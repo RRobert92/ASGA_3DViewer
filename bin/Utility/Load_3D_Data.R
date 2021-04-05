@@ -10,8 +10,8 @@
 
 Load_Data <- function(id, No_Data){
   if(id == "Demo"){
-    Data_Points_1_Demo <<- readRDS("demo/Data_Points_1")
-    Data_Segments_1_Demo <<- readRDS("demo/Data_Segments_1")
+    Data_Points_1_Demo <<- readRDS("demo/Data_Points_1.RDS")
+    Data_Segments_1_Demo <<- readRDS("demo/Data_Segments_1.RDS")
   } else {
     Amira_df <<- as_tibble(readLines(paste(id, "/",list.files(id)[No_Data], sep = "")))
     names(Amira_df)[1] <<- "X1"

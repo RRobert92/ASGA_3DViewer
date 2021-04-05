@@ -113,7 +113,7 @@ function(input, output, session) {
       updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
     })
 
-    # Reload data set if user select different data
+    # Reload data set if user select different data ----------------------------
     observeEvent(input$`Home-DataSet_in_Pub`, {
       lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
         if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
