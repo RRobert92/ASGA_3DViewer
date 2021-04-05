@@ -69,7 +69,7 @@ Viewer_UI <- function(id) {
             tags$div(
               class = "splash-input-3D",
               actionBttn(
-                inputId = ns("3D_View"),
+                inputId = ns("3D_View_Demo"),
                 label = "Demo",
                 style = "material-flat",
                 color = "primary"

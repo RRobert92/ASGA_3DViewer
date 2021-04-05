@@ -9,6 +9,7 @@
 ################################################################################
 
 function(input, output, session) {
+
   # Define Height of browser windows <- currently not working :( ---------------
   observe({
     if (START_UP == TRUE) {
@@ -51,11 +52,12 @@ function(input, output, session) {
 
       rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
       source("global.R")
-      updateTabsetPanel(session, "innavbar", selected = "Home")
+      js$refresh()
     }
     if (input$"innavbar-3D" == "3D_Data_Select") {
       rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
       source("global.R")
+
     }
     if (input$"innavbar-3D" == "Wiki") {
       js$browseURL("https://rrobert92.github.io/ASGA/")
@@ -85,9 +87,18 @@ function(input, output, session) {
   })
 
   # 3D_Viewer module - load demo -----------------------------------------------
-  observeEvent(input$`Home-3D_View`, {
+  observeEvent(input$`Home-3D_View_Demo`, {
+
     # Load Demo ----------------------------------------------------------------
     Load_Data("Demo", 1)
+
+    DataSet_Active_List <<- c("test")
+    updatePickerInput(session, "Home-DataSet_in_Pub", choices = DataSet_Active_List)
+
+    # Update list of available analysis --------------------------------------
+    Analysis_Active_List <<- c("test")
+    updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
+
     callModule(Demo_Mode, "Home")
 
     showTab(inputId = "innavbar-3D", target = "3D_Viewer")
