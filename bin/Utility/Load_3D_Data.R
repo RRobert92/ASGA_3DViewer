@@ -22,6 +22,5 @@ Load_Data <- function(id, No_Data){
     Data_Segments <<- Load_Amira_Segments()
 
     rm(Amira_df, envir = .GlobalEnv)
-
   }
 }
