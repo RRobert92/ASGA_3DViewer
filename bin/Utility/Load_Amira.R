@@ -119,7 +119,12 @@ Load_Amira_Points <- function() {
       names(df)[1] <- No_column[i, 4]
     }
 
-    Points <- cbind(Points, df)
+    if(nrow(df) == as.numeric(gsub("[^[:digit:]]", "", Amira_df[6,1]))){
+      Points <- cbind(Points, df)
+    }
+    if (as.numeric(nrow(df) + 1) == as.numeric(gsub("[^[:digit:]]", "", Amira_df[6,1]))){
+      df[nrow(df)+1,] <- Amira_df[last_column + 1, ]
+    }
   }
 
   rm(id, Points_number, Pattern, No_column, No_column_Points, df, last_column)

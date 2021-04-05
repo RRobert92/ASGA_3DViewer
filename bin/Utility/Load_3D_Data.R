@@ -8,13 +8,20 @@
 # Created: 2021-04-04
 ################################################################################
 
-Load_Data <- function(id){
+Load_Data <- function(id, No_Data){
   if(id == "Demo"){
     Data_Points_1_Demo <<- readRDS("demo/Data_Points_1")
     Data_Segments_1_Demo <<- readRDS("demo/Data_Segments_1")
   } else {
+    Amira_df <<- as_tibble(readLines(paste(id, "/",list.files(id)[No_Data], sep = "")))
+    names(Amira_df)[1] <<- "X1"
+
+
+    Data_Points <<- Load_Amira_Points()
+    Data_Nodes <<- Load_Amira_Nodes()
+    Data_Segments <<- Load_Amira_Segments()
+
+    rm(Amira_df, envir = .GlobalEnv)
 
   }
-
-
 }

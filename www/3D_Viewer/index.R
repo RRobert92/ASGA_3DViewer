@@ -92,9 +92,15 @@ Viewer_UI <- function(id) {
           column(
             2,
             offset = 0,
-            tags$div(
-              class = "setting_main", style = "margin: 10px",
-              sliderInput(ns("MT_NO"), "Number of MT to visualize", value = 1, min = 1, max = 100)
+            pickerInput(
+              inputId = ns("DataSet_in_Pub"), label = "Select data set :",
+              choices = c("Init"),
+              multiple = FALSE
+            ),
+            pickerInput(
+              inputId = ns("Analysis_in_DataSet"), label = "Select 3D View :",
+              choices = c("Init"),
+              multiple = FALSE
             )
           ),
           column(

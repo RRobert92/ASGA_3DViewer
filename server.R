@@ -9,13 +9,13 @@
 ################################################################################
 
 function(input, output, session) {
-  # Define Height of browser windows <- currently not working :( ---------------)
+  # Define Height of browser windows <- currently not working :( ---------------
   observe({
     if (START_UP == TRUE) {
       req(input$dimension)
       assign("WINDOW_HEIGHT",
-             paste(as.numeric(input$dimension[2] - 51), "px", sep = ""),
-             envir = .GlobalEnv
+        paste(as.numeric(input$dimension[2] - 51), "px", sep = ""),
+        envir = .GlobalEnv
       )
     }
   })
@@ -51,13 +51,19 @@ function(input, output, session) {
 
       rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
       source("global.R")
-      js$refresh();
     }
     if (input$"innavbar-3D" == "Wiki") {
       js$browseURL("https://rrobert92.github.io/ASGA/")
     }
     if (input$"innavbar-3D" == "About") {
       js$browseURL("https://rrobert92.github.io/ASGA/Cit/")
+    }
+  })
+
+  observeEvent(input$"innavbar-3D", {
+    if (input$"innavbar-3D" == "3D_Data_Select") {
+      rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
+      source("global.R")
     }
   })
 
@@ -79,23 +85,47 @@ function(input, output, session) {
     updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
   })
 
-  # 3D_Viewer module - load demo --------------------------------------
+  # 3D_Viewer module - load demo -----------------------------------------------
   observeEvent(input$`Home-3D_View`, {
     # Load Demo ----------------------------------------------------------------
-    Load_Data("Demo")
+    Load_Data("Demo", 1)
+    callModule(Demo_Mode, "Home")
 
     showTab(inputId = "innavbar-3D", target = "3D_Viewer")
     updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
   })
-  #callModule(Demo_Mode, "Home")
 
   # 3D_Viewer module - load Pub Data -------------------------------------------
   lapply(1:Publication_No, function(i) {
-    observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep="_")]], {
-      # Same action for each Button
-        # Load data
-        # Define setting
-        # Show model
+    observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
+      # Load data --------------------------------------------------------------
+      progressSweetAlert(
+        session = session,
+        id = "Load_3D",
+        title = paste("Loading 3D data for ", Publication_Name[i], sep = ""),
+        display_pct = TRUE,
+        value = 0
+      )
+      # Load initial 3D data from the pub folder -------------------------------
+      Load_Data(paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""), 1)
+
+      # Update list of available Data sets -------------------------------------
+      DataSet_Active_List <<- get(paste(Publication_Name[i], "Names", sep = "_"))
+      updatePickerInput(session, "Home-DataSet_in_Pub", choices = DataSet_Active_List)
+
+      # Update list of available analysis --------------------------------------
+      Analysis_Active_List <<- get(paste(Publication_Name[i], "Analysis_Names", sep = "_"))
+      if(length(Analysis_Active_List) == 0){
+        Analysis_Active_List <- c("All MT", "KMTs")
+      }
+      updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
+
+      Sys.sleep(0.1)
+      closeSweetAlert(session = session)
+
+      # Update Tabs ------------------------------------------------------------
+      showTab(inputId = "innavbar-3D", target = "3D_Viewer")
+      updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
     })
   })
 }
