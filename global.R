@@ -19,9 +19,9 @@ source("bin/Utility/Library.R")
 
 APP_TITLE <- "ASGA - 3D Viewer v0.1.0"
 CC <- paste("© Copyright GPL V3.0 2021-",
-            str_split(Sys.Date(), pattern = "-")[[1]][1],
-            ", Robert Kiewisz",
-            sep = ""
+  str_split(Sys.Date(), pattern = "-")[[1]][1],
+  ", Robert Kiewisz",
+  sep = ""
 )
 
 # Global CSS  ------------------------------------------------------------------
@@ -50,10 +50,16 @@ source("bin/Utility/3D_Generate.R")
 SHINY_IO <<- TRUE # Constant defining if app is running locally or online
 START_UP <<- TRUE # Constant defining if app was stared freshly
 VIEW_ALL <<- TRUE # Constant defining if app will show all MTs or just KMTs
-Demo <<- FALSE
+DEMO <<- FALSE # Constant defininf if app running in Demo mode
 
 Non_KMT_Col <<- "#FFFFFF"
 KMT_Col <<- "#CC1414"
 
-WINDOW_HEIGHT <<- "640px"
+# List of supported analysis
+AVAILABLE_ANALYSIS_KMTs <<- c("NaN")
+AVAILABLE_ANALYSIS_ALL <<- c("NaN")
+
+WINDOW_HEIGHT <<- "640px" # Constant to define rgl widget height
+
 Search_for_Data() # Scan environment and define set of variable for UI
+Analysis_List(1, 1) # Gather initial info about analysis if exists

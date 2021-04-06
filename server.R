@@ -88,7 +88,7 @@ function(input, output, session) {
   # 3D_Viewer module - load demo -----------------------------------------------
   observeEvent(input$`Home-3D_View_Demo`, {
     show("Home-Non_KMT_Col")
-    Demo <<- TRUE
+    DEMO <<- TRUE
 
     # Load Demo ----------------------------------------------------------------
     Load_Data("Demo", 1)
@@ -105,12 +105,17 @@ function(input, output, session) {
 
     showTab(inputId = "innavbar-3D", target = "3D_Viewer")
     updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
+
+    Analysis_List("Demo", "Demo")
+    updatePickerInput(session, "Home-Select_KMT_Analysis", choices = AVAILABLE_ANALYSIS_KMTs)
+    updatePickerInput(session, "Home-Select_ALL_Analysis", choices = AVAILABLE_ANALYSIS_ALL)
   })
 
   # 3D_Viewer module - load Pub Data -------------------------------------------
   lapply(1:Publication_No, function(i) {
-    Demo <<- FALSE
-    show("Home-Non_KMT_Col")
+    DEMO <<- FALSE
+    updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
+    updateColourInput(session, "Home-KMT_Col", value = "#E32626")
 
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
       # Update list of available Data sets -------------------------------------
@@ -118,11 +123,8 @@ function(input, output, session) {
       updatePickerInput(session, "Home-DataSet_in_Pub", choices = DataSet_Active_List)
 
       # Update list of available analysis --------------------------------------
-      Analysis_Active_List <<- get(paste(Publication_Name[i], "Analysis_Names", 1, sep = "_"))
-      if (length(Analysis_Active_List) == 0) {
         Analysis_Active_List <- c("All MTs", "KMTs")
-      }
-      updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
+      updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List, selected = "All MTs")
 
       # Update Tabs ------------------------------------------------------------
       showTab(inputId = "innavbar-3D", target = "3D_Viewer")
@@ -130,16 +132,22 @@ function(input, output, session) {
 
       # Reload data set if user select different data ----------------------------
       observeEvent(input$`Home-DataSet_in_Pub`, {
+        show("Home-Non_KMT_Col")
+        hide("Home-KMT_Col")
+        hide("Home-Hidde_MTs")
+        updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
+        hide("Home-Select_KMT_Analysis")
+        updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
+        updateColourInput(session, "Home-KMT_Col", value = "#E32626")
+
         lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
           if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
             Load_Data(paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""), j)
 
-            Analysis_Active_List <<- get(paste(Publication_Name[i], "Analysis_Names", 1, sep = "_"))
 
-            if (length(Analysis_Active_List) == 0) {
-              Analysis_Active_List <- c("All MTs", "KMTs")
-            }
-            updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
+            Analysis_List(i, j)
+            updatePickerInput(session, "Home-Select_KMT_Analysis", choices = AVAILABLE_ANALYSIS_KMTs)
+            updatePickerInput(session, "Home-Select_ALL_Analysis", choices = AVAILABLE_ANALYSIS_ALL)
 
             `3D_View_Set` <<- "All MTs"
             callModule(`3D_Generate`, "Home")
@@ -153,6 +161,7 @@ function(input, output, session) {
     if (input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "All MTs") {
       show("Home-Non_KMT_Col")
       hide("Home-KMT_Col")
+
       Non_KMT_Col <<- input[["Home-Non_KMT_Col"]]
       `3D_View_Set` <<- input[[paste("Home-Analysis_in_DataSet", sep = "_")]]
 
@@ -160,6 +169,8 @@ function(input, output, session) {
     }
     if (input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "KMTs") {
       show("Home-Hidde_MTs")
+      show("Home-Select_KMT_Analysis")
+
       Non_KMT_Col <<- input[["Home-Non_KMT_Col"]]
       KMT_Col <<- input[["Home-KMT_Col"]]
 
@@ -179,15 +190,17 @@ function(input, output, session) {
     }
   })
 
+  # Collect input about the color
   observeEvent(input$`Home-Non_KMT_Col`, {
     Non_KMT_Col <<- input$`Home-Non_KMT_Col`
   })
-
   observeEvent(input$`Home-KMT_Col`, {
     KMT_Col <<- input$`Home-KMT_Col`
   })
+
+  # Refresh rgl widget
   observeEvent(input$`Home-Refresh`, {
-    if (Demo == TRUE) {
+    if (DEMO == TRUE) {
       callModule(`3D_Generate`, "Home")
     } else {
       callModule(`3D_Generate`, "Home")

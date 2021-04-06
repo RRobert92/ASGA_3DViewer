@@ -116,9 +116,17 @@ Viewer_UI <- function(id) {
               ),
             hidden(
               pickerInput(
-                inputId = ns("Select_Analysis"),
-                label = "Select analysis",
-                choices = c("NoN"),
+                inputId = ns("Select_KMT_Analysis"),
+                label = "Select KMT analysis",
+                choices = AVAILABLE_ANALYSIS_KMTs,
+                multiple = FALSE
+              )
+            ),
+            hidden(
+              pickerInput(
+                inputId = ns("Select_SMT_Analysis"),
+                label = "Select SMT analysis",
+                choices = AVAILABLE_ANALYSIS_ALL,
                 multiple = FALSE
               )
             ),
