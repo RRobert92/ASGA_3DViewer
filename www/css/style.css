@@ -203,7 +203,6 @@ label {
   width: 100%;
   margin-bottom: 5%;
   margin-top: 5%;
-  padding-left: 35%;
 }
 
 .splash-input-3D-row:after{
@@ -306,16 +305,6 @@ label {
 /*
   # CSS MEDIA QUERIES  -------------------------------------------------------------------
 */
-  @media (min-width:20em) {
-    .splash-input-setting{
-      padding-left: 32%;
-    }
-  }
-  @media (min-width:35em) {
-    .splash-input-setting{
-      padding-left: 0;
-    }
-  }
 
   @media (min-width:60em) {
 
@@ -338,10 +327,6 @@ label {
       width: 55%;
       height: 75%;
     }
-    .splash-input-setting{
-      padding-left: 22%;
-    }
-
 
     .splash-head {
       font-size: 250%;
