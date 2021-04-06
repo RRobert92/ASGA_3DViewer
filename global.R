@@ -51,6 +51,7 @@ SHINY_IO <<- TRUE # Constant defining if app is running locally or online
 START_UP <<- TRUE # Constant defining if app was stared freshly
 VIEW_ALL <<- TRUE # Constant defining if app will show all MTs or just KMTs
 DEMO <<- FALSE # Constant defininf if app running in Demo mode
+CASHING <<- FALSE # Constant defininf if the rgl widget should reused models and cash file
 
 Non_KMT_Col <<- "#FFFFFF"
 KMT_Col <<- "#CC1414"

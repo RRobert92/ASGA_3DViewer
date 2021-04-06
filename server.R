@@ -87,8 +87,17 @@ function(input, output, session) {
 
   # 3D_Viewer module - load demo -----------------------------------------------
   observeEvent(input$`Home-3D_View_Demo`, {
-    show("Home-Non_KMT_Col")
     DEMO <<- TRUE
+    updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
+
+    updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
+    updateColourInput(session, "Home-KMT_Col", value = "#E32626")
+
+    show("Home-Non_KMT_Col")
+    hide("Home-KMT_Col")
+
+    hide("Home-Hidde_MTs")
+    hide("Home-Select_KMT_Analysis")
 
     # Load Demo ----------------------------------------------------------------
     Load_Data("Demo", 1)
@@ -114,6 +123,7 @@ function(input, output, session) {
   # 3D_Viewer module - load Pub Data -------------------------------------------
   lapply(1:Publication_No, function(i) {
     DEMO <<- FALSE
+
     updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
     updateColourInput(session, "Home-KMT_Col", value = "#E32626")
 
@@ -132,13 +142,14 @@ function(input, output, session) {
 
       # Reload data set if user select different data ----------------------------
       observeEvent(input$`Home-DataSet_in_Pub`, {
+        updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
+        updateColourInput(session, "Home-KMT_Col", value = "#E32626")
+        updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
+
         show("Home-Non_KMT_Col")
         hide("Home-KMT_Col")
         hide("Home-Hidde_MTs")
-        updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
         hide("Home-Select_KMT_Analysis")
-        updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
-        updateColourInput(session, "Home-KMT_Col", value = "#E32626")
 
         lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
           if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {

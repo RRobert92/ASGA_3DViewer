@@ -40,7 +40,7 @@ if(`3D_View_Set` == "All MTs"){
     scene <- scene3d()
     rgl.close()
     closeSweetAlert(session = session)
-    rglwidget(scene, reuse = FALSE)
+    rglwidget(scene, reuse = CASHING)
   })
 }
   if(`3D_View_Set` == "KMTs"){
@@ -93,7 +93,7 @@ if(`3D_View_Set` == "All MTs"){
       scene <- scene3d()
       rgl.close()
       closeSweetAlert(session = session)
-      rglwidget(scene, reuse = FALSE)
+      rglwidget(scene, reuse = CASHING)
     })
   }
 }
