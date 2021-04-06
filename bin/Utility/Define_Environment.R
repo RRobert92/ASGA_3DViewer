@@ -14,8 +14,19 @@ Search_for_Data <- function() {
 
   for (i in 1:Publication_No) {
     # List of data sets
+    df <- str_split(list.files(paste("./Data/", list.files("./Data")[i], "/Raw", sep = "")), "_")
+    df_df <-tibble()
+    for(j in 1:length(df)){
+      df_df[j,1] <- df[[j]][1]
+      df_df[j,2] <- df[[j]][2]
+    }
+    df_df <- unique(df_df)
+    df <- c()
+    for(j in 1:nrow(df_df)){
+      df <- c(df, paste(df_df[j,1], df_df[j,2], sep = "_"))
+    }
     assign(paste(Publication_Name[i], "Names", sep = "_"),
-      list.files(paste("./Data/", list.files("./Data")[i], "/Raw", sep = "")),
+      df,
       envir = .GlobalEnv
     )
     assign(paste(Publication_Name[i], "No", sep = "_"),

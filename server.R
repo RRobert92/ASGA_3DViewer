@@ -88,7 +88,9 @@ function(input, output, session) {
 
   # 3D_Viewer module - load demo -----------------------------------------------
   observeEvent(input$`Home-3D_View_Demo`, {
-
+    show("Home-Non_KMT_Col")
+    show("Home-KMT_Col")
+    Demo <<- TRUE
     # Load Demo ----------------------------------------------------------------
     Load_Data("Demo", 1)
 
@@ -107,6 +109,7 @@ function(input, output, session) {
 
   # 3D_Viewer module - load Pub Data -------------------------------------------
   lapply(1:Publication_No, function(i) {
+    Demo <<- FALSE
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
       # Update list of available Data sets -------------------------------------
       DataSet_Active_List <<- get(paste(Publication_Name[i], "Names", sep = "_"))
@@ -127,13 +130,6 @@ function(input, output, session) {
       observeEvent(input$`Home-DataSet_in_Pub`, {
         lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
           if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
-            progressSweetAlert(
-              session = session,
-              id = "Load_3D",
-              title = paste("Loading 3D data for ", Publication_Name[i], ", data set: ", get(paste(Publication_Name[i], "Names", sep = "_"))[j], sep = ""),
-              display_pct = TRUE,
-              value = 0
-            )
 
             Load_Data(paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""), j)
 
@@ -144,11 +140,8 @@ function(input, output, session) {
             }
             updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
 
-            updateProgressBar(session = session,
-                              id = "Load_3D",
-                              value = 100)
-            Sys.sleep(0.1)
-            closeSweetAlert(session = session)
+            `3D_View_Set` <<- "All MTs"
+            callModule(`3D_Generate`, "Home")
           }
         })
       })
@@ -157,10 +150,18 @@ function(input, output, session) {
 
   observeEvent(input$`Home-Analysis_in_DataSet`, {
     if(input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "All MTs"){
-     callModule(`3D_Generate_All`, "Home")
+      show("Home-Non_KMT_Col")
+      Non_KMT_Col <<- input[["Home-Non_KMT_Col"]]
+      `3D_View_Set` <<- input[[paste("Home-Analysis_in_DataSet", sep = "_")]]
+
+     callModule(`3D_Generate`, "Home")
     }
     if(input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "KMTs"){
       show("Home-Hidde_MTs")
+      Non_KMT_Col <<- input[["Home-Hidde_MTs"]]
+
+      show("Home-Non_KMT_Col")
+      show("Home-KMT_Col")
 
       observeEvent(input$`Home-Hidde_MTs`, {
         if(input[[paste("Home-Hidde_MTs", sep = "_")]] == TRUE){
@@ -168,8 +169,25 @@ function(input, output, session) {
         } else {
           VIEW_ALL <<- FALSE
         }
-        callModule(`3D_Generate_KMTs`, "Home")
+
+        `3D_View_Set` <<- input[[paste("Home-Analysis_in_DataSet", sep = "_")]]
+        callModule(`3D_Generate`, "Home")
       })
+    }
+  })
+
+  observeEvent(input$`Home-Non_KMT_Col`, {
+    Non_KMT_Col <<- input$`Home-Non_KMT_Col`
+  })
+
+  observeEvent(input$`Home-KMT_Col`, {
+    KMT_Col <<- input$`Home-KMT_Col`
+  })
+  observeEvent(input$`Home-Refresh`, {
+    if(Demo == TRUE){
+      callModule(`Demo_Mode`, "Home")
+    } else {
+      callModule(`3D_Generate`, "Home")
     }
   })
 }

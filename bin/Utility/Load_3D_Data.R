@@ -13,14 +13,8 @@ Load_Data <- function(id, No_Data) {
     Data_Points_1_Demo <<- readRDS("demo/Data_Points_1.RDS")
     Data_Segments_1_Demo <<- readRDS("demo/Data_Segments_1.RDS")
   } else {
-    Amira_df <<- as_tibble(readLines(paste(id, "/", list.files(id)[No_Data], sep = "")))
-    names(Amira_df)[1] <<- "X1"
-
-
-    Data_Points <<- Load_Amira_Points()
-    Data_Nodes <<- Load_Amira_Nodes()
-    Data_Segments <<- Load_Amira_Segments()
-
-    rm(Amira_df, envir = .GlobalEnv)
+    Data_Points <<- readRDS(paste(paste(id, "/", Publication_Name_1_Names[No_Data], "_Points.RDS", sep = "")))
+    Data_Nodes <<- readRDS(paste(paste(id, "/", Publication_Name_1_Names[No_Data], "_Nodes.RDS", sep = "")))
+    Data_Segments <<- readRDS(paste(paste(id, "/", Publication_Name_1_Names[No_Data], "_Segments.RDS", sep = "")))
   }
 }

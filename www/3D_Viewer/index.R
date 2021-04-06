@@ -49,10 +49,10 @@ Viewer_UI <- function(id) {
                 tags$div(
                   class = "btn-default-3D",
                   actionButton(
-                    inputId = ns(paste("3D_Viewer_Pub", i, sep="_")),
+                    inputId = ns(paste("3D_Viewer_Pub", i, sep = "_")),
                     label = Publication_Name[i],
                     width = "100%"
-                    )
+                  )
                 )
               })
             ),
@@ -93,17 +93,51 @@ Viewer_UI <- function(id) {
             2,
             offset = 0,
             pickerInput(
-              inputId = ns("DataSet_in_Pub"), label = "Select data set :",
+              inputId = ns("DataSet_in_Pub"),
+              label = "Select data set",
               choices = c("Init"),
               multiple = FALSE
             ),
             pickerInput(
-              inputId = ns("Analysis_in_DataSet"), label = "Select 3D View :",
+              inputId = ns("Analysis_in_DataSet"),
+              label = "Select 3D View",
               choices = c("Init"),
               multiple = FALSE
             ),
             hidden(
-              checkboxInput(ns("Hidde_MTs"), "Hidde all non-KMTs", value = TRUE)
+              checkboxInput(
+                inputId = ns("Hidde_MTs"),
+                label = "Hidde all non-KMTs",
+                value = TRUE
+              )
+            ),
+            tags$div(class = "h_line"),
+            hidden(
+              colourInput(ns("Non_KMT_Col"),
+                          label = "Non-KMTs color",
+                          value = "#FFFFFF")
+                          ),
+            hidden(
+              colourInput(ns("KMT_Col"),
+                          label = "KMTs color",
+                          value = "#E32626")
+              ),
+            hidden(
+              pickerInput(
+                inputId = ns("Select_Analysis"),
+                label = "Select analysis",
+                choices = c("NoN"),
+                multiple = FALSE
+              )
+            ),
+            tags$div(
+              class = "splash-input-setting",
+              actionBttn(
+                inputId = ns("Refresh"),
+                label = "Refresh",
+                style = "material-flat",
+                color = "primary"
+              )
             )
           ),
           column(

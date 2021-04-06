@@ -50,5 +50,10 @@ source("bin/Utility/3D_Generate.R")
 SHINY_IO <<- TRUE # Constant defining if app is running locally or online
 START_UP <<- TRUE # Constant defining if app was stared freshly
 VIEW_ALL <<- TRUE # Constant defining if app will show all MTs or just KMTs
+Demo <<- FALSE
+
+Non_KMT_Col <<- "#FFFFFF"
+KMT_Col <<- "#CC1414"
+
 WINDOW_HEIGHT <<- "640px"
 Search_for_Data() # Scan environment and define set of variable for UI
