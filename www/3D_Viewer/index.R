@@ -45,26 +45,18 @@ Viewer_UI <- function(id) {
             tags$div(
               class = "splash-input-3D",
               "Select publication",
-              lapply(1:Publication_No, function(i) {
-                tags$div(
-                  class = "btn-default-3D",
-                  actionButton(
-                    inputId = ns(paste("3D_Viewer_Pub", i, sep = "_")),
-                    label = Publication_Name[i],
-                    width = "100%"
+              if(Publication_No !=0){
+                lapply(1:Publication_No, function(i) {
+                  tags$div(
+                    class = "btn-default-3D",
+                    actionButton(
+                      inputId = ns(paste("3D_Viewer_Pub", i, sep = "_")),
+                      label = Publication_Name[i],
+                      width = "100%"
+                    )
                   )
-                )
-              })
-            ),
-            tags$div(
-              class = "splash-input-3D",
-              tags$p(),
-              fileInput(
-                inputId = ns("file_3D"),
-                label = "Load 3D model",
-                multiple = FALSE,
-                accept = ".am"
-              )
+                })
+              }
             ),
             tags$div(
               class = "splash-input-3D",
