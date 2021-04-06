@@ -115,40 +115,61 @@ function(input, output, session) {
       # Update list of available analysis --------------------------------------
       Analysis_Active_List <<- get(paste(Publication_Name[i], "Analysis_Names", 1, sep = "_"))
       if (length(Analysis_Active_List) == 0) {
-        Analysis_Active_List <- c("All MT", "KMTs")
+        Analysis_Active_List <- c("All MTs", "KMTs")
       }
       updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
 
       # Update Tabs ------------------------------------------------------------
       showTab(inputId = "innavbar-3D", target = "3D_Viewer")
       updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
-    })
 
-    # Reload data set if user select different data ----------------------------
-    observeEvent(input$`Home-DataSet_in_Pub`, {
-      lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
-        if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
-          progressSweetAlert(
-            session = session,
-            id = "Load_3D",
-            title = paste("Loading 3D data for ", Publication_Name[i], ", data set: ", get(paste(Publication_Name[i], "Names", sep = "_"))[j], sep = ""),
-            display_pct = TRUE,
-            value = 0
-          )
+      # Reload data set if user select different data ----------------------------
+      observeEvent(input$`Home-DataSet_in_Pub`, {
+        lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
+          if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
+            progressSweetAlert(
+              session = session,
+              id = "Load_3D",
+              title = paste("Loading 3D data for ", Publication_Name[i], ", data set: ", get(paste(Publication_Name[i], "Names", sep = "_"))[j], sep = ""),
+              display_pct = TRUE,
+              value = 0
+            )
 
-          Load_Data(paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""), j)
+            Load_Data(paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""), j)
 
-          Analysis_Active_List <<- get(paste(Publication_Name[i], "Analysis_Names", 1, sep = "_"))
+            Analysis_Active_List <<- get(paste(Publication_Name[i], "Analysis_Names", 1, sep = "_"))
 
-          if (length(Analysis_Active_List) == 0) {
-            Analysis_Active_List <- c("All MT", "KMTs")
+            if (length(Analysis_Active_List) == 0) {
+              Analysis_Active_List <- c("All MTs", "KMTs")
+            }
+            updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
+
+            updateProgressBar(session = session,
+                              id = "Load_3D",
+                              value = 100)
+            Sys.sleep(0.1)
+            closeSweetAlert(session = session)
           }
-          updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
-
-          Sys.sleep(0.1)
-          closeSweetAlert(session = session)
-        }
+        })
       })
     })
+  })
+
+  observeEvent(input$`Home-Analysis_in_DataSet`, {
+    if(input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "All MTs"){
+     callModule(`3D_Generate_All`, "Home")
+    }
+    if(input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "KMTs"){
+      show("Home-Hidde_MTs")
+
+      observeEvent(input$`Home-Hidde_MTs`, {
+        if(input[[paste("Home-Hidde_MTs", sep = "_")]] == TRUE){
+          VIEW_ALL <<- TRUE
+        } else {
+          VIEW_ALL <<- FALSE
+        }
+        callModule(`3D_Generate_KMTs`, "Home")
+      })
+    }
   })
 }

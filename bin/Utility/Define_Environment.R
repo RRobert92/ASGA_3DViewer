@@ -5,7 +5,7 @@
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Author: Robert Kiewisz
-# Created: 2021-04-03
+# Created: 2021-04-05
 ################################################################################
 
 Search_for_Data <- function() {

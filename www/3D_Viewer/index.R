@@ -101,6 +101,9 @@ Viewer_UI <- function(id) {
               inputId = ns("Analysis_in_DataSet"), label = "Select 3D View :",
               choices = c("Init"),
               multiple = FALSE
+            ),
+            hidden(
+              checkboxInput(ns("Hidde_MTs"), "Hidde all non-KMTs", value = TRUE)
             )
           ),
           column(

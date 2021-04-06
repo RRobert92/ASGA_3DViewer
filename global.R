@@ -43,10 +43,12 @@ source("bin/Utility/Upload_Data.R")
 source("bin/Utility/Load_Amira.R")
 source("bin/Utility/Load_3D_Data.R")
 source("bin/Utility/Define_Environment.R")
-source("bin/Utility/Demo_Mode.R")
+source("bin/Utility/3D_Generate.R")
+
 
 # Global constant settings  ----------------------------------------------------
 SHINY_IO <<- TRUE # Constant defining if app is running locally or online
 START_UP <<- TRUE # Constant defining if app was stared freshly
+VIEW_ALL <<- TRUE # Constant defining if app will show all MTs or just KMTs
 WINDOW_HEIGHT <<- "640px"
 Search_for_Data() # Scan environment and define set of variable for UI
