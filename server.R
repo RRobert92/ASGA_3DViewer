@@ -174,8 +174,18 @@ function(input, output, session) {
       show("Home-Non_KMT_Col")
       hide("Home-KMT_Col")
 
+      hide("Home-Hidde_MTs")
+      updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
+
+      hide("Home-Select_fiber")
+      updatePickerInput(session, "Home-Select_fiber", selected = "All")
+
       hide("Home-Select_KMT_Analysis")
       show("Home-Select_SMT_Analysis")
+
+      List_of_Kfibers()
+      updatePickerInput(session, "Home-Select_fiber", choices = Column_List_Fiber)
+      updatePickerInput(session, "Home-Select_fiber", selected = "All")
 
       Non_KMT_Col <<- input[["Home-Non_KMT_Col"]]
       `3D_View_Set` <<- input[[paste("Home-Analysis_in_DataSet", sep = "_")]]
@@ -204,8 +214,10 @@ function(input, output, session) {
 
         if (input$`Home-Hidde_MTs` == TRUE) {
           VIEW_ALL <<- TRUE
+          updatePickerInput(session, "Home-Select_fiber", selected = "All")
         } else {
           VIEW_ALL <<- FALSE
+          updatePickerInput(session, "Home-Select_fiber", selected = "All")
         }
 
         `3D_View_Set` <<- input$`Home-Analysis_in_DataSet`
@@ -240,7 +252,6 @@ function(input, output, session) {
   })
 
   observeEvent(input$`Home-Select_fiber`, {
-    print(input$`Home-Select_fiber`)
       List_of_Kfibers(input$`Home-Select_fiber`)
   })
 }
