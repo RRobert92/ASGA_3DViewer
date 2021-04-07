@@ -79,6 +79,9 @@ function(input, output, session) {
   # 3D_Viewer module - load demo -----------------------------------------------
   observeEvent(input$`Home-3D_View_Demo`, {
     DEMO <<- TRUE
+    Pub_ID <<- 0
+    Data_ID <<- 0
+
     updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
 
     updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
@@ -153,6 +156,8 @@ function(input, output, session) {
 
         lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
           if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
+            Pub_ID <<- i
+            Data_ID <<- j
             Load_Data(paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""), j)
             List_of_Kfibers()
             updatePickerInput(session, "Home-Select_fiber", choices = Column_List_Fiber)
@@ -206,7 +211,7 @@ function(input, output, session) {
       show("Home-KMT_Col")
 
       observeEvent(input$`Home-Hidde_MTs`, {
-        if(input$`Home-Hidde_MTs` == FALSE){
+        if (input$`Home-Hidde_MTs` == FALSE) {
           show("Home-Select_fiber")
         } else {
           hide("Home-Select_fiber")
@@ -243,15 +248,25 @@ function(input, output, session) {
     }
   })
 
-  observeEvent(input$`Home-Select_SMT_Analysis`, {
-    SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
-
-  })
   observeEvent(input$`Home-Select_KMT_Analysis`, {
     KMT_Analysis <<- input$`Home-Select_KMT_Analysis`
+    if(input$`Home-Select_KMT_Analysis` != "NaN" &&
+       input$`Home-Select_SMT_Analysis`!= "NaN"){
+      updatePickerInput(session, "Home-Select_SMT_Analysis", selected = "NaN")
+    }
+    Collect_Analysis(input$`Home-Select_KMT_Analysis`, Pub_ID, Data_ID)
+  })
+
+  observeEvent(input$`Home-Select_SMT_Analysis`, {
+    SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
+    if(input$`Home-Select_KMT_Analysis` != "NaN" &&
+       input$`Home-Select_SMT_Analysis`!= "NaN"){
+      updatePickerInput(session, "Home-Select_KMT_Analysis", selected = "NaN")
+    }
+    Collect_Analysis(input$`Home-Select_SMT_Analysis`, Pub_ID, Data_ID)
   })
 
   observeEvent(input$`Home-Select_fiber`, {
-      List_of_Kfibers(input$`Home-Select_fiber`)
+    List_of_Kfibers(input$`Home-Select_fiber`)
   })
 }

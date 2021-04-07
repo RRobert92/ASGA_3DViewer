@@ -44,6 +44,7 @@ source("bin/Utility/Load_Amira.R")
 source("bin/Utility/Load_3D_Data.R")
 source("bin/Utility/Define_Environment.R")
 source("bin/Utility/3D_Generate.R")
+source("bin/Utility/3D_Analysis_Settings.R")
 
 
 # Global constant settings  ----------------------------------------------------
@@ -63,6 +64,7 @@ AVAILABLE_ANALYSIS_ALL <<- c("NaN")
 SMT_Analysis <<- NULL
 Column_List_Fiber <<- c("All")
 Data_Segments <<- NULL
+Data <<- NULL
 
 WINDOW_HEIGHT <<- "640px" # Constant to define rgl_widget height
 

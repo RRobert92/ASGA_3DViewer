@@ -105,12 +105,6 @@ Analysis_List <- function(Pub, Data) {
           "KMTs Curvature"
         )
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "KMT_Total_Curv") == TRUE) != 0) {
-        AVAILABLE_ANALYSIS_KMTs <<- c(
-          AVAILABLE_ANALYSIS_KMTs,
-          "KMTs Curvature"
-        )
-      }
       if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "K_Core_Area") == TRUE) != 0) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
@@ -126,25 +120,25 @@ Analysis_List <- function(Pub, Data) {
       if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "KMT_Minus_End") == TRUE) == 7) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
-          "KMT minus-ends interaction for 25 nm",
-          "KMT minus-ends interaction for 30 nm",
-          "KMT minus-ends interaction for 35 nm",
-          "KMT minus-ends interaction for 45 nm",
-          "KMT minus-ends interaction for 50 nm",
-          "KMT minus-ends interaction for 75 nm",
-          "KMT minus-ends interaction for 100 nm"
+          "KMT minus-ends interaction for 25nm",
+          "KMT minus-ends interaction for 30nm",
+          "KMT minus-ends interaction for 35nm",
+          "KMT minus-ends interaction for 45nm",
+          "KMT minus-ends interaction for 50nm",
+          "KMT minus-ends interaction for 75nm",
+          "KMT minus-ends interaction for 100nm"
         )
       }
       if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "KMTs_minus_seed") == TRUE) == 7) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
-          "KMT lattice interaction for 25 nm",
-          "KMT lattice interaction for 30 nm",
-          "KMT lattice interaction for 35 nm",
-          "KMT lattice interaction for 45 nm",
-          "KMT lattice interaction for 50 nm",
-          "KMT lattice interaction for 75 nm",
-          "KMT lattice interaction for 100 nm"
+          "KMT lattice interaction for 25nm",
+          "KMT lattice interaction for 30nm",
+          "KMT lattice interaction for 35nm",
+          "KMT lattice interaction for 45nm",
+          "KMT lattice interaction for 50nm",
+          "KMT lattice interaction for 75nm",
+          "KMT lattice interaction for 100nm"
         )
       }
     }
@@ -161,8 +155,8 @@ List_of_Kfibers <- function(Retrive = NULL) {
 
   if (!is.null(Retrive)) {
     if (Retrive != "All") {
-          KMT_List <<- select(.data = Data_Segments, "Segment ID", Retrive)
-          KMT_List <<- KMT_List %>% filter_at(vars(starts_with("Pole")), any_vars(. > 0))
+      KMT_List <<- select(.data = Data_Segments, "Segment ID", Retrive)
+      KMT_List <<- KMT_List %>% filter_at(vars(starts_with("Pole")), any_vars(. > 0))
 
       if (is.null(KMT_List)) {
       } else if (nrow(KMT_List) > 0) {
