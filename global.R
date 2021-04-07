@@ -50,17 +50,21 @@ source("bin/Utility/3D_Generate.R")
 SHINY_IO <<- TRUE # Constant defining if app is running locally or online
 START_UP <<- TRUE # Constant defining if app was stared freshly
 VIEW_ALL <<- TRUE # Constant defining if app will show all MTs or just KMTs
-DEMO <<- FALSE # Constant defininf if app running in Demo mode
-CASHING <<- FALSE # Constant defininf if the rgl widget should reused models and cash file
+DEMO <<- FALSE # Constant defining if app running in Demo mode
+CASHING <<- FALSE # Constant defining if the rgl widget should reused models and cash file
 
 Non_KMT_Col <<- "#FFFFFF"
 KMT_Col <<- "#CC1414"
 
 # List of supported analysis
 AVAILABLE_ANALYSIS_KMTs <<- c("NaN")
+KMT_Analysis <<- NULL
 AVAILABLE_ANALYSIS_ALL <<- c("NaN")
+SMT_Analysis <<- NULL
+Column_List_Fiber <<- c("All")
+Data_Segments <<- NULL
 
-WINDOW_HEIGHT <<- "640px" # Constant to define rgl widget height
+WINDOW_HEIGHT <<- "640px" # Constant to define rgl_widget height
 
 Search_for_Data() # Scan environment and define set of variable for UI
 Analysis_List(1, 1) # Gather initial info about analysis if exists

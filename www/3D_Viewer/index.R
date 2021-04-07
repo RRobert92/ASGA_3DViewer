@@ -45,7 +45,7 @@ Viewer_UI <- function(id) {
             tags$div(
               class = "splash-input-3D",
               "Select publication",
-              if(Publication_No !=0){
+              if (Publication_No != 0) {
                 lapply(1:Publication_No, function(i) {
                   tags$div(
                     class = "btn-default-3D",
@@ -103,17 +103,27 @@ Viewer_UI <- function(id) {
                 value = TRUE
               )
             ),
+            hidden(
+              pickerInput(
+                inputId = ns("Select_fiber"),
+                label = "Select k-fibers",
+                choices = Column_List_Fiber,
+                multiple = FALSE,
+              )
+            ),
             tags$div(class = "h_line"),
             hidden(
               colourInput(ns("Non_KMT_Col"),
-                          label = "Non-KMTs color",
-                          value = "#FFFFFF")
-                          ),
+                label = "Non-KMTs color",
+                value = "#FFFFFF"
+              )
+            ),
             hidden(
               colourInput(ns("KMT_Col"),
-                          label = "KMTs color",
-                          value = "#E32626")
-              ),
+                label = "KMTs color",
+                value = "#E32626"
+              )
+            ),
             hidden(
               pickerInput(
                 inputId = ns("Select_KMT_Analysis"),
@@ -125,7 +135,7 @@ Viewer_UI <- function(id) {
             hidden(
               pickerInput(
                 inputId = ns("Select_SMT_Analysis"),
-                label = "Select SMT analysis",
+                label = "Select MT analysis",
                 choices = AVAILABLE_ANALYSIS_ALL,
                 multiple = FALSE
               )

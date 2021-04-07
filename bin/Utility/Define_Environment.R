@@ -16,24 +16,37 @@ Search_for_Data <- function() {
     for (i in 1:Publication_No) {
       # List of data sets
       df <- str_split(list.files(paste("./Data/", list.files("./Data")[i], "/Raw", sep = "")), "_")
-      df_df <- tibble()
-      for (j in 1:length(df)) {
-        df_df[j, 1] <- df[[j]][1]
-        df_df[j, 2] <- df[[j]][2]
+      if (length(df) > 0) {
+        df_df <- tibble()
+        for (j in 1:length(df)) {
+          df_df[j, 1] <- df[[j]][1]
+          df_df[j, 2] <- df[[j]][2]
+        }
+
+        df_df <- unique(df_df)
+        df <- c()
+        for (j in 1:nrow(df_df)) {
+          df <- c(df, paste(df_df[j, 1], df_df[j, 2], sep = "_"))
+        }
+
+        assign(paste(Publication_Name[i], "Names", sep = "_"),
+          df,
+          envir = .GlobalEnv
+        )
+        assign(paste(Publication_Name[i], "No", sep = "_"),
+          length(get(paste(Publication_Name[i], "Names", sep = "_"))),
+          envir = .GlobalEnv
+        )
+      } else {
+        assign(paste(Publication_Name[i], "Names", sep = "_"),
+          c(),
+          envir = .GlobalEnv
+        )
+        assign(paste(Publication_Name[i], "No", sep = "_"),
+          0L,
+          envir = .GlobalEnv
+        )
       }
-      df_df <- unique(df_df)
-      df <- c()
-      for (j in 1:nrow(df_df)) {
-        df <- c(df, paste(df_df[j, 1], df_df[j, 2], sep = "_"))
-      }
-      assign(paste(Publication_Name[i], "Names", sep = "_"),
-        df,
-        envir = .GlobalEnv
-      )
-      assign(paste(Publication_Name[i], "No", sep = "_"),
-        length(get(paste(Publication_Name[i], "Names", sep = "_"))),
-        envir = .GlobalEnv
-      )
     }
   }
 }
@@ -42,7 +55,7 @@ Analysis_List <- function(Pub, Data) {
   AVAILABLE_ANALYSIS_KMTs <<- c("NaN")
   AVAILABLE_ANALYSIS_ALL <<- c("NaN")
 
-  if(Pub == "Demo" && Data == "Demo"){
+  if (Pub == "Demo" && Data == "Demo") {
     AVAILABLE_ANALYSIS_ALL <<- c(
       AVAILABLE_ANALYSIS_ALL,
       "Demo"
@@ -134,6 +147,32 @@ Analysis_List <- function(Pub, Data) {
           "KMT lattice interaction for 100 nm"
         )
       }
+    }
+  }
+}
+
+List_of_Kfibers <- function(Retrive = NULL) {
+  if (exists("Data_Segments")) {
+    Column_List_Fiber <<- c(
+      "All",
+      colnames(Data_Segments[, grepl("Pole", colnames(Data_Segments))])
+    )
+  }
+
+  if (!is.null(Retrive)) {
+    if (Retrive != "All") {
+          KMT_List <<- select(.data = Data_Segments, "Segment ID", Retrive)
+          KMT_List <<- KMT_List %>% filter_at(vars(starts_with("Pole")), any_vars(. > 0))
+
+      if (is.null(KMT_List)) {
+      } else if (nrow(KMT_List) > 0) {
+        KMT_List <<- as.character(as.vector(KMT_List[, 1]))
+      } else {
+        KMT_List <<- NULL
+      }
+    }
+    if (Retrive == "All") {
+      KMT_List <<- NULL
     }
   }
 }
