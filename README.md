@@ -1,6 +1,6 @@
 # ASGA 3D Viewer
 <p align="center">
-<img src="https://github.com/RRobert92/ASGA_3DViewer/blob/main/img/ASGA_3d_logo.png?raw=true" width="20%" height="20%">
+<img src="https://github.com/RRobert92/ASGA_3DViewer/blob/main/img/ASGA_3D_logo.png" width="20%" height="20%">
 </p>
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/RRobert92/ASGA_3DViewer)
