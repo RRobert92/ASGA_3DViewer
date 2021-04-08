@@ -1,4 +1,7 @@
 # ASGA 3D Viewer
+
+<img src="https://github.com/RRobert92/ASGA_3DViewer/blob/main/img/ASGA_3d_logo.png?raw=true" width="20%" height="20%" align = "middle">
+
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/RRobert92/ASGA_3DViewer)
 ![GitHub top language](https://img.shields.io/github/languages/top/RRobert92/ASGA_3DViewer)
 ![GitHub](https://img.shields.io/github/license/RRobert92/ASGA_3DViewer)
