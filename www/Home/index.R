@@ -18,6 +18,11 @@ homeUI <- function(id) {
     class = "splash-container",
     tags$div(
       class = "splash",
+      tags$p(align="center",
+             tags$img(
+               src = "https://github.com/RRobert92/ASGA_3DViewer/blob/main/img/ASGA_3d_logo.png?raw=true"
+             )
+      ),
       tags$h1(
         class = "splash-head",
         "Spatial Graph 3D Viewer"
