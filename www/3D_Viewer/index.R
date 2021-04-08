@@ -51,7 +51,7 @@ Viewer_UI <- function(id) {
                     class = "btn-default-3D",
                     actionButton(
                       inputId = ns(paste("3D_Viewer_Pub", i, sep = "_")),
-                      label = Publication_Name[i],
+                      label = str_replace_all(Publication_Name[i], "_", " "),
                       width = "100%"
                     )
                   )
