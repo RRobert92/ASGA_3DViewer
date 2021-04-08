@@ -20,7 +20,7 @@ homeUI <- function(id) {
       class = "splash",
       tags$p(align="center",
              tags$img(
-               src = "https://github.com/RRobert92/ASGA_3DViewer/blob/main/img/ASGA_3d_logo.png?raw=true"
+               src = "https://github.com/RRobert92/ASGA_3DViewer/blob/main/img/ASGA_3D_logo.png?raw=true"
              )
       ),
       tags$h1(
