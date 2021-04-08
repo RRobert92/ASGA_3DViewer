@@ -1,5 +1,5 @@
 ################################################################################
-# Shiny Server - Collect data and standarize output
+# Shiny Server - Collect data and standardize output
 #
 # (c) 2021 Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
