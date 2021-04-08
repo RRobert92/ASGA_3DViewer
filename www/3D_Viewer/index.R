@@ -87,13 +87,13 @@ Viewer_UI <- function(id) {
             pickerInput(
               inputId = ns("DataSet_in_Pub"),
               label = "Select data set",
-              choices = c("Init"),
+              choices = "Init",
               multiple = FALSE
             ),
             pickerInput(
               inputId = ns("Analysis_in_DataSet"),
               label = "Select 3D View",
-              choices = c("Init"),
+              choices = "Init",
               multiple = FALSE
             ),
             hidden(

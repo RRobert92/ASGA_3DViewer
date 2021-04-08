@@ -24,7 +24,7 @@ Search_for_Data <- function() {
         }
 
         df_df <- unique(df_df)
-        df <- c()
+        df <- NULL
         for (j in 1:nrow(df_df)) {
           df <- c(df, paste(df_df[j, 1], df_df[j, 2], sep = "_"))
         }
@@ -39,7 +39,7 @@ Search_for_Data <- function() {
         )
       } else {
         assign(paste(Publication_Name[i], "Names", sep = "_"),
-          c(),
+          NULL,
           envir = .GlobalEnv
         )
         assign(paste(Publication_Name[i], "No", sep = "_"),
@@ -52,8 +52,8 @@ Search_for_Data <- function() {
 }
 
 Analysis_List <- function(Pub, Data) {
-  AVAILABLE_ANALYSIS_KMTs <<- c("NaN")
-  AVAILABLE_ANALYSIS_ALL <<- c("NaN")
+  AVAILABLE_ANALYSIS_KMTs <<- "NaN"
+  AVAILABLE_ANALYSIS_ALL <<- "NaN"
 
   if (Pub == "Demo" && Data == "Demo") {
     AVAILABLE_ANALYSIS_ALL <<- c(

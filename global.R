@@ -58,11 +58,11 @@ Non_KMT_Col <<- "#FFFFFF"
 KMT_Col <<- "#CC1414"
 
 # List of supported analysis
-AVAILABLE_ANALYSIS_KMTs <<- c("NaN")
+AVAILABLE_ANALYSIS_KMTs <<- "NaN"
 KMT_Analysis <<- NULL
-AVAILABLE_ANALYSIS_ALL <<- c("NaN")
+AVAILABLE_ANALYSIS_ALL <<- "NaN"
 SMT_Analysis <<- NULL
-Column_List_Fiber <<- c("All")
+Column_List_Fiber <<- "All"
 Data_Segments <<- NULL
 Data <<- NULL
 
