@@ -30,22 +30,6 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID){
     Data <<- cbind(Segment_df, Data[2])
   }
 
-  # KMTs minus-end position ----------------------------------------------------
-  if(Analysis == "Minus-ends Position"){
-    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_LD.xlsx", sep = ""))
-    Data <<- select(Data, "Fiber_Name", "minus_dist_to_pole")
-    names(Data)[2] <<- "Data"
-
-    Fiber_List <- unique(Data$Fiber_Name)
-    Segment_df <- data.frame()
-    for (i in 1:length(Fiber_List)){
-      Data_df <- select(Data_Segments, c("Segment ID", Fiber_List[i]))
-      Data_df <- Data_df %>% filter_at(vars(starts_with(Fiber_List[i])), any_vars(. >= 1))
-      Segment_df <- rbind(Segment_df, Data_df[1])
-    }
-    Data <<- cbind(Segment_df, Data[2])
-  }
-
   # KMTs Curvature -------------------------------------------------------------
   if(Analysis == "KMTs Curvature"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Total_Curv.xlsx", sep = ""))
@@ -99,78 +83,80 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID){
     names(Data)[1:2] <<- c("Segment ID", "Data")
   }
 
+  # KMTs minus-end position ----------------------------------------------------
+  if(Analysis == "Minus-ends Position"){
+    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_LD.xlsx", sep = ""))
+    Data <<- select(Data, "Fiber_Name", "minus_dist_to_pole")
+    names(Data)[2] <<- "Data"
+
+    Fiber_List <- unique(Data$Fiber_Name)
+    Segment_df <- data.frame()
+    for (i in 1:length(Fiber_List)){
+      Data_df <- select(Data_Segments, c("Segment ID", Fiber_List[i]))
+      Data_df <- Data_df %>% filter_at(vars(starts_with(Fiber_List[i])), any_vars(. >= 1))
+      Segment_df <- rbind(Segment_df, Data_df[1])
+    }
+    Data <<- cbind(Segment_df, Data[2])
+  }
+
   # KMT minus-ends interaction -------------------------------------------------
   if(Analysis == "KMT minus-ends interaction for 25nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Minus_End_0.025.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT minus-ends interaction for 30nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Minus_End_0.03.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT minus-ends interaction for 35nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Minus_End_0.035.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT minus-ends interaction for 45nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Minus_End_0.045.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT minus-ends interaction for 50nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Minus_End_0.05.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT minus-ends interaction for 75nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Minus_End_0.075.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT minus-ends interaction for 100nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Minus_End_0.1.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-    names(Data)[1] <<- "Segment_ID"
   }
 
   # KMT lattice interaction ----------------------------------------------------
   if(Analysis == "KMT lattice interaction for 25nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.025.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interactor_ID", "I_class")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT lattice interaction for 30nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.03.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interactor_ID", "I_class")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT lattice interaction for 35nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.035.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interactor_ID", "I_class")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT lattice interaction for 45nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.045.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interactor_ID", "I_class")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT lattice interaction for 50nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.05.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interactor_ID", "I_class")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT lattice interaction for 75nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.075.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interactor_ID", "I_class")
-    names(Data)[1] <<- "Segment_ID"
   }
   if(Analysis == "KMT lattice interaction for 100nm"){
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.1.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID","Interactor_ID", "I_class")
-    names(Data)[1] <<- "Segment_ID"
   }
 
   # # KMT lattice interaction ----------------------------------------------------
