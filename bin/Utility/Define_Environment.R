@@ -96,7 +96,8 @@ Analysis_List <- function(Pub, Data) {
       if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "LD") == TRUE) != 0) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
-          "Length Distribution"
+          "Length Distribution",
+          "Minus-ends Position"
         )
       }
       if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "KMT_Total_Curv") == TRUE) != 0) {
