@@ -82,7 +82,7 @@ function(input, output, session) {
     Pub_ID <<- 0
     Data_ID <<- 0
 
-    updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
+    updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
 
     updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
     updateColourInput(session, "Home-KMT_Col", value = "#E32626")
@@ -143,7 +143,7 @@ function(input, output, session) {
       observeEvent(input$`Home-DataSet_in_Pub`, {
         updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
         updateColourInput(session, "Home-KMT_Col", value = "#E32626")
-        updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
+        updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
 
         show("Home-Non_KMT_Col")
         hide("Home-KMT_Col")
@@ -180,7 +180,7 @@ function(input, output, session) {
       hide("Home-KMT_Col")
 
       hide("Home-Hidde_MTs")
-      updateCheckboxInput(session, "Home-Hidde_MTs", value = TRUE)
+      updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
 
       hide("Home-Select_fiber")
       updatePickerInput(session, "Home-Select_fiber", selected = "All")
@@ -244,6 +244,7 @@ function(input, output, session) {
     if (DEMO == TRUE) {
       callModule(`3D_Generate`, "Home")
     } else {
+      Collect_Analysis(input$`Home-Select_KMT_Analysis`, Pub_ID, Data_ID)
       callModule(`3D_Generate`, "Home")
     }
   })
@@ -254,7 +255,6 @@ function(input, output, session) {
        input$`Home-Select_SMT_Analysis`!= "NaN"){
       updatePickerInput(session, "Home-Select_SMT_Analysis", selected = "NaN")
     }
-    Collect_Analysis(input$`Home-Select_KMT_Analysis`, Pub_ID, Data_ID)
   })
 
   observeEvent(input$`Home-Select_SMT_Analysis`, {
@@ -263,7 +263,6 @@ function(input, output, session) {
        input$`Home-Select_SMT_Analysis`!= "NaN"){
       updatePickerInput(session, "Home-Select_KMT_Analysis", selected = "NaN")
     }
-    Collect_Analysis(input$`Home-Select_SMT_Analysis`, Pub_ID, Data_ID)
   })
 
   observeEvent(input$`Home-Select_fiber`, {

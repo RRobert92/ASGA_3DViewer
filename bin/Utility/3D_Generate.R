@@ -55,8 +55,22 @@
 
       if (input$`Select_fiber` != "All") {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with(input$`Select_fiber`)), any_vars(. >= 1))
+        df_Segments <- df_Segments %>% select("Segment ID", starts_with(input$`Select_fiber`), "Point IDs")
       } else {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
+        df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
+      }
+
+      if(!is.null(KMT_Analysis) && !is.null(Data)){
+        df_Data <- subset(Data, subset = `Segment ID` %in% df_Segments$`Segment ID`)
+        df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`Segment ID`)
+
+        Palette <- Creat_Palette(nrow(df_Segments), KMT_Col)
+
+        df_Segments <- cbind(df_Segments, df_Data[2])
+        df_Segments <- df_Segments[order(df_Segments$Data),]
+        df_Segments <- cbind(df_Segments$`Segment ID`, df_Segments$`Point IDs`, df_Segments$Data, Palette[1])
+        names(df_Segments)[1:4] <- c("Segment ID", "Point IDs", "Data", "Color")
       }
 
       progressSweetAlert(
@@ -79,7 +93,11 @@
           MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
           if (Data_Segments[i, 1] %in% df_Segments[, 1]) {
-            lines3d(MT, col = KMT_Col, alpha = 1)
+            if("Color" %in% colnames(df_Segments)){
+              lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
+            } else {
+              lines3d(MT, col = KMT_Col, alpha = 1)
+            }
           } else {
             lines3d(MT, col = Non_KMT_Col, alpha = 1)
           }
@@ -96,7 +114,11 @@
             MT <- as.numeric(unlist(strsplit(df_Segments[i, "Point IDs"], split = ",")))
             MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-            lines3d(MT, col = KMT_Col, alpha = 1)
+            if("Color" %in% colnames(df_Segments)){
+              lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
+            } else {
+              lines3d(MT, col = KMT_Col, alpha = 1)
+            }
           }
         }
       }

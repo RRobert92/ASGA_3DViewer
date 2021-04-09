@@ -100,7 +100,7 @@ Viewer_UI <- function(id) {
               checkboxInput(
                 inputId = ns("Hidde_MTs"),
                 label = "Hidde all non-KMTs",
-                value = TRUE
+                value = FALSE
               )
             ),
             hidden(

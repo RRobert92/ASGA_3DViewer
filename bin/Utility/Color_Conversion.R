@@ -26,14 +26,106 @@ HexToRGB <- function(HEX) {
 
 RGBtoHEX <- function(Col) {
   if (ncol(Col) == 3) {
-    HEX <- tibble(
-      R = as.character(as.hexmode(as.integer(Col[1]))),
-      G = as.character(as.hexmode(as.integer(Col[2]))),
-      B = as.character(as.hexmode(as.integer(Col[3])))
-    )
-    HEX <- paste("#", HEX[1], HEX[2], HEX[3], sep = "")
+
+      R <- as.character(as.hexmode(as.integer(Col[1])))
+      if(nchar(R) != 2){
+        R <- paste("0", R, sep = "")
+      }
+
+      G <- as.character(as.hexmode(as.integer(Col[2])))
+      if(nchar(G) != 2){
+        G <- paste("0", R, sep = "")
+      }
+
+      B <- as.character(as.hexmode(as.integer(Col[3])))
+      if(nchar(B) != 2){
+        B <- paste("0", R, sep = "")
+      }
+
+    HEX <- paste("#", R, G, B, sep = "")
     return(HEX)
   } else {
     return(NULL)
   }
+}
+
+Creat_Palette <- function(Range, HEX) {
+  RGB <- HexToRGB(HEX)[1:Range, ]
+  MAX_1 <- RGB[as.numeric(which.max(RGB[1, ]))]
+  RGB <- subset(RGB, select = -c(as.numeric(which.max(RGB[1, ]))))
+
+  MAX_2 <- RGB[as.numeric(which.max(RGB[1, ]))]
+  RGB <- subset(RGB, select = -c(as.numeric(which.max(RGB[1, ]))))
+
+  MAX_3 <- RGB[as.numeric(which.max(RGB[1, ]))]
+  RGB <- subset(RGB, select = -c(as.numeric(which.max(RGB[1, ]))))
+
+  if (MAX_1[1, 1] == MAX_2[1, 1] && MAX_1[1, 1] == MAX_3[1, 1] && MAX_1[1, 1]) {
+    RGB <- data.frame(
+      data.frame(round(seq(as.numeric(MAX_1[1, 1]), 255, length.out = Range), 0)),
+      data.frame(round(seq(as.numeric(MAX_1[1, 1]), 255, length.out = Range), 0)),
+      data.frame(round(seq(as.numeric(MAX_1[1, 1]), 255, length.out = Range), 0))
+    )
+    names(RGB)[1:3] <- c("R", "G", "B")
+  } else if (MAX_1[1, 1] == MAX_2[1, 1]) {
+    MAX_1[1:Range, 1] <- MAX_1[1, 1]
+    MAX_1_Name <- colnames(MAX_1)
+    MAX_2[1:Range, 1] <- MAX_2[1, 1]
+    MAX_2_Name <- colnames(MAX_2)
+    MAX_3[1:Range, 1] <- data.frame(round(seq(as.numeric(MAX_3[1, 1]), 255, length.out = Range), 0))
+    MAX_3_Name <- colnames(MAX_3)
+
+    RGB <- data.frame(
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "R"), sep = "")),
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "G"), sep = "")),
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "B"), sep = ""))
+    )
+  } else if (MAX_2[1, 1] == MAX_3[1, 1]) {
+    MAX_1[1:Range, 1] <- data.frame(round(seq(as.numeric(MAX_2[1, 1]), 255, length.out = Range), 0))
+    MAX_1_Name <- colnames(MAX_1)
+    MAX_2[1:Range, 1] <- MAX_2[1, 1]
+    MAX_2_Name <- colnames(MAX_2)
+    MAX_3[1:Range, 1] <- MAX_3[1, 1]
+    MAX_3_Name <- colnames(MAX_3)
+
+    RGB <- data.frame(
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "R"), sep = "")),
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "G"), sep = "")),
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "B"), sep = ""))
+    )
+  } else if (MAX_1[1, 1] == MAX_3[1, 1]) {
+    MAX_1[1:Range, 1] <- MAX_1[1, 1]
+    MAX_1_Name <- colnames(MAX_1)
+    MAX_2[1:Range, 1] <- data.frame(round(seq(as.numeric(MAX_2[1, 1]), 255, length.out = Range), 0))
+    MAX_2_Name <- colnames(MAX_2)
+    MAX_3[1:Range, 1] <- MAX_3[1, 1]
+    MAX_3_Name <- colnames(MAX_3)
+
+    RGB <- data.frame(
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "R"), sep = "")),
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "G"), sep = "")),
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "B"), sep = ""))
+    )
+  } else {
+    MAX_1[1:Range, 1] <- MAX_1[1, 1]
+    MAX_1_Name <- colnames(MAX_1)
+    MAX_2[1:Range, 1] <- data.frame(round(seq(as.numeric(MAX_2[1, 1]), as.numeric(MAX_1[1, 1]), length.out = Range), 0))
+    MAX_2_Name <- colnames(MAX_2)
+    MAX_3[1:Range, 1] <- data.frame(round(seq(as.numeric(MAX_3[1, 1]), as.numeric(MAX_1[1, 1]), length.out = Range), 0))
+    MAX_3_Name <- colnames(MAX_3)
+
+    RGB <- data.frame(
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "R"), sep = "")),
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "G"), sep = "")),
+      get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "B"), sep = ""))
+    )
+  }
+
+  df_col <- data.frame()
+  for (i in 1:nrow(RGB)) {
+    df_col[i, 1] <- RGBtoHEX(RGB[i, 1:3])
+  }
+  names(df_col)[1] <- "Color"
+
+  return(df_col)
 }

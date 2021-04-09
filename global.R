@@ -45,12 +45,13 @@ source("bin/Utility/Load_3D_Data.R")
 source("bin/Utility/Define_Environment.R")
 source("bin/Utility/3D_Generate.R")
 source("bin/Utility/3D_Analysis_Settings.R")
+source("bin/Utility/Color_Conversion.R")
 
 
 # Global constant settings  ----------------------------------------------------
 SHINY_IO <<- TRUE # Constant defining if app is running locally or online
 START_UP <<- TRUE # Constant defining if app was stared freshly
-VIEW_ALL <<- TRUE # Constant defining if app will show all MTs or just KMTs
+VIEW_ALL <<- FALSE # Constant defining if app will show all MTs or just KMTs
 DEMO <<- FALSE # Constant defining if app running in Demo mode
 CASHING <<- FALSE # Constant defining if the rgl widget should reused models and cash file
 
