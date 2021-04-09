@@ -57,9 +57,9 @@ To use 3D viewer simply refere to [Shinyapp.io](https://kiewisz.shinyapps.io/ASG
 To add and publish new data:
 ```
 app
-├── bin                                          # Folder containing all functions needed by ASGA_3DViewer
-├── wwww                                         # Folder containing all html and css code
-├── demo                                         # This name will be display on the website page as a name of publication
+├── bin
+├── wwww
+├── demo
 │   └── Data_Points_1.RDS
     └── Data_Segments_1.RDS
 ├── Data
