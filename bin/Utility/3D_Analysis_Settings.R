@@ -81,7 +81,6 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID){
     df_Data <<- select(df_Data, "Fiber_name")
     Data <<- select(Data, "KMTs_at_the_Pole")
     Data <<- cbind(df_Data, Data)
-    rm(df_Data)
     names(Data)[1:2] <<- c("Fiber_Name", "Data")
 
     Fiber_List <- unique(Data$Fiber_Name)
