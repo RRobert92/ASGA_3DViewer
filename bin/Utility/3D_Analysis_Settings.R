@@ -22,12 +22,32 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID){
 
     Fiber_List <- unique(Data$Fiber_Name)
     Segment_df <- data.frame()
+
+    for (i in 1:length(Fiber_List)){
+      Data_df <- select(Data_Segments, c("Segment ID", Fiber_List[i]))
+      Data_df <- Data_df %>% filter_at(vars(starts_with(Fiber_List[i])), any_vars(. >= 1))
+
+      Segment_df <- rbind(Segment_df, Data_df[1])
+    }
+    Data <<- cbind(Segment_df, Data[2])
+    names(Data)[1:2] <<- c("Segment ID", "Data")
+  }
+
+  # KMTs minus-end position ----------------------------------------------------
+  if(Analysis == "Minus-ends Position"){
+    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_LD.xlsx", sep = ""))
+    Data <<- select(Data, "Fiber_Name", "minus_dist_to_pole")
+    names(Data)[2] <- "Data"
+
+    Fiber_List <- unique(Data$Fiber_Name)
+    Segment_df <- data.frame()
     for (i in 1:length(Fiber_List)){
       Data_df <- select(Data_Segments, c("Segment ID", Fiber_List[i]))
       Data_df <- Data_df %>% filter_at(vars(starts_with(Fiber_List[i])), any_vars(. >= 1))
       Segment_df <- rbind(Segment_df, Data_df[1])
     }
     Data <<- cbind(Segment_df, Data[2])
+    names(Data)[1:2] <<- c("Segment ID", "Data")
   }
 
   # KMTs Curvature -------------------------------------------------------------
@@ -46,16 +66,21 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID){
     Fiber_List <- unique(Data$Fiber_Name)
     Segment_df <- data.frame()
     KMT_df <- data.frame()
+    fiber_df <- data.frame()
 
     for (i in 1:length(Fiber_List)){
       Data_df <- select(Data_Segments, c("Segment ID", Fiber_List[i]))
       Data_df <- Data_df %>% filter_at(vars(starts_with(Fiber_List[i])), any_vars(. >= 1))
       Data_df[3] <- Data[i,2]
+      Data_df[4] <- Data[i,1]
+
       Segment_df <- rbind(Segment_df, Data_df[1])
       KMT_df <- rbind(KMT_df, Data_df[3])
+      fiber_df <- rbind(fiber_df, Data_df[4])
     }
-    Data <<- cbind(Segment_df, KMT_df)
-    names(Data)[1:2] <<- c("Segment ID", "Data")
+
+    Data <<- cbind(fiber_df, Segment_df, KMT_df)
+    names(Data)[1:3] <<- c("Fiber_Name", "Segment ID", "Data")
   }
 
   # No. of KMTs at a Pole ------------------------------------------------------
@@ -70,33 +95,21 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID){
     Fiber_List <- unique(Data$Fiber_Name)
     Segment_df <- data.frame()
     KMT_df <- data.frame()
+    fiber_df <- data.frame()
 
     for (i in 1:length(Fiber_List)){
       Data_df <- select(Data_Segments, c("Segment ID", Fiber_List[i]))
       Data_df <- Data_df %>% filter_at(vars(starts_with(Fiber_List[i])), any_vars(. >= 1))
       Data_df[3] <- Data[i,2]
+      Data_df[4] <- Data[i,1]
+
       Segment_df <- rbind(Segment_df, Data_df[1])
       KMT_df <- rbind(KMT_df, Data_df[3])
+      fiber_df <- rbind(fiber_df, Data_df[4])
     }
 
-    Data <<- cbind(Segment_df, KMT_df)
-    names(Data)[1:2] <<- c("Segment ID", "Data")
-  }
-
-  # KMTs minus-end position ----------------------------------------------------
-  if(Analysis == "Minus-ends Position"){
-    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_LD.xlsx", sep = ""))
-    Data <<- select(Data, "Fiber_Name", "minus_dist_to_pole")
-    names(Data)[2] <<- "Data"
-
-    Fiber_List <- unique(Data$Fiber_Name)
-    Segment_df <- data.frame()
-    for (i in 1:length(Fiber_List)){
-      Data_df <- select(Data_Segments, c("Segment ID", Fiber_List[i]))
-      Data_df <- Data_df %>% filter_at(vars(starts_with(Fiber_List[i])), any_vars(. >= 1))
-      Segment_df <- rbind(Segment_df, Data_df[1])
-    }
-    Data <<- cbind(Segment_df, Data[2])
+    Data <<- cbind(fiber_df, Segment_df, KMT_df)
+    names(Data)[1:3] <<- c("Fiber_Name", "Segment ID", "Data")
   }
 
   # KMT minus-ends interaction -------------------------------------------------
