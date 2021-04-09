@@ -34,12 +34,12 @@ RGBtoHEX <- function(Col) {
 
       G <- as.character(as.hexmode(as.integer(Col[2])))
       if(nchar(G) != 2){
-        G <- paste("0", R, sep = "")
+        G <- paste("0", G, sep = "")
       }
 
       B <- as.character(as.hexmode(as.integer(Col[3])))
       if(nchar(B) != 2){
-        B <- paste("0", R, sep = "")
+        B <- paste("0", B, sep = "")
       }
 
     HEX <- paste("#", R, G, B, sep = "")
