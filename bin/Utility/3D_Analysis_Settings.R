@@ -31,6 +31,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID){
     }
     Data <<- cbind(Segment_df, Data[2])
     names(Data)[1:2] <<- c("Segment ID", "Data")
+    ACQ <<- 4
   }
 
   # KMTs minus-end position ----------------------------------------------------

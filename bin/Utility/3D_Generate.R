@@ -65,12 +65,28 @@
         df_Data <- subset(Data, subset = `Segment ID` %in% df_Segments$`Segment ID`)
         df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`Segment ID`)
 
-        Palette <- Creat_Palette(nrow(df_Segments), KMT_Col)
+        Palette <- Creat_Palette(as.numeric(df_Data[(which.min(df_Data$Data)),2]),
+                                 as.numeric(df_Data[(which.max(df_Data$Data)),2]),
+                                 nrow(df_Segments),
+                                 ACQ,
+                                 KMT_Col)
 
         df_Segments <- cbind(df_Segments, df_Data[2])
-        df_Segments <- df_Segments[order(df_Segments$Data),]
-        df_Segments <- cbind(df_Segments$`Segment ID`, df_Segments$`Point IDs`, df_Segments$Data, Palette[1])
-        names(df_Segments)[1:4] <- c("Segment ID", "Point IDs", "Data", "Color")
+        df_Segments <- df_Segments[order(df_Segments$Data), ]
+        df_Segments <- tibble(
+          df_Segments$`Segment ID`,
+          df_Segments$`Point IDs`,
+          df_Segments$`Data`
+        )
+        names(df_Segments)[1:3] <- c("Segment ID", "Point IDs", "Data")
+
+        df_col <- tibble()
+        for(i in 1:nrow(df_Segments)){
+          df_col[i,1] <- Palette$Color[which.min(abs(Palette$Range - as.numeric(df_Segments[i,3])))]
+        }
+
+        df_Segments <- cbind(df_Segments, df_col)
+        names(df_Segments)[4] <- c("Color")
       }
 
       progressSweetAlert(
