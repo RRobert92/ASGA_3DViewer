@@ -251,16 +251,26 @@ function(input, output, session) {
 
   observeEvent(input$`Home-Select_KMT_Analysis`, {
     KMT_Analysis <<- input$`Home-Select_KMT_Analysis`
-    if(input$`Home-Select_KMT_Analysis` != "NaN" &&
-       input$`Home-Select_SMT_Analysis`!= "NaN"){
+    if (input$`Home-Select_KMT_Analysis` == "Length Distribution" ||
+      input$`Home-Select_KMT_Analysis` == "Minus-ends Position" ||
+      input$`Home-Select_KMT_Analysis` == "KMTs Curvature" ||
+      input$`Home-Select_KMT_Analysis` == "No. of KMTs" ||
+      input$`Home-Select_KMT_Analysis` == "No. of KMTs at a Pole") {
+      KMT_Analysis <<- TRUE
+    } else {
+      KMT_Analysis <<- FALSE
+    }
+
+    if (input$`Home-Select_KMT_Analysis` != "NaN" &&
+      input$`Home-Select_SMT_Analysis` != "NaN") {
       updatePickerInput(session, "Home-Select_SMT_Analysis", selected = "NaN")
     }
   })
 
   observeEvent(input$`Home-Select_SMT_Analysis`, {
     SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
-    if(input$`Home-Select_KMT_Analysis` != "NaN" &&
-       input$`Home-Select_SMT_Analysis`!= "NaN"){
+    if (input$`Home-Select_KMT_Analysis` != "NaN" &&
+      input$`Home-Select_SMT_Analysis` != "NaN") {
       updatePickerInput(session, "Home-Select_KMT_Analysis", selected = "NaN")
     }
   })

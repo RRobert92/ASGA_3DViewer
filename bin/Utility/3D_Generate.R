@@ -48,10 +48,11 @@
     output$`wdg` <- renderRglwidget({
       open3d()
       rgl.bg(color = "black", fogtype = "none")
-      rgl.light(
-        diffuse = "gray75",
-        specular = "gray75", viewpoint.rel = FALSE
-      )
+      # rgl.light(
+      #   theta = 0, phi = 0,
+      #   ambient = "grey50",
+      #   diffuse = "grey50", specular = "grey50"
+      # )
 
       if (input$`Select_fiber` != "All") {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with(input$`Select_fiber`)), any_vars(. >= 1))
@@ -61,18 +62,20 @@
         df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
       }
 
-      if(!is.null(KMT_Analysis) && !is.null(Data)){
+      if (!is.null(KMT_Analysis) && KMT_Analysis == TRUE && !is.null(Data)) {
         df_Data <- subset(Data, subset = `Segment ID` %in% df_Segments$`Segment ID`)
         df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`Segment ID`)
 
-        Palette <- Creat_Palette(as.numeric(df_Data[(which.min(df_Data$Data)),2]),
-                                 as.numeric(df_Data[(which.max(df_Data$Data)),2]),
-                                 nrow(df_Segments),
-                                 ACQ,
-                                 KMT_Col)
+        Palette <- Creat_Palette(
+          as.numeric(df_Data[(which.min(df_Data$Data)), "Data"]),
+          as.numeric(df_Data[(which.max(df_Data$Data)), "Data"]),
+          nrow(df_Segments),
+          ACQ,
+          KMT_Col
+        )
 
-        df_Segments <- cbind(df_Segments, df_Data[2])
-        df_Segments <- df_Segments[order(df_Segments$Data), ]
+        df_Data <- df_Data[order(df_Data$`Segment ID`), ]
+        df_Segments <- cbind(df_Segments, df_Data["Data"])
         df_Segments <- tibble(
           df_Segments$`Segment ID`,
           df_Segments$`Point IDs`,
@@ -81,12 +84,16 @@
         names(df_Segments)[1:3] <- c("Segment ID", "Point IDs", "Data")
 
         df_col <- tibble()
-        for(i in 1:nrow(df_Segments)){
-          df_col[i,1] <- Palette$Color[which.min(abs(Palette$Range - as.numeric(df_Segments[i,3])))]
+        for (i in 1:nrow(df_Segments)) {
+          df_col[i, 1] <- Palette$Color[which.min(abs(Palette$Range - as.numeric(df_Segments[i, 3])))]
         }
 
         df_Segments <- cbind(df_Segments, df_col)
         names(df_Segments)[4] <- c("Color")
+      }
+
+      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data)) {
+        # how to handle the data when user want to see interactions
       }
 
       progressSweetAlert(
@@ -109,7 +116,7 @@
           MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
           if (Data_Segments[i, 1] %in% df_Segments[, 1]) {
-            if("Color" %in% colnames(df_Segments)){
+            if ("Color" %in% colnames(df_Segments)) {
               lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
             } else {
               lines3d(MT, col = KMT_Col, alpha = 1)
@@ -129,8 +136,9 @@
 
             MT <- as.numeric(unlist(strsplit(df_Segments[i, "Point IDs"], split = ",")))
             MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+            #MT <- cylinder3d(MT / 10000, radius = 0.01)
 
-            if("Color" %in% colnames(df_Segments)){
+            if ("Color" %in% colnames(df_Segments)) {
               lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
             } else {
               lines3d(MT, col = KMT_Col, alpha = 1)
