@@ -48,11 +48,6 @@
     output$`wdg` <- renderRglwidget({
       open3d()
       rgl.bg(color = "black", fogtype = "none")
-      # rgl.light(
-      #   theta = 0, phi = 0,
-      #   ambient = "grey50",
-      #   diffuse = "grey50", specular = "grey50"
-      # )
 
       if (input$`Select_fiber` != "All") {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with(input$`Select_fiber`)), any_vars(. >= 1))
@@ -126,7 +121,7 @@
           }
         }
       } else {
-        if (nrow(df_Segments) > 0) {
+        if (nrow(df_Segments) > 0 && input$`Select_fiber` == "All") {
           for (i in 1:nrow(df_Segments)) {
             updateProgressBar(
               session = session,
@@ -136,12 +131,35 @@
 
             MT <- as.numeric(unlist(strsplit(df_Segments[i, "Point IDs"], split = ",")))
             MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-            #MT <- cylinder3d(MT / 10000, radius = 0.01)
 
             if ("Color" %in% colnames(df_Segments)) {
               lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
             } else {
               lines3d(MT, col = KMT_Col, alpha = 1)
+            }
+          }
+        } else {
+          rgl.light(
+            theta = 0, phi = 0,
+            ambient = "grey75",
+            diffuse = "grey75"
+          )
+
+            for (i in 1:nrow(df_Segments)) {
+              updateProgressBar(
+                session = session,
+                id = "Load_3D",
+                value = (i / nrow(df_Segments)) * 100
+              )
+
+              MT <- as.numeric(unlist(strsplit(df_Segments[i, "Point IDs"], split = ",")))
+              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+              MT <- cylinder3d(MT / 10000, radius = 0.01)
+
+              if ("Color" %in% colnames(df_Segments)) {
+                shade3d(MT, col = df_Segments[i, "Color"], alpha = 1)
+              } else {
+                shade3d(MT, col = KMT_Col, alpha = 1)
             }
           }
         }
