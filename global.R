@@ -17,7 +17,7 @@ options(java.parameters = "-Xmx1024m")
 # Title of the app -------------------------------------------------------------
 source("bin/Utility/Library.R")
 
-APP_TITLE <- "ASGA - 3D Viewer v0.1.0"
+APP_TITLE <- "ASGA - 3D Viewer v1.0.0-beta"
 CC <- paste("© Copyright GPL V3.0 2021-",
   str_split(Sys.Date(), pattern = "-")[[1]][1],
   ", Robert Kiewisz",

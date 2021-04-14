@@ -26,21 +26,20 @@ HexToRGB <- function(HEX) {
 
 RGBtoHEX <- function(Col) {
   if (ncol(Col) == 3) {
+    R <- as.character(as.hexmode(as.integer(Col[1])))
+    if (nchar(R) != 2) {
+      R <- paste("0", R, sep = "")
+    }
 
-      R <- as.character(as.hexmode(as.integer(Col[1])))
-      if(nchar(R) != 2){
-        R <- paste("0", R, sep = "")
-      }
+    G <- as.character(as.hexmode(as.integer(Col[2])))
+    if (nchar(G) != 2) {
+      G <- paste("0", G, sep = "")
+    }
 
-      G <- as.character(as.hexmode(as.integer(Col[2])))
-      if(nchar(G) != 2){
-        G <- paste("0", G, sep = "")
-      }
-
-      B <- as.character(as.hexmode(as.integer(Col[3])))
-      if(nchar(B) != 2){
-        B <- paste("0", B, sep = "")
-      }
+    B <- as.character(as.hexmode(as.integer(Col[3])))
+    if (nchar(B) != 2) {
+      B <- paste("0", B, sep = "")
+    }
 
     HEX <- paste("#", R, G, B, sep = "")
     return(HEX)
@@ -69,13 +68,13 @@ Creat_Palette <- function(MIN, MAX, RANGE, ACQ, HEX) {
     names(RGB)[1:3] <- c("R", "G", "B")
   } else if (MAX_1[1, 1] == MAX_2[1, 1]) {
     ismax <- as.logical(MAX_2[1, 1] > MAX_1[1, 1])
-    if(ismax == TRUE){
-    MAX_1[1:RANGE, 1] <- MAX_1[1, 1]
-    MAX_1_Name <- colnames(MAX_1)
-    MAX_2[1:RANGE, 1] <- MAX_2[1, 1]
-    MAX_2_Name <- colnames(MAX_2)
-    MAX_3[1:RANGE, 1] <- data.frame(round(seq(as.numeric(MAX_3[1, 1]), 255, length.out = RANGE), 0))
-    MAX_3_Name <- colnames(MAX_3)
+    if (ismax == TRUE) {
+      MAX_1[1:RANGE, 1] <- MAX_1[1, 1]
+      MAX_1_Name <- colnames(MAX_1)
+      MAX_2[1:RANGE, 1] <- MAX_2[1, 1]
+      MAX_2_Name <- colnames(MAX_2)
+      MAX_3[1:RANGE, 1] <- data.frame(round(seq(as.numeric(MAX_3[1, 1]), 255, length.out = RANGE), 0))
+      MAX_3_Name <- colnames(MAX_3)
     } else {
       MAX_1[1:RANGE, 1] <- data.frame(round(seq(as.numeric(MAX_1[1, 1]), 255, length.out = RANGE), 0))
       MAX_1_Name <- colnames(MAX_1)
@@ -84,10 +83,9 @@ Creat_Palette <- function(MIN, MAX, RANGE, ACQ, HEX) {
       MAX_3[1:RANGE, 1] <- MAX_3[1, 1]
       MAX_3_Name <- colnames(MAX_3)
     }
-
   } else if (MAX_2[1, 1] == MAX_3[1, 1]) {
     ismax <- as.logical(MAX_2[1, 1] > MAX_1[1, 1])
-    if(ismax == TRUE){
+    if (ismax == TRUE) {
       MAX_1[1:RANGE, 1] <- data.frame(round(seq(as.numeric(MAX_2[1, 1]), 255, length.out = RANGE), 0))
       MAX_1_Name <- colnames(MAX_1)
       MAX_2[1:RANGE, 1] <- MAX_2[1, 1]
@@ -102,17 +100,15 @@ Creat_Palette <- function(MIN, MAX, RANGE, ACQ, HEX) {
       MAX_3[1:RANGE, 1] <- data.frame(round(seq(as.numeric(MAX_3[1, 1]), 255, length.out = RANGE), 0))
       MAX_3_Name <- colnames(MAX_3)
     }
-
   } else if (MAX_1[1, 1] == MAX_3[1, 1]) {
     ismax <- as.logical(MAX_2[1, 1] > MAX_1[1, 1])
-    if(ismax == TRUE){
-    MAX_1[1:RANGE, 1] <- MAX_1[1, 1]
-    MAX_1_Name <- colnames(MAX_1)
-    MAX_2[1:RANGE, 1] <- data.frame(round(seq(as.numeric(MAX_2[1, 1]), 255, length.out = RANGE), 0))
-    MAX_2_Name <- colnames(MAX_2)
-    MAX_3[1:RANGE, 1] <- MAX_3[1, 1]
-    MAX_3_Name <- colnames(MAX_3)
-
+    if (ismax == TRUE) {
+      MAX_1[1:RANGE, 1] <- MAX_1[1, 1]
+      MAX_1_Name <- colnames(MAX_1)
+      MAX_2[1:RANGE, 1] <- data.frame(round(seq(as.numeric(MAX_2[1, 1]), 255, length.out = RANGE), 0))
+      MAX_2_Name <- colnames(MAX_2)
+      MAX_3[1:RANGE, 1] <- MAX_3[1, 1]
+      MAX_3_Name <- colnames(MAX_3)
     } else {
       MAX_1[1:RANGE, 1] <- data.frame(round(seq(as.numeric(MAX_1[1, 1]), 255, length.out = RANGE), 0))
       MAX_1_Name <- colnames(MAX_1)

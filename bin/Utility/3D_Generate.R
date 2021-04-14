@@ -139,27 +139,27 @@
             }
           }
         } else {
-          rgl.light(
-            theta = 0, phi = 0,
-            ambient = "grey75",
-            diffuse = "grey75"
-          )
+          # rgl.light(
+          #   theta = 0, phi = 0,
+          #   ambient = "grey75",
+          #   diffuse = "grey75"
+          # )
 
-            for (i in 1:nrow(df_Segments)) {
-              updateProgressBar(
-                session = session,
-                id = "Load_3D",
-                value = (i / nrow(df_Segments)) * 100
-              )
+          for (i in 1:nrow(df_Segments)) {
+            updateProgressBar(
+              session = session,
+              id = "Load_3D",
+              value = (i / nrow(df_Segments)) * 100
+            )
 
-              MT <- as.numeric(unlist(strsplit(df_Segments[i, "Point IDs"], split = ",")))
-              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-              MT <- cylinder3d(MT / 10000, radius = 0.01)
+            MT <- as.numeric(unlist(strsplit(df_Segments[i, "Point IDs"], split = ",")))
+            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+            MT <- cylinder3d(MT / 10000, radius = 0.01)
 
-              if ("Color" %in% colnames(df_Segments)) {
-                shade3d(MT, col = df_Segments[i, "Color"], alpha = 1)
-              } else {
-                shade3d(MT, col = KMT_Col, alpha = 1)
+            if ("Color" %in% colnames(df_Segments)) {
+              shade3d(MT, col = df_Segments[i, "Color"], alpha = 1)
+            } else {
+              shade3d(MT, col = KMT_Col, alpha = 1)
             }
           }
         }
