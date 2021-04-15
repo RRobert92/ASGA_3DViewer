@@ -57,7 +57,7 @@
         df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
       }
 
-      if (!is.null(KMT_Analysis) && KMT_Analysis == TRUE && !is.null(Data)) {
+      if (!is.null(KMT_Analysis) && KMT_Analysis == TRUE && !is.null(Data) && "Segment ID" %in% colnames(Data)) {
         df_Data <- subset(Data, subset = `Segment ID` %in% df_Segments$`Segment ID`)
         df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`Segment ID`)
 
@@ -87,8 +87,19 @@
         names(df_Segments)[4] <- c("Color")
       }
 
-      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data)) {
+      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "KMT_ID" %in% colnames(Data)) {
         # how to handle the data when user want to see interactions
+        df_Data <- subset(Data, subset = `KMT_ID` %in% df_Segments$`Segment ID`)
+        df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`KMT_ID`)
+
+        df_Data <- df_Data %>% filter(Interaction_ID != "NaN")
+
+        # KMT without inter == 0 / gray
+        # KMT with inter == 1 / light red
+        # NoN-KMT interacting == 2 / light yellow
+        # KMT interacting == 3 / purple
+        # bind all to df_Segments
+        # defined fixed color
       }
 
       progressSweetAlert(
@@ -122,6 +133,7 @@
         }
       } else {
         if (nrow(df_Segments) > 0 && input$`Select_fiber` == "All") {
+          # if("Segment ID" %in% colnames(Data)){}
           for (i in 1:nrow(df_Segments)) {
             updateProgressBar(
               session = session,
