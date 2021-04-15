@@ -31,7 +31,10 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     }
     Data <<- cbind(Segment_df, Data[2])
     names(Data)[1:2] <<- c("Segment ID", "Data")
+
     ACQ <<- 4
+    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
   # KMTs minus-end position ----------------------------------------------------
@@ -49,7 +52,10 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     }
     Data <<- cbind(Segment_df, Data[2])
     names(Data)[1:2] <<- c("Segment ID", "Data")
+
     ACQ <<- 4
+    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
   # KMTs Curvature -------------------------------------------------------------
@@ -57,7 +63,10 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMT_Total_Curv.xlsx", sep = ""))
     Data <<- select(Data, all_of(c("Segment_ID", "Curvature")))
     names(Data)[1:2] <<- c("Segment ID", "Data")
+
     ACQ <<- 3
+    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
   # No. of KMTs ----------------------------------------------------------------
@@ -84,7 +93,10 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
 
     Data <<- cbind(fiber_df, Segment_df, KMT_df)
     names(Data)[1:3] <<- c("Fiber_Name", "Segment ID", "Data")
+
     ACQ <<- 0
+    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
   # No. of KMTs at a Pole ------------------------------------------------------
@@ -114,7 +126,10 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
 
     Data <<- cbind(fiber_df, Segment_df, KMT_df)
     names(Data)[1:3] <<- c("Fiber_Name", "Segment ID", "Data")
+
     ACQ <<- 0
+    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
   # KMT minus-ends interaction -------------------------------------------------

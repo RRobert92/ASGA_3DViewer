@@ -62,8 +62,8 @@
         df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`Segment ID`)
 
         Palette <- Creat_Palette(
-          as.numeric(df_Data[(which.min(df_Data$Data)), "Data"]),
-          as.numeric(df_Data[(which.max(df_Data$Data)), "Data"]),
+          MIN_SLIDER,
+          MAX_SLIDER,
           nrow(df_Segments),
           ACQ,
           KMT_Col
@@ -139,12 +139,6 @@
             }
           }
         } else {
-          # rgl.light(
-          #   theta = 0, phi = 0,
-          #   ambient = "grey75",
-          #   diffuse = "grey75"
-          # )
-
           for (i in 1:nrow(df_Segments)) {
             updateProgressBar(
               session = session,
