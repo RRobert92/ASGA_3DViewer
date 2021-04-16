@@ -46,6 +46,14 @@
       open3d()
       rgl.bg(color = "black", fogtype = "none")
 
+      progressSweetAlert(
+        session = session,
+        id = "Load_3D",
+        title = "Loading 3D data : ",
+        display_pct = TRUE,
+        value = 0
+      )
+
       if (input$`Select_fiber` != "All") {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with(input$`Select_fiber`)), any_vars(. >= 1))
         df_Segments <- df_Segments %>% select("Segment ID", starts_with(input$`Select_fiber`), "Point IDs")
@@ -167,12 +175,10 @@
         # Handle MT-MT interaction data
       }
 
-      progressSweetAlert(
+      updateProgressBar(
         session = session,
         id = "Load_3D",
-        title = "Loading 3D data : ",
-        display_pct = TRUE,
-        value = 0
+        value = (i / nrow(df_Segments)) * 100
       )
 
       if (VIEW_ALL == TRUE) {
