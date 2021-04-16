@@ -13,10 +13,7 @@
     output$`wdg` <- renderRglwidget({
       open3d()
       rgl.bg(color = "black", fogtype = "none")
-      rgl.light(
-        diffuse = "gray75",
-        specular = "gray75", viewpoint.rel = FALSE
-      )
+
       progressSweetAlert(
         session = session,
         id = "Load_3D",
@@ -91,15 +88,46 @@
         # how to handle the data when user want to see interactions
         df_Data <- subset(Data, subset = `KMT_ID` %in% df_Segments$`Segment ID`)
         df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`KMT_ID`)
+        df_Segments <- select(df_Segments, all_of(c("Segment ID")))
 
         df_Data <- df_Data %>% filter(Interaction_ID != "NaN")
 
-        # KMT without inter == 0 / gray
-        # KMT with inter == 1 / light red
-        # NoN-KMT interacting == 2 / light yellow
-        # KMT interacting == 3 / purple
-        # bind all to df_Segments
-        # defined fixed color
+        if (nrow(df_Data) > 0) {
+          df_col <- tibble()
+          for (i in 1:nrow(df_Segments)) {
+            df_col[i, 1] <- df_Segments[i, "Segment ID"]
+
+            if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["KMT_ID"])[[1]]) {
+              df_col[i, 2] <- "#FF7A7A" # KMT with inter == 1 / light red
+            } else {
+              df_col[i, 2] <- "#8F8F8F" # KMT without inter == 0 / gray
+            }
+          }
+
+          for (i in 1:nrow(df_Data)) {
+            if (df_Data[i, "Interaction_ID"] %in% as.list(df_Segments["Segment ID"])[[1]]) {
+              Find_Col <- which(df_Segments$`Segment ID` == as.numeric(df_Data[i, "Interaction_ID"]))
+              df_col[Find_Col, 2] <- "#FD7BFD" # KMT interacting == 2 / purple
+            } else {
+              Find_Col <- nrow(df_col) + 1
+              df_col[Find_Col, 1] <- as.numeric(df_Data[i, "Interaction_ID"])
+              df_col[Find_Col, 2] <- "#FDDC7B" # NoN-KMT interacting == 3 / light yellow
+            }
+          }
+
+          for (i in 1:nrow(df_col)) {
+            df_col[i, 3] <- Data_Segments[which(as.numeric(df_col[i, 1]) == Data_Segments$`Segment ID`), "Point IDs"]
+          }
+
+          df_Segments <- df_col
+          names(df_Segments)[1:3] <- c("Segment ID", "Color", "Point IDs")
+        } else {
+          df_Segments[2] <- "#8F8F8F"
+          for (i in 1:nrow(df_Segments)) {
+            df_Segments[i, 3] <- Data_Segments[which(as.numeric(df_Segments[i, 1]) == Data_Segments$`Segment ID`), "Point IDs"]
+          }
+          names(df_Segments)[1:3] <- c("Segment ID", "Color", "Point IDs")
+        }
       }
 
       progressSweetAlert(
@@ -133,7 +161,6 @@
         }
       } else {
         if (nrow(df_Segments) > 0 && input$`Select_fiber` == "All") {
-          # if("Segment ID" %in% colnames(Data)){}
           for (i in 1:nrow(df_Segments)) {
             updateProgressBar(
               session = session,
@@ -141,7 +168,7 @@
               value = (i / nrow(df_Segments)) * 100
             )
 
-            MT <- as.numeric(unlist(strsplit(df_Segments[i, "Point IDs"], split = ",")))
+            MT <- as.numeric(unlist(strsplit(as.character(df_Segments[i, "Point IDs"]), split = ",")))
             MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
             if ("Color" %in% colnames(df_Segments)) {
@@ -158,7 +185,7 @@
               value = (i / nrow(df_Segments)) * 100
             )
 
-            MT <- as.numeric(unlist(strsplit(df_Segments[i, "Point IDs"], split = ",")))
+            MT <- as.numeric(unlist(strsplit(as.character(df_Segments[i, "Point IDs"]), split = ",")))
             MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
             MT <- cylinder3d(MT / 10000, radius = 0.01)
 

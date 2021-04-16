@@ -132,8 +132,8 @@ function(input, output, session) {
       updatePickerInput(session, "Home-DataSet_in_Pub", choices = DataSet_Active_List)
 
       # Update list of available analysis --------------------------------------
-      Analysis_Active_List <- c("All MTs", "KMTs")
-      updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List, selected = "All MTs")
+      Analysis_Active_List <- c("KMTs", "All MTs")
+      updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List, selected = "KMTs")
 
       # Update Tabs ------------------------------------------------------------
       showTab(inputId = "innavbar-3D", target = "3D_Viewer")
@@ -145,8 +145,8 @@ function(input, output, session) {
         updateColourInput(session, "Home-KMT_Col", value = "#E32626")
         updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
 
-        show("Home-Non_KMT_Col")
-        hide("Home-KMT_Col")
+        hide("Home-Non_KMT_Col")
+        show("Home-KMT_Col")
 
         hide("Home-Hidde_MTs")
         hide("Home-Select_KMT_Analysis")
@@ -166,7 +166,7 @@ function(input, output, session) {
             updatePickerInput(session, "Home-Select_KMT_Analysis", choices = AVAILABLE_ANALYSIS_KMTs)
             updatePickerInput(session, "Home-Select_SMT_Analysis", choices = AVAILABLE_ANALYSIS_ALL)
 
-            `3D_View_Set` <<- "All MTs"
+            `3D_View_Set` <<- "KMTs"
             callModule(`3D_Generate`, "Home")
           }
         })
@@ -192,29 +192,31 @@ function(input, output, session) {
       updatePickerInput(session, "Home-Select_fiber", choices = Column_List_Fiber)
       updatePickerInput(session, "Home-Select_fiber", selected = "All")
 
-      Non_KMT_Col <<- input[["Home-Non_KMT_Col"]]
-      `3D_View_Set` <<- input[[paste("Home-Analysis_in_DataSet", sep = "_")]]
+      Non_KMT_Col <<- input$`Home-Non_KMT_Col`
+      `3D_View_Set` <<- input$`Home-Analysis_in_DataSet`
 
       callModule(`3D_Generate`, "Home")
     }
-    if (input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "KMTs") {
+    if (input$`Home-Analysis_in_DataSet` == "KMTs") {
       show("Home-Hidde_MTs")
       show("Home-Select_KMT_Analysis")
 
       show("Home-Select_KMT_Analysis")
       show("Home-Select_SMT_Analysis")
 
-      Non_KMT_Col <<- input[["Home-Non_KMT_Col"]]
-      KMT_Col <<- input[["Home-KMT_Col"]]
+      Non_KMT_Col <<- input$`Home-Non_KMT_Col`
+      KMT_Col <<- input$`Home-KMT_Col`
 
-      show("Home-Non_KMT_Col")
       show("Home-KMT_Col")
+      hide("Home-Non_KMT_Col")
 
       observeEvent(input$`Home-Hidde_MTs`, {
         if (input$`Home-Hidde_MTs` == FALSE) {
           show("Home-Select_fiber")
+          show("Home-Non_KMT_Col")
         } else {
           hide("Home-Select_fiber")
+          hide("Home-Non_KMT_Col")
         }
 
         if (input$`Home-Hidde_MTs` == TRUE) {
