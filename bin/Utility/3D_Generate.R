@@ -84,7 +84,7 @@
         names(df_Segments)[4] <- c("Color")
       }
 
-      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "KMT_ID" %in% colnames(Data)) {
+      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "KMT_ID" %in% colnames(Data) && "MT_type" %in% colnames(Data)) {
         # how to handle the data when user want to see interactions
         df_Data <- subset(Data, subset = `KMT_ID` %in% df_Segments$`Segment ID`)
         df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`KMT_ID`)
@@ -128,6 +128,41 @@
           }
           names(df_Segments)[1:3] <- c("Segment ID", "Color", "Point IDs")
         }
+      }
+
+      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "KMT_ID" %in% colnames(Data) && "I_class" %in% colnames(Data)) {
+        df_Data <- subset(Data, subset = `KMT_ID` %in% df_Segments$`Segment ID`)
+        df_Segments <- select(df_Segments, all_of(c("Segment ID", "Point IDs")))
+
+        for (i in 1:nrow(df_Segments)) {
+          if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["Interactor_ID"])[[1]]) {
+            df_Segments[i, 3] <- "#FF7A7A" # KMT-SMT lateral interaction == light red
+          } else if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["KMT_ID"])[[1]]){
+            df_Segments[i, 3] <- "#FD7BFD" # KMT-KMT lateral interaction == purple
+          } else {
+            df_Segments[i, 3] <- "#8F8F8F" # KMT-KMT lateral interaction == purple
+          }
+        }
+        names(df_Segments)[3] <- "Color"
+        df_Data <- df_Data %>%
+          select(all_of(c("Interactor_ID", "I_class"))) %>%
+          filter_at(vars(starts_with("I_class")), any_vars(. == "SMT"))
+
+if(nrow(df_Data) > 0){
+  for(i in 1:nrow(df_Data)){
+    df_Data[i, 3] <- Data_Segments[as.numeric(df_Data[i,1] + 1), "Point IDs"]
+  }
+  df_Data <- tibble(df_Data[1],
+                    df_Data[3],
+                    df_Data[2])
+  df_Data[3] <- "#FDDC7B"
+  names(df_Data)[1:3] <- c("Segment ID", "Point IDs", "Color")
+  df_Segments <- rbind(df_Segments, df_Data)
+}
+      }
+
+      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "Segments_ID_1" %in% colnames(Data)) {
+        # Handle MT-MT interaction data
       }
 
       progressSweetAlert(

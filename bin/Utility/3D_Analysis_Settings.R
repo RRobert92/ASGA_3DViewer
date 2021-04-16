@@ -7,6 +7,23 @@
 # Author: Robert Kiewisz
 # Created: 2021-04-07
 ################################################################################
+Transform_Data <- function() {
+  ID_List <- tibble()
+  for (i in 1:nrow(Data)) {
+    Name <- strsplit(as.character(Data[i, 1]), split = "_")
+    No_KMT <- as.numeric(Name[[1]][3])
+    Name <- paste(Name[[1]][1], Name[[1]][2], sep = "_")
+    Name <- Data_Segments %>%
+      select(all_of(c("Segment ID", Name))) %>%
+      filter_at(vars(starts_with(Name)), any_vars(. >= 1))
+    Name <- Name[No_KMT, 1]
+    ID_List[i, 1] <- Name
+  }
+
+  Data <<- cbind(ID_List, select(Data, "Interactor_ID", "I_class"))
+  names(Data)[1] <<- c("KMT_ID")
+}
+
 Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
 
   # Nothing is selected --------------------------------------------------------
@@ -166,36 +183,50 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
   if (Analysis == "KMT lattice interaction for 25nm") {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.025.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
+
+    Transform_Data()
   }
   if (Analysis == "KMT lattice interaction for 30nm") {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.03.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
+
+    Transform_Data()
   }
   if (Analysis == "KMT lattice interaction for 35nm") {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.035.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
+
+    Transform_Data()
   }
   if (Analysis == "KMT lattice interaction for 45nm") {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.045.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
+
+    Transform_Data()
   }
   if (Analysis == "KMT lattice interaction for 50nm") {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.05.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
+
+    Transform_Data()
   }
   if (Analysis == "KMT lattice interaction for 75nm") {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.075.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
+
+    Transform_Data()
   }
   if (Analysis == "KMT lattice interaction for 100nm") {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.1.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
+
+    Transform_Data()
   }
 
   # # KMT lattice interaction ----------------------------------------------------
   # if(Analysis == "MT-MT interactions for 25nm"){
   #   Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.025.xlsx", sep = ""))
-  #   Data <<- select(Data, "Segments_ID_1","Segments_ID_2", "MT_type")
+  #   Data <<- select(Data, "Segments_ID_1","Segments_ID_2", "S_1_Start",  "S_1_Stop", "S_2_Start",  "S_2_Stop", "MT_type")
   #   names(Data)[1] <<- "Segment_ID"
   # }
   # if(Analysis == "MT-MT interactions for 30nm"){
