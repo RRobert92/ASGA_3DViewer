@@ -93,7 +93,7 @@ Viewer_UI <- function(id) {
             pickerInput(
               inputId = ns("Analysis_in_DataSet"),
               label = "Select 3D View",
-              choices = "Init",
+              choices = "KMTs",
               multiple = FALSE
             ),
             hidden(
@@ -135,7 +135,7 @@ Viewer_UI <- function(id) {
             hidden(
               pickerInput(
                 inputId = ns("Select_SMT_Analysis"),
-                label = "Select MT analysis",
+                label = "Select MT-MT interaction analysis",
                 choices = AVAILABLE_ANALYSIS_ALL,
                 multiple = FALSE
               )

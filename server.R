@@ -149,9 +149,8 @@ function(input, output, session) {
         show("Home-KMT_Col")
 
         hide("Home-Hidde_MTs")
-        hide("Home-Select_KMT_Analysis")
 
-        hide("Home-Select_KMT_Analysis")
+        show("Home-Select_KMT_Analysis")
         show("Home-Select_SMT_Analysis")
 
         lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
@@ -186,7 +185,7 @@ function(input, output, session) {
       updatePickerInput(session, "Home-Select_fiber", selected = "All")
 
       hide("Home-Select_KMT_Analysis")
-      show("Home-Select_SMT_Analysis")
+      hide("Home-Select_SMT_Analysis")
 
       List_of_Kfibers()
       updatePickerInput(session, "Home-Select_fiber", choices = Column_List_Fiber)
@@ -199,7 +198,6 @@ function(input, output, session) {
     }
     if (input$`Home-Analysis_in_DataSet` == "KMTs") {
       show("Home-Hidde_MTs")
-      show("Home-Select_KMT_Analysis")
 
       show("Home-Select_KMT_Analysis")
       show("Home-Select_SMT_Analysis")
@@ -213,10 +211,10 @@ function(input, output, session) {
       observeEvent(input$`Home-Hidde_MTs`, {
         if (input$`Home-Hidde_MTs` == FALSE) {
           show("Home-Select_fiber")
-          show("Home-Non_KMT_Col")
+          hide("Home-Non_KMT_Col")
         } else {
           hide("Home-Select_fiber")
-          hide("Home-Non_KMT_Col")
+          show("Home-Non_KMT_Col")
         }
 
         if (input$`Home-Hidde_MTs` == TRUE) {

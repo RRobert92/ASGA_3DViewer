@@ -137,7 +137,7 @@
         for (i in 1:nrow(df_Segments)) {
           if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["Interactor_ID"])[[1]]) {
             df_Segments[i, 3] <- "#FF7A7A" # KMT-SMT lateral interaction == light red
-          } else if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["KMT_ID"])[[1]]){
+          } else if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["KMT_ID"])[[1]]) {
             df_Segments[i, 3] <- "#FD7BFD" # KMT-KMT lateral interaction == purple
           } else {
             df_Segments[i, 3] <- "#8F8F8F" # KMT-KMT lateral interaction == purple
@@ -148,17 +148,19 @@
           select(all_of(c("Interactor_ID", "I_class"))) %>%
           filter_at(vars(starts_with("I_class")), any_vars(. == "SMT"))
 
-if(nrow(df_Data) > 0){
-  for(i in 1:nrow(df_Data)){
-    df_Data[i, 3] <- Data_Segments[as.numeric(df_Data[i,1] + 1), "Point IDs"]
-  }
-  df_Data <- tibble(df_Data[1],
-                    df_Data[3],
-                    df_Data[2])
-  df_Data[3] <- "#FDDC7B"
-  names(df_Data)[1:3] <- c("Segment ID", "Point IDs", "Color")
-  df_Segments <- rbind(df_Segments, df_Data)
-}
+        if (nrow(df_Data) > 0) {
+          for (i in 1:nrow(df_Data)) {
+            df_Data[i, 3] <- Data_Segments[as.numeric(df_Data[i, 1] + 1), "Point IDs"]
+          }
+          df_Data <- tibble(
+            df_Data[1],
+            df_Data[3],
+            df_Data[2]
+          )
+          df_Data[3] <- "#FDDC7B"
+          names(df_Data)[1:3] <- c("Segment ID", "Point IDs", "Color")
+          df_Segments <- rbind(df_Segments, df_Data)
+        }
       }
 
       if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "Segments_ID_1" %in% colnames(Data)) {
