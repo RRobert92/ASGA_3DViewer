@@ -121,7 +121,7 @@ Viewer_UI <- function(id) {
             hidden(
               colourInput(ns("KMT_Col"),
                 label = "KMTs color",
-                value = "#E32626"
+                value = "#FF3C28"
               )
             ),
             hidden(

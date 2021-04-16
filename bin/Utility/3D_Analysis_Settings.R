@@ -50,7 +50,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     names(Data)[1:2] <<- c("Segment ID", "Data")
 
     ACQ <<- 4
-    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
@@ -71,7 +71,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     names(Data)[1:2] <<- c("Segment ID", "Data")
 
     ACQ <<- 4
-    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
@@ -82,7 +82,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     names(Data)[1:2] <<- c("Segment ID", "Data")
 
     ACQ <<- 3
-    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MIN_SLIDER <<- 1
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
@@ -112,7 +112,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     names(Data)[1:3] <<- c("Fiber_Name", "Segment ID", "Data")
 
     ACQ <<- 0
-    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 
@@ -145,7 +145,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     names(Data)[1:3] <<- c("Fiber_Name", "Segment ID", "Data")
 
     ACQ <<- 0
-    MIN_SLIDER <<- as.numeric(Data[(which.min(Data$Data)), "Data"])
+    MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
   }
 

@@ -175,12 +175,6 @@
         # Handle MT-MT interaction data
       }
 
-      updateProgressBar(
-        session = session,
-        id = "Load_3D",
-        value = (i / nrow(df_Segments)) * 100
-      )
-
       if (VIEW_ALL == TRUE) {
         for (i in 1:nrow(Data_Segments)) {
           updateProgressBar(

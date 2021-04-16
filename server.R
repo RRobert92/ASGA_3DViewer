@@ -257,8 +257,14 @@ function(input, output, session) {
       input$`Home-Select_KMT_Analysis` == "No. of KMTs" ||
       input$`Home-Select_KMT_Analysis` == "No. of KMTs at a Pole") {
       KMT_Analysis <<- TRUE
+
+      hide("Home-Non_KMT_Col")
+      show("Home-KMT_Col")
     } else {
       KMT_Analysis <<- FALSE
+
+      hide("Home-Non_KMT_Col")
+      hide("Home-KMT_Col")
     }
 
     if (input$`Home-Select_KMT_Analysis` != "NaN" &&
