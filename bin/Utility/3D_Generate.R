@@ -148,7 +148,7 @@
           } else if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["KMT_ID"])[[1]]) {
             df_Segments[i, 3] <- "#FD7BFD" # KMT-KMT lateral interaction == purple
           } else {
-            df_Segments[i, 3] <- "#8F8F8F" # KMT-KMT lateral interaction == purple
+            df_Segments[i, 3] <- "#8F8F8F" # No interaction == gray
           }
         }
         names(df_Segments)[3] <- "Color"
@@ -165,7 +165,7 @@
             df_Data[3],
             df_Data[2]
           )
-          df_Data[3] <- "#FDDC7B"
+          df_Data[3] <- "#FDDC7B" # KMT-SMT lateral interaction == purple
           names(df_Data)[1:3] <- c("Segment ID", "Point IDs", "Color")
           df_Segments <- rbind(df_Segments, df_Data)
         }

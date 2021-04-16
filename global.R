@@ -56,7 +56,7 @@ DEMO <<- FALSE # Constant defining if app running in Demo mode
 CASHING <<- FALSE # Constant defining if the rgl widget should reused models and cash file
 
 Non_KMT_Col <<- "#FFFFFF"
-KMT_Col <<- "#CC1414"
+KMT_Col <<- "#FF3C28"
 
 # List of supported analysis
 AVAILABLE_ANALYSIS_KMTs <<- "NaN"
