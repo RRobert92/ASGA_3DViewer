@@ -153,7 +153,8 @@ Viewer_UI <- function(id) {
           column(
             10,
             offset = 0,
-            rglwidgetOutput(ns("wdg"), width = "100%", height = WINDOW_HEIGHT) %>% withSpinner()
+            rglwidgetOutput(ns("wdg"), width = "100%", height = WINDOW_HEIGHT) %>% withSpinner(),
+            rglwidgetOutput(ns("ScaleBare"), width = "100%", height = 200)
           )
         )
       )

@@ -43,7 +43,7 @@
   }
   if (`3D_View_Set` == "KMTs") {
     output$`wdg` <- renderRglwidget({
-      open3d(windowRect = c(10, 10, WINDOW_WIDTH, 640))
+      open3d()
       rgl.bg(color = "black")
 
       progressSweetAlert(
@@ -66,7 +66,7 @@
         df_Data <- subset(Data, subset = `Segment ID` %in% df_Segments$`Segment ID`)
         df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`Segment ID`)
 
-        Palette <- Creat_Palette(
+        Palette <<- Creat_Palette(
           MIN_SLIDER,
           MAX_SLIDER,
           nrow(df_Segments),
@@ -136,6 +136,8 @@
           }
           names(df_Segments)[1:3] <- c("Segment ID", "Color", "Point IDs")
         }
+        Palette <<- c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B")
+        UNIT <<- c("KMT with no interaction", "KMT with interaction", "KMT-KMT interaction", "SMT interaction with KMT")
       }
 
       if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "KMT_ID" %in% colnames(Data) && "I_class" %in% colnames(Data)) {
@@ -169,6 +171,9 @@
           names(df_Data)[1:3] <- c("Segment ID", "Point IDs", "Color")
           df_Segments <- rbind(df_Segments, df_Data)
         }
+
+        Palette <<- c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B")
+        UNIT <<- c("No interaction", "KMT-SMT interaction", "KMT-KMT interaction", "SMT interaction with KMT")
       }
 
       if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "Segments_ID_1" %in% colnames(Data)) {
@@ -196,12 +201,13 @@
             lines3d(MT, col = Non_KMT_Col, alpha = 1)
           }
         }
+
+        scene <- scene3d()
+        rgl.close()
+        closeSweetAlert(session = session)
+        rglwidget(scene, reuse = CASHING)
       } else {
         if (nrow(df_Segments) > 0 && input$`Select_fiber` == "All") {
-          if ("Color" %in% colnames(df_Segments)) {
-            layout3d(matrix(1:2, 1,2), c(0.9, 0.1), 1)
-          }
-
           for (i in 1:nrow(df_Segments)) {
             updateProgressBar(
               session = session,
@@ -219,20 +225,11 @@
             }
           }
 
-          if ("Color" %in% colnames(df_Segments)) {
-            next3d()
-            bgplot3d({
-              plot.new()
-              color.legend(-0.2, 0, 1, 1,
-                           rect.col=as.list(Palette[1])[[1]],
-                           legend=paste((MIN_SLIDER):round(MAX_SLIDER,1), "μm", sep = " "), gradient="y", cex = 1.5)
-            })
-          }
-
+          scene <- scene3d()
+          rgl.close()
+          closeSweetAlert(session = session)
+          rglwidget(scene, reuse = CASHING)
         } else {
-          if ("Color" %in% colnames(df_Segments)) {
-            layout3d(matrix(1:2, 1,2), c(0.9, 0.1), 1)
-          }
           for (i in 1:nrow(df_Segments)) {
             updateProgressBar(
               session = session,
@@ -251,22 +248,30 @@
             }
           }
 
-          if ("Color" %in% colnames(df_Segments)) {
-            next3d()
-            bgplot3d({
-              plot.new()
-              color.legend(-0.2, 0, 1, 1,
-                           rect.col=as.list(Palette[1])[[1]],
-                           legend=paste((MIN_SLIDER):round(MAX_SLIDER,1), UNIT, sep = " "), gradient="y", cex = 1.5)
-            })
-          }
+          scene <- scene3d()
+          rgl.close()
+          closeSweetAlert(session = session)
+          rglwidget(scene, reuse = CASHING)
         }
       }
+    })
 
-      scene <- scene3d()
-      rgl.close()
-      closeSweetAlert(session = session)
-      rglwidget(scene, reuse = CASHING)
+    output$`ScaleBare` <- renderRglwidget({
+      if (exists("Palette")) {
+        open3d(windowRect = c(10, 10, WINDOW_WIDTH, 200))
+        rgl.bg(color = "white")
+        bgplot3d({
+          plot.new()
+          color.legend(0, -0.2, 1, 0.8,
+            rect.col = as.list(Palette[1])[[1]],
+            legend = UNIT, gradient = "x", cex = 1
+          )
+        })
+
+        scene <- scene3d()
+        rgl.close()
+        rglwidget(scene, reuse = CASHING)
+      }
     })
   }
 }

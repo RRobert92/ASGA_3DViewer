@@ -55,7 +55,7 @@ function(input, output, session) {
           envir = .GlobalEnv
         )
         assign("WINDOW_WIDTH",
-          round(as.numeric(input$dimension[1]) * 0.82, 0),
+          round(as.numeric(input$dimension[1]) * 0.75, 0),
           envir = .GlobalEnv
         )
         START_UP <<- FALSE
@@ -247,6 +247,9 @@ function(input, output, session) {
     if (DEMO == TRUE) {
       callModule(`3D_Generate`, "Home")
     } else {
+      if(exists("Palette")){
+        rm(Palette)
+      }
       Collect_Analysis(input$`Home-Select_KMT_Analysis`, Pub_ID, Data_ID)
       callModule(`3D_Generate`, "Home")
     }

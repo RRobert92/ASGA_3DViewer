@@ -53,7 +53,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 4
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- "μm"
+    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), "μm", sep = " ")
   }
 
   # KMTs minus-end position ----------------------------------------------------
@@ -75,7 +75,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 4
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- "μm"
+    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), "μm", sep = " ")
   }
 
   # KMTs Curvature -------------------------------------------------------------
@@ -87,7 +87,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 3
     MIN_SLIDER <<- 1
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- ""
+    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), sep = "")
   }
 
   # No. of KMTs ----------------------------------------------------------------
@@ -118,7 +118,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 0
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- "KMTs"
+    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), "KMTs", sep = " ")
   }
 
   # No. of KMTs at a Pole ------------------------------------------------------
@@ -152,7 +152,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 0
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- "KMTs"
+    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), "KMTs", sep = " ")
   }
 
   # KMT minus-ends interaction -------------------------------------------------
