@@ -136,7 +136,7 @@
           }
           names(df_Segments)[1:3] <- c("Segment ID", "Color", "Point IDs")
         }
-        Palette <<- c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B")
+        Palette <<- tibble(c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B"))
         UNIT <<- c("KMT with no interaction", "KMT with interaction", "KMT-KMT interaction", "SMT interaction with KMT")
       }
 
@@ -172,12 +172,13 @@
           df_Segments <- rbind(df_Segments, df_Data)
         }
 
-        Palette <<- c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B")
+        Palette <<- tibble(c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B"))
         UNIT <<- c("No interaction", "KMT-SMT interaction", "KMT-KMT interaction", "SMT interaction with KMT")
       }
 
       if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "Segments_ID_1" %in% colnames(Data)) {
         # Handle MT-MT interaction data
+
       }
 
       if (VIEW_ALL == TRUE) {
