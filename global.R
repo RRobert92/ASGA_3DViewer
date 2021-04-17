@@ -13,6 +13,7 @@ options(shiny.maxRequestSize = 1024 * 1024^2)
 options(shiny.host = "127.0.0.1")
 options(shiny.port = 7878)
 options(java.parameters = "-Xmx1024m")
+options(encoding = 'UTF-8')
 
 # Title of the app -------------------------------------------------------------
 source("bin/Utility/Library.R")
@@ -68,6 +69,7 @@ Data_Segments <<- NULL
 Data <<- NULL
 
 WINDOW_HEIGHT <<- "640px" # Constant to define rgl_widget height
+WINDOW_WIDTH <<- NULL
 
 Search_for_Data() # Scan environment and define set of variable for UI
 Analysis_List(1, 1) # Gather initial info about analysis if exists

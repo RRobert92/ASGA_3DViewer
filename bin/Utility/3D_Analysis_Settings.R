@@ -7,6 +7,7 @@
 # Author: Robert Kiewisz
 # Created: 2021-04-07
 ################################################################################
+
 Transform_Data <- function() {
   ID_List <- tibble()
   for (i in 1:nrow(Data)) {
@@ -52,6 +53,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 4
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
+    UNIT <<- "μm"
   }
 
   # KMTs minus-end position ----------------------------------------------------
@@ -73,6 +75,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 4
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
+    UNIT <<- "μm"
   }
 
   # KMTs Curvature -------------------------------------------------------------
@@ -84,6 +87,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 3
     MIN_SLIDER <<- 1
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
+    UNIT <<- ""
   }
 
   # No. of KMTs ----------------------------------------------------------------
@@ -114,6 +118,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 0
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
+    UNIT <<- "KMTs"
   }
 
   # No. of KMTs at a Pole ------------------------------------------------------
@@ -147,6 +152,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 0
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
+    UNIT <<- "KMTs"
   }
 
   # KMT minus-ends interaction -------------------------------------------------
@@ -181,46 +187,164 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
 
   # KMT lattice interaction ----------------------------------------------------
   if (Analysis == "KMT lattice interaction for 25nm") {
+    progressSweetAlert(
+      session = session,
+      id = "Load_3D",
+      title = "Loading analyzed data",
+      display_pct = TRUE,
+      value = 0
+    )
+
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.025.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
 
+    updateProgressBar(
+      session = session,
+      id = "Load_3D",
+      value = 50
+    )
+
     Transform_Data()
+
+    updateProgressBar(
+      session = session,
+      id = "Load_3D",
+      value = 100
+    )
+    Sys.sleep(0.5)
+    closeSweetAlert(session = session)
   }
   if (Analysis == "KMT lattice interaction for 30nm") {
+    progressSweetAlert(
+      session = session,
+      id = "Load_3D",
+      title = "Loading analyzed data",
+      display_pct = TRUE,
+      value = 0
+    )
+
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.03.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
 
     Transform_Data()
+
+    updateProgressBar(
+      session = session,
+      id = "Load_3D",
+      value = 100
+    )
+    Sys.sleep(0.5)
+    closeSweetAlert(session = session)
   }
   if (Analysis == "KMT lattice interaction for 35nm") {
+    progressSweetAlert(
+      session = session,
+      id = "Load_3D",
+      title = "Loading analyzed data",
+      display_pct = TRUE,
+      value = 0
+    )
+
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.035.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
 
     Transform_Data()
+
+    updateProgressBar(
+      session = session,
+      id = "Load_3D",
+      value = 100
+    )
+    Sys.sleep(0.5)
+    closeSweetAlert(session = session)
   }
   if (Analysis == "KMT lattice interaction for 45nm") {
+    progressSweetAlert(
+      session = session,
+      id = "Load_3D",
+      title = "Loading analyzed data",
+      display_pct = TRUE,
+      value = 0
+    )
+
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.045.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
 
     Transform_Data()
+
+    updateProgressBar(
+      session = session,
+      id = "Load_3D",
+      value = 100
+    )
+    Sys.sleep(0.5)
+    closeSweetAlert(session = session)
   }
   if (Analysis == "KMT lattice interaction for 50nm") {
+    progressSweetAlert(
+      session = session,
+      id = "Load_3D",
+      title = "Loading analyzed data",
+      display_pct = TRUE,
+      value = 0
+    )
+
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.05.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
 
     Transform_Data()
+
+    updateProgressBar(
+      session = session,
+      id = "Load_3D",
+      value = 100
+    )
+    Sys.sleep(0.5)
+    closeSweetAlert(session = session)
   }
   if (Analysis == "KMT lattice interaction for 75nm") {
+    progressSweetAlert(
+      session = session,
+      id = "Load_3D",
+      title = "Loading analyzed data",
+      display_pct = TRUE,
+      value = 0
+    )
+
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.075.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
 
     Transform_Data()
+
+    updateProgressBar(
+      session = session,
+      id = "Load_3D",
+      value = 100
+    )
+    Sys.sleep(0.5)
+    closeSweetAlert(session = session)
   }
   if (Analysis == "KMT lattice interaction for 100nm") {
+    progressSweetAlert(
+      session = session,
+      id = "Load_3D",
+      title = "Loading analyzed data",
+      display_pct = TRUE,
+      value = 0
+    )
+
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.1.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
 
     Transform_Data()
+
+    updateProgressBar(
+      session = session,
+      id = "Load_3D",
+      value = 100
+    )
+    Sys.sleep(0.5)
+    closeSweetAlert(session = session)
   }
 
   # # KMT lattice interaction ----------------------------------------------------

@@ -10,17 +10,6 @@
 
 function(input, output, session) {
 
-  # Define Height of browser windows <- currently not working :( ---------------
-  observe({
-    if (START_UP == TRUE) {
-      req(input$dimension)
-      assign("WINDOW_HEIGHT",
-        paste(as.numeric(input$dimension[2] - 51), "px", sep = ""),
-        envir = .GlobalEnv
-      )
-    }
-  })
-
   # Hide pages on start  -------------------------------------------------------
   hideTab(inputId = "innavbar", target = "3D_Viewer")
 
@@ -57,6 +46,20 @@ function(input, output, session) {
     if (input$"innavbar-3D" == "3D_Data_Select") {
       rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
       source("global.R")
+
+      # Define Height of browser windows <- currently not working :( -------------
+      req(input$dimension)
+      if (START_UP == TRUE) {
+        assign("WINDOW_HEIGHT",
+          paste(as.numeric(input$dimension[2] - 51), "px", sep = ""),
+          envir = .GlobalEnv
+        )
+        assign("WINDOW_WIDTH",
+          round(as.numeric(input$dimension[1]) * 0.82, 0),
+          envir = .GlobalEnv
+        )
+        START_UP <<- FALSE
+      }
     }
     if (input$"innavbar-3D" == "Wiki") {
       js$browseURL("https://rrobert92.github.io/ASGA/")
@@ -85,7 +88,7 @@ function(input, output, session) {
     updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
 
     updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
-    updateColourInput(session, "Home-KMT_Col", value = "#E32626")
+    updateColourInput(session, "Home-KMT_Col", value = "#FF3C28")
 
     show("Home-Non_KMT_Col")
     hide("Home-KMT_Col")
@@ -124,7 +127,7 @@ function(input, output, session) {
     DEMO <<- FALSE
 
     updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
-    updateColourInput(session, "Home-KMT_Col", value = "#E32626")
+    updateColourInput(session, "Home-KMT_Col", value = "#FF3C28")
 
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
       # Update list of available Data sets -------------------------------------
@@ -142,7 +145,7 @@ function(input, output, session) {
       # Reload data set if user select different data ----------------------------
       observeEvent(input$`Home-DataSet_in_Pub`, {
         updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
-        updateColourInput(session, "Home-KMT_Col", value = "#E32626")
+        updateColourInput(session, "Home-KMT_Col", value = "#FF3C28")
         updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
 
         hide("Home-Non_KMT_Col")

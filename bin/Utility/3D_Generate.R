@@ -12,7 +12,7 @@
   if (`3D_View_Set` == "All MTs") {
     output$`wdg` <- renderRglwidget({
       open3d()
-      rgl.bg(color = "black", fogtype = "none")
+      rgl.bg(color = "black")
 
       progressSweetAlert(
         session = session,
@@ -43,8 +43,8 @@
   }
   if (`3D_View_Set` == "KMTs") {
     output$`wdg` <- renderRglwidget({
-      open3d()
-      rgl.bg(color = "black", fogtype = "none")
+      open3d(windowRect = c(10, 10, WINDOW_WIDTH, 640))
+      rgl.bg(color = "black")
 
       progressSweetAlert(
         session = session,
@@ -56,7 +56,7 @@
 
       if (input$`Select_fiber` != "All") {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with(input$`Select_fiber`)), any_vars(. >= 1))
-        df_Segments <- df_Segments %>% select("Segment ID", starts_with(input$`Select_fiber`), "Point IDs")
+        df_Segments <- df_Segments %>% select("Segment ID", all_of(starts_with(input$`Select_fiber`)), "Point IDs")
       } else {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
         df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
@@ -198,6 +198,10 @@
         }
       } else {
         if (nrow(df_Segments) > 0 && input$`Select_fiber` == "All") {
+          if ("Color" %in% colnames(df_Segments)) {
+            layout3d(matrix(1:2, 1,2), c(0.9, 0.1), 1)
+          }
+
           for (i in 1:nrow(df_Segments)) {
             updateProgressBar(
               session = session,
@@ -214,7 +218,21 @@
               lines3d(MT, col = KMT_Col, alpha = 1)
             }
           }
+
+          if ("Color" %in% colnames(df_Segments)) {
+            next3d()
+            bgplot3d({
+              plot.new()
+              color.legend(-0.2, 0, 1, 1,
+                           rect.col=as.list(Palette[1])[[1]],
+                           legend=paste((MIN_SLIDER):round(MAX_SLIDER,1), "μm", sep = " "), gradient="y", cex = 1.5)
+            })
+          }
+
         } else {
+          if ("Color" %in% colnames(df_Segments)) {
+            layout3d(matrix(1:2, 1,2), c(0.9, 0.1), 1)
+          }
           for (i in 1:nrow(df_Segments)) {
             updateProgressBar(
               session = session,
@@ -231,6 +249,16 @@
             } else {
               shade3d(MT, col = KMT_Col, alpha = 1)
             }
+          }
+
+          if ("Color" %in% colnames(df_Segments)) {
+            next3d()
+            bgplot3d({
+              plot.new()
+              color.legend(-0.2, 0, 1, 1,
+                           rect.col=as.list(Palette[1])[[1]],
+                           legend=paste((MIN_SLIDER):round(MAX_SLIDER,1), UNIT, sep = " "), gradient="y", cex = 1.5)
+            })
           }
         }
       }
