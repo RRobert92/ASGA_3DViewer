@@ -48,6 +48,7 @@ R library
 - readxl
 - tidyverse
 - rgl
+- plotrix
 ```
 
 <a name="Quick_start"></a>
