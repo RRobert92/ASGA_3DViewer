@@ -18,7 +18,7 @@ options(encoding = 'UTF-8')
 # Title of the app -------------------------------------------------------------
 source("bin/Utility/Library.R")
 
-APP_TITLE <- "ASGA - 3D Viewer v1.0.0-beta"
+APP_TITLE <- "ASGA - 3D Viewer v1.0.0 Pre release"
 CC <- paste("© Copyright GPL V3.0 2021-",
   str_split(Sys.Date(), pattern = "-")[[1]][1],
   ", Robert Kiewisz",
@@ -58,6 +58,8 @@ CASHING <<- FALSE # Constant defining if the rgl widget should reused models and
 
 Non_KMT_Col <<- "#FFFFFF"
 KMT_Col <<- "#FF3C28"
+KMT_Int <<- "#F6005D"
+NON_KMT_Int <<- "#FF8F00"
 
 # List of supported analysis
 AVAILABLE_ANALYSIS_KMTs <<- "NaN"

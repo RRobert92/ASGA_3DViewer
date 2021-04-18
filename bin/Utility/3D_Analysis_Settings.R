@@ -87,7 +87,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 3
     MIN_SLIDER <<- 1
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), sep = "")
+    UNIT <<- paste(round(seq(MIN_SLIDER, MAX_SLIDER, length.out=7), 2), sep = "")
   }
 
   # No. of KMTs ----------------------------------------------------------------
@@ -118,7 +118,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 0
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), "KMTs", sep = " ")
+    UNIT <<- paste(round(seq(MIN_SLIDER, MAX_SLIDER, length.out=7), 2), "KMTs", sep = " ")
   }
 
   # No. of KMTs at a Pole ------------------------------------------------------
@@ -152,7 +152,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 0
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), "KMTs", sep = " ")
+    UNIT <<- paste(round(seq(MIN_SLIDER, MAX_SLIDER, length.out=7), 2), "KMTs", sep = " ")
   }
 
   # KMT minus-ends interaction -------------------------------------------------
@@ -235,30 +235,40 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     Transform_Data()
   }
 
-  # # KMT lattice interaction ----------------------------------------------------
-  # if(Analysis == "MT-MT interactions for 25nm"){
-  #   Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.025.xlsx", sep = ""))
-  #   Data <<- select(Data, "Segments_ID_1","Segments_ID_2", "S_1_Start",  "S_1_Stop", "S_2_Start",  "S_2_Stop", "MT_type")
-  #   names(Data)[1] <<- "Segment_ID"
-  # }
-  # if(Analysis == "MT-MT interactions for 30nm"){
-  #   Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.03.xlsx", sep = ""))
-  #   Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-  #   names(Data)[1] <<- "Segment_ID"
-  # }
-  # if(Analysis == "MT-MT interactions for 35nm"){
-  #   Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.035.xlsx", sep = ""))
-  #   Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-  #   names(Data)[1] <<- "Segment_ID"
-  # }
-  # if(Analysis == "MT-MT interactions for 45nm"){
-  #   Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.045.xlsx", sep = ""))
-  #   Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-  #   names(Data)[1] <<- "Segment_ID"
-  # }
-  # if(Analysis == "MT-MT interactions for 50nm"){
-  #   Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.05.xlsx", sep = ""))
-  #   Data <<- select(Data, "KMT_ID","Interaction_ID", "MT_type")
-  #   names(Data)[1] <<- "Segment_ID"
-  # }
+  # KMT lattice interaction ----------------------------------------------------
+  if(Analysis == "MT-MT interactions for 25nm"){
+    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.025.xlsx", sep = ""))
+    Data <<- select(Data, "Segments_ID_1","Segments_ID_2", "S_1_Start",  "S_1_Stop", "S_2_Start",  "S_2_Stop")
+    names(Data)[1] <<- "Segment ID"
+
+    UNIT <<- c("KMT Interaction Region", "NoN-KMT Interaction Region")
+  }
+  if(Analysis == "MT-MT interactions for 30nm"){
+    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.03.xlsx", sep = ""))
+    Data <<- select(Data, "Segments_ID_1","Segments_ID_2", "S_1_Start",  "S_1_Stop", "S_2_Start",  "S_2_Stop")
+    names(Data)[1] <<- "Segment ID"
+
+    UNIT <<- c("KMT Interaction Region", "NoN-KMT Interaction Region")
+  }
+  if(Analysis == "MT-MT interactions for 35nm"){
+    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.035.xlsx", sep = ""))
+    Data <<- select(Data, "Segments_ID_1","Segments_ID_2", "S_1_Start",  "S_1_Stop", "S_2_Start",  "S_2_Stop")
+    names(Data)[1] <<- "Segment ID"
+
+    UNIT <<- c("KMT Interaction Region", "NoN-KMT Interaction Region")
+  }
+  if(Analysis == "MT-MT interactions for 45nm"){
+    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.045.xlsx", sep = ""))
+    Data <<- select(Data, "Segments_ID_1","Segments_ID_2", "S_1_Start",  "S_1_Stop", "S_2_Start",  "S_2_Stop")
+    names(Data)[1] <<- "Segment ID"
+
+    UNIT <<- c("KMT Interaction Region", "NoN-KMT Interaction Region")
+  }
+  if(Analysis == "MT-MT interactions for 50nm"){
+    Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_MT_Interaction_0.05.xlsx", sep = ""))
+    Data <<- select(Data, "Segments_ID_1","Segments_ID_2", "S_1_Start",  "S_1_Stop", "S_2_Start",  "S_2_Stop")
+    names(Data)[1] <<- "Segment ID"
+
+    UNIT <<- c("KMT Interaction Region", "NoN-KMT Interaction Region")
+  }
 }

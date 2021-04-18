@@ -244,19 +244,36 @@ function(input, output, session) {
 
   # Refresh rgl widget
   observeEvent(input$`Home-Refresh`, {
+    req(input$`Home-Select_KMT_Analysis`)
+    req(input$`Home-Select_SMT_Analysis`)
+
+    KMT_Analysis <<- input$`Home-Select_KMT_Analysis`
+    SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
+
     if (DEMO == TRUE) {
       callModule(`3D_Generate`, "Home")
     } else {
       if(exists("Palette")){
-        rm(Palette)
+        rm(Palette, envir = .GlobalEnv)
       }
-      Collect_Analysis(input$`Home-Select_KMT_Analysis`, Pub_ID, Data_ID)
+      if(input$`Home-Select_SMT_Analysis` == "NaN" &&
+         input$`Home-Select_KMT_Analysis` != "NaN"){
+        Collect_Analysis(input$`Home-Select_KMT_Analysis`, Pub_ID, Data_ID)
+      } else if (input$`Home-Select_KMT_Analysis` == "NaN" &&
+                 input$`Home-Select_SMT_Analysis` != "NaN") {
+        Collect_Analysis(input$`Home-Select_SMT_Analysis`, Pub_ID, Data_ID)
+        Palette <<- tibble(c(KMT_Int,
+                             NON_KMT_Int))
+      }
+
       callModule(`3D_Generate`, "Home")
     }
   })
 
   observeEvent(input$`Home-Select_KMT_Analysis`, {
     KMT_Analysis <<- input$`Home-Select_KMT_Analysis`
+    SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
+
     if (input$`Home-Select_KMT_Analysis` == "Length Distribution" ||
       input$`Home-Select_KMT_Analysis` == "Minus-ends Position" ||
       input$`Home-Select_KMT_Analysis` == "KMTs Curvature" ||
@@ -280,6 +297,10 @@ function(input, output, session) {
   })
 
   observeEvent(input$`Home-Select_SMT_Analysis`, {
+    hide("Home-Non_KMT_Col")
+    hide("Home-KMT_Col")
+
+    KMT_Analysis <<- input$`Home-Select_KMT_Analysis`
     SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
     if (input$`Home-Select_KMT_Analysis` != "NaN" &&
       input$`Home-Select_SMT_Analysis` != "NaN") {
