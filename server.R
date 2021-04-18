@@ -160,7 +160,7 @@ function(input, output, session) {
           if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
             Pub_ID <<- i
             Data_ID <<- j
-            Load_Data(paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""), j)
+            Load_Data(paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""), i, j)
             List_of_Kfibers()
             updatePickerInput(session, "Home-Select_fiber", choices = Column_List_Fiber)
 
@@ -247,9 +247,6 @@ function(input, output, session) {
     req(input$`Home-Select_KMT_Analysis`)
     req(input$`Home-Select_SMT_Analysis`)
 
-    KMT_Analysis <<- input$`Home-Select_KMT_Analysis`
-    SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
-
     if (DEMO == TRUE) {
       callModule(`3D_Generate`, "Home")
     } else {
@@ -271,7 +268,6 @@ function(input, output, session) {
   })
 
   observeEvent(input$`Home-Select_KMT_Analysis`, {
-    KMT_Analysis <<- input$`Home-Select_KMT_Analysis`
     SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
 
     if (input$`Home-Select_KMT_Analysis` == "Length Distribution" ||
@@ -293,19 +289,26 @@ function(input, output, session) {
     if (input$`Home-Select_KMT_Analysis` != "NaN" &&
       input$`Home-Select_SMT_Analysis` != "NaN") {
       updatePickerInput(session, "Home-Select_SMT_Analysis", selected = "NaN")
+
+      hide("Home-Non_KMT_Col")
+      show("Home-KMT_Col")
     }
   })
 
   observeEvent(input$`Home-Select_SMT_Analysis`, {
-    hide("Home-Non_KMT_Col")
-    hide("Home-KMT_Col")
-
-    KMT_Analysis <<- input$`Home-Select_KMT_Analysis`
-    SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
     if (input$`Home-Select_KMT_Analysis` != "NaN" &&
       input$`Home-Select_SMT_Analysis` != "NaN") {
       updatePickerInput(session, "Home-Select_KMT_Analysis", selected = "NaN")
+
+      KMT_Analysis <<- NULL
+      SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
     }
+
+    if (input$`Home-Select_KMT_Analysis` == "NaN") {
+      hide("Home-Non_KMT_Col")
+      hide("Home-KMT_Col")
+    }
+    SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
   })
 
   observeEvent(input$`Home-Select_fiber`, {

@@ -64,6 +64,7 @@ NON_KMT_Int <<- "#FF8F00"
 # List of supported analysis
 AVAILABLE_ANALYSIS_KMTs <<- "NaN"
 KMT_Analysis <<- NULL
+SMT_Analysis <<- "NaN"
 AVAILABLE_ANALYSIS_ALL <<- "NaN"
 SMT_Analysis <<- NULL
 Column_List_Fiber <<- "All"
