@@ -56,9 +56,18 @@ function(input, output, session) {
           envir = .GlobalEnv
         )
         assign("WINDOW_WIDTH",
-          round(as.numeric(input$dimension[1]) * 0.75, 0),
+          round(as.numeric(input$dimension[1]), 0),
           envir = .GlobalEnv
         )
+
+        if (WINDOW_WIDTH < 800) {
+          FONT_SIZE <<- 0.95
+        } else if (WINDOW_WIDTH < 1400) {
+          FONT_SIZE <<- 1.5
+        } else {
+          FONT_SIZE <<- 2
+        }
+
         START_UP <<- FALSE
       }
     }
@@ -251,6 +260,7 @@ function(input, output, session) {
     if (DEMO == TRUE) {
       callModule(`3D_Generate`, "Home")
     } else {
+      withProgress(message = "Loading data:", value = 1, {
       if(exists("Palette")){
         rm(Palette, envir = .GlobalEnv)
       }
@@ -263,7 +273,9 @@ function(input, output, session) {
         Palette <<- tibble(c(KMT_Int,
                              NON_KMT_Int))
       }
-
+        setProgress(100)
+        Sys.sleep(0.1)
+      })
       callModule(`3D_Generate`, "Home")
     }
   })

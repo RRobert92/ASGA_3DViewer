@@ -53,7 +53,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 4
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), "μm", sep = " ")
+    UNIT <<- paste(round(seq(MIN_SLIDER, MAX_SLIDER, length.out=7), 1), "μm", sep = " ")
   }
 
   # KMTs minus-end position ----------------------------------------------------
@@ -75,7 +75,7 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
     ACQ <<- 4
     MIN_SLIDER <<- 0
     MAX_SLIDER <<- as.numeric(Data[(which.max(Data$Data)), "Data"])
-    UNIT <<- paste((MIN_SLIDER):round(MAX_SLIDER, 1), "μm", sep = " ")
+    UNIT <<- paste(round(seq(MIN_SLIDER, MAX_SLIDER, length.out=7), 1), "μm", sep = " ")
   }
 
   # KMTs Curvature -------------------------------------------------------------
@@ -189,12 +189,6 @@ Collect_Analysis <- function(Analysis, Pub_ID, Data_ID) {
   if (Analysis == "KMT lattice interaction for 25nm") {
     Data <<- read_xlsx(paste("./Data/", Publication_Name[Pub_ID], "/Analysis/Data_", Data_ID, "_KMTs_minus_seed_0.025.xlsx", sep = ""))
     Data <<- select(Data, "KMT_ID", "Interactor_ID", "I_class")
-
-    updateProgressBar(
-      session = session,
-      id = "Load_3D",
-      value = 50
-    )
 
     Transform_Data()
   }

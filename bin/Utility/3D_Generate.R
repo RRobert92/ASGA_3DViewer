@@ -222,7 +222,7 @@
         }
 
         Palette <<- tibble(c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B"))
-        UNIT <<- c("KMT without interaction", "KMT with Non-KMT interaction", "KMT - KMT interaction", "Non-KMT interaction with KMT")
+        UNIT <<- c("KMT without interactions", "KMT with Non-KMT interaction", "KMT - KMT interaction", "Non-KMT interaction with KMT")
       }
 
       if (VIEW_ALL == TRUE) {
@@ -298,7 +298,6 @@
         rgl.close()
         closeSweetAlert(session = session)
         rglwidget(scene, reuse = CASHING)
-
       } else {
         if (nrow(df_Segments) > 0 && input$`Select_fiber` == "All") {
           if (SMT_Analysis != "NaN" && !is.null(Data) && "Segment ID" %in% colnames(Data)) {
@@ -369,7 +368,6 @@
           rgl.close()
           closeSweetAlert(session = session)
           rglwidget(scene, reuse = CASHING)
-
         } else {
           if (SMT_Analysis != "NaN" && !is.null(Data) && "Segment ID" %in% colnames(Data)) {
             # Handle MT-MT interaction data
@@ -446,13 +444,14 @@
 
     output$`ScaleBare` <- renderRglwidget({
       if (exists("Palette")) {
+
         open3d(windowRect = c(10, 10, WINDOW_WIDTH, 200))
         rgl.bg(color = "white")
         bgplot3d({
           plot.new()
           color.legend(0, -0.2, 1, 0.8,
             rect.col = as.list(Palette[1])[[1]],
-            legend = UNIT, gradient = "x", cex = 1
+            legend = UNIT, gradient = "x", cex = FONT_SIZE
           )
         })
 
