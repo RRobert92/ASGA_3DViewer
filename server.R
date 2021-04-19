@@ -41,14 +41,14 @@ function(input, output, session) {
 
       rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
       source("global.R")
-     # js$refresh()
+      # js$refresh()
       updateTabsetPanel(session, "innavbar", selected = "Home")
     }
     if (input$"innavbar-3D" == "3D_Data_Select") {
       rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
       source("global.R")
 
-      # Define Height of browser windows <- currently not working :( -----------
+      # Define Height of browser windows ---------------------------------------
       req(input$dimension)
       if (START_UP == TRUE) {
         assign("WINDOW_HEIGHT",
@@ -117,7 +117,7 @@ function(input, output, session) {
     DataSet_Active_List <<- c("Demo")
     updatePickerInput(session, "Home-DataSet_in_Pub", choices = DataSet_Active_List)
 
-    # Update list of available analysis --------------------------------------
+    # Update list of available analysis ----------------------------------------
     Analysis_Active_List <<- c("All MTs", "KMTs")
     updatePickerInput(session, "Home-Analysis_in_DataSet", choices = Analysis_Active_List)
 
@@ -186,6 +186,7 @@ function(input, output, session) {
     })
   })
 
+  # Responsive for each publications -------------------------------------------
   observeEvent(input$`Home-Analysis_in_DataSet`, {
     if (input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "All MTs") {
       show("Home-Non_KMT_Col")
@@ -244,7 +245,7 @@ function(input, output, session) {
     }
   })
 
-  # Collect input about the color
+  # Collect input about the color ----------------------------------------------
   observeEvent(input$`Home-Non_KMT_Col`, {
     Non_KMT_Col <<- input$`Home-Non_KMT_Col`
   })
@@ -252,7 +253,7 @@ function(input, output, session) {
     KMT_Col <<- input$`Home-KMT_Col`
   })
 
-  # Refresh rgl widget
+  # Refresh rgl widget ---------------------------------------------------------
   observeEvent(input$`Home-Refresh`, {
     req(input$`Home-Select_KMT_Analysis`)
     req(input$`Home-Select_SMT_Analysis`)
@@ -261,18 +262,20 @@ function(input, output, session) {
       callModule(`3D_Generate`, "Home")
     } else {
       withProgress(message = "Loading data:", value = 1, {
-      if(exists("Palette")){
-        rm(Palette, envir = .GlobalEnv)
-      }
-      if(input$`Home-Select_SMT_Analysis` == "NaN" &&
-         input$`Home-Select_KMT_Analysis` != "NaN"){
-        Collect_Analysis(input$`Home-Select_KMT_Analysis`, Pub_ID, Data_ID)
-      } else if (input$`Home-Select_KMT_Analysis` == "NaN" &&
-                 input$`Home-Select_SMT_Analysis` != "NaN") {
-        Collect_Analysis(input$`Home-Select_SMT_Analysis`, Pub_ID, Data_ID)
-        Palette <<- tibble(c(KMT_Int,
-                             NON_KMT_Int))
-      }
+        if (exists("Palette")) {
+          rm(Palette, envir = .GlobalEnv)
+        }
+        if (input$`Home-Select_SMT_Analysis` == "NaN" &&
+          input$`Home-Select_KMT_Analysis` != "NaN") {
+          Collect_Analysis(input$`Home-Select_KMT_Analysis`, Pub_ID, Data_ID)
+        } else if (input$`Home-Select_KMT_Analysis` == "NaN" &&
+          input$`Home-Select_SMT_Analysis` != "NaN") {
+          Collect_Analysis(input$`Home-Select_SMT_Analysis`, Pub_ID, Data_ID)
+          Palette <<- tibble(c(
+            KMT_Int,
+            NON_KMT_Int
+          ))
+        }
         setProgress(100)
         Sys.sleep(0.1)
       })
@@ -280,6 +283,7 @@ function(input, output, session) {
     }
   })
 
+  # Collect info about KMT anaysis selection -----------------------------------
   observeEvent(input$`Home-Select_KMT_Analysis`, {
     SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
 
@@ -308,6 +312,7 @@ function(input, output, session) {
     }
   })
 
+  # Collect info about MT-MT analysis selection --------------------------------
   observeEvent(input$`Home-Select_SMT_Analysis`, {
     if (input$`Home-Select_KMT_Analysis` != "NaN" &&
       input$`Home-Select_SMT_Analysis` != "NaN") {
@@ -324,6 +329,7 @@ function(input, output, session) {
     SMT_Analysis <<- input$`Home-Select_SMT_Analysis`
   })
 
+  # Collect info fiber selection -----------------------------------------------
   observeEvent(input$`Home-Select_fiber`, {
     List_of_Kfibers(input$`Home-Select_fiber`)
   })
