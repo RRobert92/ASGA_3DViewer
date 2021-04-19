@@ -84,60 +84,84 @@ Viewer_UI <- function(id) {
           column(
             2,
             offset = 0,
-            pickerInput(
-              inputId = ns("DataSet_in_Pub"),
-              label = "Select data set",
-              choices = "Init",
-              multiple = FALSE
-            ),
-            pickerInput(
-              inputId = ns("Analysis_in_DataSet"),
-              label = "Select 3D View",
-              choices = "KMTs",
-              multiple = FALSE
-            ),
-            hidden(
-              checkboxInput(
-                inputId = ns("Hidde_MTs"),
-                label = "Hidde all non-KMTs",
-                value = FALSE
+            tags$div(
+              class = "Tools-3D",
+              pickerInput(
+                inputId = ns("DataSet_in_Pub"),
+                label = "Select data set",
+                choices = "Init",
+                multiple = FALSE
               )
             ),
-            hidden(
+            tags$div(
+              class = "Tools-3D",
               pickerInput(
-                inputId = ns("Select_fiber"),
-                label = "Select k-fibers",
-                choices = Column_List_Fiber,
-                multiple = FALSE,
+                inputId = ns("Analysis_in_DataSet"),
+                label = "Select 3D View",
+                choices = "KMTs",
+                multiple = FALSE
+              )
+            ),
+            tags$div(
+              class = "Tools-3D",
+              hidden(
+                checkboxInput(
+                  inputId = ns("Hidde_MTs"),
+                  label = "Show all non-KMTs",
+                  value = FALSE
+                )
+              )
+            ),
+            tags$div(
+              class = "Tools-3D",
+              hidden(
+                pickerInput(
+                  inputId = ns("Select_fiber"),
+                  label = "Select k-fibers",
+                  choices = Column_List_Fiber,
+                  multiple = FALSE,
+                )
               )
             ),
             tags$div(class = "h_line"),
-            hidden(
-              colourInput(ns("Non_KMT_Col"),
-                label = "Non-KMTs color",
-                value = "#FFFFFF"
+            tags$div(
+              class = "Tools-3D",
+              hidden(
+                colourInput(ns("Non_KMT_Col"),
+                  label = "Non-KMTs color",
+                  value = "#FFFFFF"
+                )
               )
             ),
-            hidden(
-              colourInput(ns("KMT_Col"),
-                label = "KMTs color",
-                value = "#FF3C28"
+            tags$div(
+              class = "Tools-3D",
+              hidden(
+                colourInput(ns("KMT_Col"),
+                  label = "KMTs color",
+                  value = "#FF3C28"
+                )
               )
             ),
-            hidden(
-              pickerInput(
-                inputId = ns("Select_KMT_Analysis"),
-                label = "Select KMT analysis",
-                choices = AVAILABLE_ANALYSIS_KMTs,
-                multiple = FALSE
+            tags$div(
+              class = "Tools-3D",
+              hidden(
+                pickerInput(
+                  inputId = ns("Select_KMT_Analysis"),
+                  label = "Select KMT analysis",
+                  choices = AVAILABLE_ANALYSIS_KMTs,
+                  multiple = FALSE
+                )
               )
             ),
-            hidden(
-              pickerInput(
-                inputId = ns("Select_SMT_Analysis"),
-                label = "Select MT-MT interaction analysis",
-                choices = AVAILABLE_ANALYSIS_ALL,
-                multiple = FALSE
+            tags$div(
+              class = "Tools-3D",
+              hidden(
+                pickerInput(
+                  inputId = ns("Select_SMT_Analysis"),
+                  label = "Select MT-MT interaction analysis",
+                  choices = AVAILABLE_ANALYSIS_ALL,
+                  multiple = FALSE
+                )
               )
             ),
             tags$div(

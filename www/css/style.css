@@ -32,8 +32,8 @@ label {
 
 .h_line {
     border-top: 2px solid grey;
-    margin-top: 2%;
-    margin-bottom: 2%;
+    margin-top: 10%;
+    margin-bottom: 10%;
     width: 100%;
 }
 
@@ -92,6 +92,11 @@ img {
 
 .Setting_button {
   margin: 3%;
+}
+
+.Tools-3D {
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
 /*
   # CSS Main Page  -----------------------------------------------------------------
