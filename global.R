@@ -30,7 +30,7 @@ includeCSS("www/css/style.css")
 
 JS_CODE <- "
 shinyjs.browseURL = function(url) {
-  window.open(url,'_blank');
+  window.location.assign(url,'_blank');
 }
 "
 JS_RESET <- "shinyjs.refresh = function() { history.go(0); }"
