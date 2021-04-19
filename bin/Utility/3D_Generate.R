@@ -426,12 +426,11 @@
 
               MT <- as.numeric(unlist(strsplit(as.character(df_Segments[i, "Point IDs"]), split = ",")))
               MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-              MT <- cylinder3d(MT / 10000, radius = 0.01)
 
               if ("Color" %in% colnames(df_Segments)) {
-                shade3d(MT, col = df_Segments[i, "Color"], alpha = 1)
+                lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
               } else {
-                shade3d(MT, col = KMT_Col, alpha = 1)
+                lines3d(MT, col = KMT_Col, alpha = 1)
               }
             }
           }

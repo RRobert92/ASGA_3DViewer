@@ -33,7 +33,7 @@ shinyjs.browseURL = function(url) {
   window.location.assign(url,'_blank');
 }
 "
-JS_RESET <- "shinyjs.refresh = function() { history.go(0); }"
+#JS_RESET <- "shinyjs.refresh = function() { history.go(0); }"
 
 # Global HTML  -----------------------------------------------------------------
 source("www/Home/index.R")
@@ -50,29 +50,32 @@ source("bin/Utility/Color_Conversion.R")
 
 
 # Global constant settings  ----------------------------------------------------
-SHINY_IO <<- TRUE # Constant defining if app is running locally or online
-START_UP <<- TRUE # Constant defining if app was stared freshly
-VIEW_ALL <<- FALSE # Constant defining if app will show all MTs or just KMTs
-DEMO <<- FALSE # Constant defining if app running in Demo mode
-CASHING <<- FALSE # Constant defining if the rgl widget should reused models and cash file
+SHINY_IO <- TRUE # Constant defining if app is running locally or online
+START_UP <- TRUE # Constant defining if app was stared freshly
+VIEW_ALL <- FALSE # Constant defining if app will show all MTs or just KMTs
+DEMO <- FALSE # Constant defining if app running in Demo mode
+CASHING <- FALSE # Constant defining if the rgl widget should reused models and cash file
 
-Non_KMT_Col <<- "#FFFFFF"
-KMT_Col <<- "#FF3C28"
-KMT_Int <<- "#F6005D"
-NON_KMT_Int <<- "#FF8F00"
+Non_KMT_Col <- "#FFFFFF"
+KMT_Col <- "#FF3C28"
+KMT_Int <- "#F6005D"
+NON_KMT_Int <- "#FF8F00"
 
 # List of supported analysis
-AVAILABLE_ANALYSIS_KMTs <<- "NaN"
-KMT_Analysis <<- NULL
-SMT_Analysis <<- "NaN"
-AVAILABLE_ANALYSIS_ALL <<- "NaN"
-SMT_Analysis <<- NULL
-Column_List_Fiber <<- "All"
-Data_Segments <<- NULL
-Data <<- NULL
+AVAILABLE_ANALYSIS_KMTs <- "NaN"
+KMT_Analysis <- NULL
+SMT_Analysis <- "NaN"
+AVAILABLE_ANALYSIS_ALL <- "NaN"
+SMT_Analysis <- NULL
+Column_List_Fiber <- "All"
+Data_Segments <- NULL
+Data <- NULL
+`3D_View_Set` <- "KMTs"
+Pub_ID <- 1
+Data_ID <- 1
 
-WINDOW_HEIGHT <<- "640px" # Constant to define rgl_widget height
-WINDOW_WIDTH <<- NULL
+WINDOW_HEIGHT <- "640px" # Constant to define rgl_widget height
+WINDOW_WIDTH <- NULL
 
 Search_for_Data() # Scan environment and define set of variable for UI
 Analysis_List(1, 1) # Gather initial info about analysis if exists

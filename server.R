@@ -41,13 +41,14 @@ function(input, output, session) {
 
       rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
       source("global.R")
-      js$refresh()
+     # js$refresh()
+      updateTabsetPanel(session, "innavbar", selected = "Home")
     }
     if (input$"innavbar-3D" == "3D_Data_Select") {
       rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
       source("global.R")
 
-      # Define Height of browser windows <- currently not working :( -------------
+      # Define Height of browser windows <- currently not working :( -----------
       req(input$dimension)
       if (START_UP == TRUE) {
         assign("WINDOW_HEIGHT",
@@ -100,7 +101,7 @@ function(input, output, session) {
     show("Home-Select_SMT_Analysis")
 
     # Load Demo ----------------------------------------------------------------
-    Load_Data("Demo", 1)
+    Load_Data("Demo", 1, 1)
     List_of_Kfibers()
     updatePickerInput(session, "Home-Select_fiber", choices = Column_List_Fiber)
 
