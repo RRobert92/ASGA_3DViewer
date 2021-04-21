@@ -480,10 +480,10 @@
     },
     "mgcv": {
       "Package": "mgcv",
-      "Version": "1.8-34",
+      "Version": "1.8-35",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "bd4a6c4b600f58651d60d381b0e9a397"
+      "Hash": "89fd8b2ad4a6cb4979b78cf2a77ab503"
     },
     "mime": {
       "Package": "mime",
@@ -648,10 +648,10 @@
     },
     "rgl": {
       "Package": "rgl",
-      "Version": "0.105.22",
+      "Version": "0.106.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "58fcb115fdf03df469f8e39da4d0c476"
+      "Hash": "9b52986ff19cdde97074ba4704d3d834"
     },
     "rlang": {
       "Package": "rlang",
@@ -781,10 +781,10 @@
     },
     "tibble": {
       "Package": "tibble",
-      "Version": "3.1.0",
+      "Version": "3.1.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4d894a114dbd4ecafeda5074e7c538e6"
+      "Hash": "fbbca141541ee9242233ba50b0fcb843"
     },
     "tidyr": {
       "Package": "tidyr",

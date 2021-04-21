@@ -81,7 +81,8 @@ Analysis_List <- function(Pub, Data) {
 
     if (!is.null(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")))) {
       # List of analysis for all MTs
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "MT_Interaction") == TRUE) == 5) {
+      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
+                         paste("Data_", Data, "_MT_Interaction", sep = "")) == TRUE) == 5) {
         AVAILABLE_ANALYSIS_ALL <<- c(
           AVAILABLE_ANALYSIS_ALL,
           "MT-MT interactions for 25nm",
@@ -93,32 +94,37 @@ Analysis_List <- function(Pub, Data) {
       }
 
       # List of analysis for KMTs
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "LD") == TRUE) != 0) {
+      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
+                         paste("Data_", Data, "_LD", sep = "")) == TRUE) != 0) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
           "Length Distribution",
           "Minus-ends Position"
         )
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "KMT_Total_Curv") == TRUE) != 0) {
+      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
+                         paste("Data_", Data, "_KMT_Total_Curv", sep = "")) == TRUE) != 0) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
           "KMTs Curvature"
         )
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "K_Core_Area") == TRUE) != 0) {
+      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
+                         paste("Data_", Data, "_K_Core_Area", sep = "")) == TRUE) != 0) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
           "No. of KMTs at a Pole"
         )
-        if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "KMT_Pole") == TRUE) != 0) {
+        if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
+                           paste("Data_", Data, "_KMT_Pole", sep = "")) == TRUE) != 0) {
           AVAILABLE_ANALYSIS_KMTs <<- c(
             AVAILABLE_ANALYSIS_KMTs,
             "No. of KMTs"
           )
         }
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "KMT_Minus_End") == TRUE) == 7) {
+      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
+                         paste("Data_", Data, "_KMT_Minus_End", sep = "")) == TRUE) == 7) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
           "KMT minus-ends interaction for 25nm",
@@ -130,7 +136,8 @@ Analysis_List <- function(Pub, Data) {
           "KMT minus-ends interaction for 100nm"
         )
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")), "KMTs_minus_seed") == TRUE) == 7) {
+      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
+                         paste("Data_", Data, "_KMTs_minus_seed", sep = "")) == TRUE) == 7) {
         AVAILABLE_ANALYSIS_KMTs <<- c(
           AVAILABLE_ANALYSIS_KMTs,
           "KMT lattice interaction for 25nm",

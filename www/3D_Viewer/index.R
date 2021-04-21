@@ -26,7 +26,7 @@ Viewer_UI <- function(id) {
       value = "Home"
     ),
     tabPanel(
-      title = "3D Module",
+      title = "Publication's",
       value = "3D_Data_Select",
       tags$div(
         class = "splash-container-3D",
