@@ -61,9 +61,10 @@ function(input, output, session) {
         )
 
         if (WINDOW_WIDTH < 800) {
-          FONT_SIZE <<- 0.95
+          FONT_SIZE <<- 0.8
         } else if (WINDOW_WIDTH < 1400) {
-          FONT_SIZE <<- 1.5
+          FONT_SIZE <<- 1
+          WINDOW_WIDTH <<- WINDOW_WIDTH - 25
         } else {
           FONT_SIZE <<- 2
         }

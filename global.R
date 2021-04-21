@@ -19,7 +19,7 @@ options(encoding = 'UTF-8')
 source("bin/Utility/Library.R")
 
 APP_TITLE <- "ASGA - 3D Viewer v1.0.0 Pre release"
-CC <- paste("© Copyright GPL V3.0 2021-",
+CC <- paste0("© Copyright GPL V3.0 2021-",
   str_split(Sys.Date(), pattern = "-")[[1]][1],
   ", Robert Kiewisz",
   sep = ""
