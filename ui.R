@@ -14,7 +14,7 @@ fluidPage(
   useShinyalert(),
   useShinyjs(),
   extendShinyjs(text = JS_CODE, functions = "browseURL"),
- # extendShinyjs(text = JS_RESET, functions = "refresh"),
+  # extendShinyjs(text = JS_RESET, functions = "refresh"),
   navbarPage(
     title = APP_TITLE,
     collapsible = TRUE,

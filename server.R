@@ -188,7 +188,7 @@ function(input, output, session) {
 
   # Responsive for each publications -------------------------------------------
   observeEvent(input$`Home-Analysis_in_DataSet`, {
-    if (input[[paste("Home-Analysis_in_DataSet", sep = "_")]] == "All MTs") {
+    if (input$"Home-Analysis_in_DataSet" == "All MTs") {
       show("Home-Non_KMT_Col")
       hide("Home-KMT_Col")
 
@@ -210,6 +210,7 @@ function(input, output, session) {
 
       callModule(`3D_Generate`, "Home")
     }
+
     if (input$`Home-Analysis_in_DataSet` == "KMTs") {
       show("Home-Hidde_MTs")
 
