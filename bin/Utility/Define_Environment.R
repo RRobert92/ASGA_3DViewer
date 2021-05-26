@@ -4,6 +4,8 @@
 # (c) 2021 Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
+# Define variables that are used in all sessions by the users
+#
 # Author: Robert Kiewisz
 # Created: 2021-04-05
 ################################################################################
@@ -51,82 +53,105 @@ Search_for_Data <- function() {
   }
 }
 
-Analysis_List <- function(Pub, Data) {
-  AVAILABLE_ANALYSIS_KMTs <<- "NaN"
-  AVAILABLE_ANALYSIS_ALL <<- "NaN"
-
-  if (Pub == "Demo" && Data == "Demo") {
-    AVAILABLE_ANALYSIS_ALL <<- c(
-      AVAILABLE_ANALYSIS_ALL,
-      "Demo"
-    )
-    AVAILABLE_ANALYSIS_KMTs <<- c(
-      AVAILABLE_ANALYSIS_KMTs,
-      "Demo"
-    )
-  }
-
+Analysis_List_All <- function(Pub, Data) {
   if (length(list.files(paste("./Data/", list.files("./Data")[Pub], "/Analysis", sep = ""))) > 0) {
     # List of Analysis
-    assign(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_"),
+    assign(paste(Publication_Name[Pub], "Analysis_Names", sep = "_"),
       list.files(paste("./Data/", list.files("./Data")[Pub], "/Analysis", sep = "")),
       envir = .GlobalEnv
     )
-    if (length(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_"))) == 0) {
+    if (length(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_"))) == 0) {
       assign(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_"),
         NULL,
         envir = .GlobalEnv
       )
     }
 
-    if (!is.null(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")))) {
-      # List of analysis for all MTs
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
-                         paste("Data_", Data, "_MT_Interaction", sep = "")) == TRUE) == 5) {
-        AVAILABLE_ANALYSIS_ALL <<- c(
-          AVAILABLE_ANALYSIS_ALL,
-          "MT-MT interactions for 25nm",
-          "MT-MT interactions for 30nm",
-          "MT-MT interactions for 35nm",
-          "MT-MT interactions for 45nm",
-          "MT-MT interactions for 50nm"
+    if (!is.null(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")))) {
+      if(sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
+                        paste("Data_", Data, "_MT_Interaction", sep = "")) == TRUE) == 5){
+        return(
+          c(
+            "NaN",
+            "MT-MT interactions for 25nm",
+            "MT-MT interactions for 30nm",
+            "MT-MT interactions for 35nm",
+            "MT-MT interactions for 45nm",
+            "MT-MT interactions for 50nm"
+          )
+        )
+      } else {
+        return(
+          c(
+            "NaN"
+          )
         )
       }
+    }
+  }
+}
 
+Analysis_List_KMTs <- function(Pub, Data) {
+  if (length(list.files(paste("./Data/", list.files("./Data")[Pub], "/Analysis", sep = ""))) > 0) {
+
+    # List of Analysis
+    assign(paste(Publication_Name[Pub], "Analysis_Names", sep = "_"),
+      list.files(paste("./Data/", list.files("./Data")[Pub], "/Analysis", sep = "")),
+      envir = .GlobalEnv
+    )
+    if (length(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_"))) == 0) {
+      assign(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_"),
+        NULL,
+        envir = .GlobalEnv
+      )
+    }
+
+    df_list_of_analysis <- c("NaN")
+    if (!is.null(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")))) {
       # List of analysis for KMTs
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
-                         paste("Data_", Data, "_LD", sep = "")) == TRUE) != 0) {
-        AVAILABLE_ANALYSIS_KMTs <<- c(
-          AVAILABLE_ANALYSIS_KMTs,
+      if (sum(str_detect(
+        get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
+        paste("Data_", Data, "_LD", sep = "")
+      ) == TRUE) != 0) {
+        df_list_of_analysis <- c(
+          df_list_of_analysis,
           "Length Distribution",
           "Minus-ends Position"
         )
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
-                         paste("Data_", Data, "_KMT_Total_Curv", sep = "")) == TRUE) != 0) {
-        AVAILABLE_ANALYSIS_KMTs <<- c(
-          AVAILABLE_ANALYSIS_KMTs,
+      if (sum(str_detect(
+        get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
+        paste("Data_", Data, "_KMT_Total_Curv", sep = "")
+      ) == TRUE) != 0) {
+        df_list_of_analysis <- c(
+          df_list_of_analysis,
           "KMTs Curvature"
         )
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
-                         paste("Data_", Data, "_K_Core_Area", sep = "")) == TRUE) != 0) {
-        AVAILABLE_ANALYSIS_KMTs <<- c(
-          AVAILABLE_ANALYSIS_KMTs,
+      if (sum(str_detect(
+        get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
+        paste("Data_", Data, "_K_Core_Area", sep = "")
+      ) == TRUE) != 0) {
+        df_list_of_analysis <- c(
+          df_list_of_analysis,
           "No. of KMTs at a Pole"
         )
-        if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
-                           paste("Data_", Data, "_KMT_Pole", sep = "")) == TRUE) != 0) {
-          AVAILABLE_ANALYSIS_KMTs <<- c(
-            AVAILABLE_ANALYSIS_KMTs,
-            "No. of KMTs"
-          )
-        }
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
-                         paste("Data_", Data, "_KMT_Minus_End", sep = "")) == TRUE) == 7) {
-        AVAILABLE_ANALYSIS_KMTs <<- c(
-          AVAILABLE_ANALYSIS_KMTs,
+      if (sum(str_detect(
+        get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
+        paste("Data_", Data, "_KMT_Pole", sep = "")
+      ) == TRUE) != 0) {
+        df_list_of_analysis <- c(
+          df_list_of_analysis,
+          "No. of KMTs"
+        )
+      }
+      if (sum(str_detect(
+        get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
+        paste("Data_", Data, "_KMT_Minus_End", sep = "")
+      ) == TRUE) == 7) {
+        df_list_of_analysis <- c(
+          df_list_of_analysis,
           "KMT minus-ends interaction for 25nm",
           "KMT minus-ends interaction for 30nm",
           "KMT minus-ends interaction for 35nm",
@@ -136,10 +161,12 @@ Analysis_List <- function(Pub, Data) {
           "KMT minus-ends interaction for 100nm"
         )
       }
-      if (sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", Data, sep = "_")),
-                         paste("Data_", Data, "_KMTs_minus_seed", sep = "")) == TRUE) == 7) {
-        AVAILABLE_ANALYSIS_KMTs <<- c(
-          AVAILABLE_ANALYSIS_KMTs,
+      if (sum(str_detect(
+        get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
+        paste("Data_", Data, "_KMTs_minus_seed", sep = "")
+      ) == TRUE) == 7) {
+        df_list_of_analysis <- c(
+          df_list_of_analysis,
           "KMT lattice interaction for 25nm",
           "KMT lattice interaction for 30nm",
           "KMT lattice interaction for 35nm",
@@ -149,32 +176,14 @@ Analysis_List <- function(Pub, Data) {
           "KMT lattice interaction for 100nm"
         )
       }
+      return(df_list_of_analysis)
     }
   }
 }
 
-List_of_Kfibers <- function(Retrive = NULL) {
-  if (exists("Data_Segments")) {
-    Column_List_Fiber <<- c(
-      "All",
-      colnames(Data_Segments[, grepl("Pole", colnames(Data_Segments))])
-    )
-  }
-
-  if (!is.null(Retrive)) {
-    if (Retrive != "All") {
-      KMT_List <<- select(.data = Data_Segments, "Segment ID", Retrive)
-      KMT_List <<- KMT_List %>% filter_at(vars(starts_with("Pole")), any_vars(. > 0))
-
-      if (is.null(KMT_List)) {
-      } else if (nrow(KMT_List) > 0) {
-        KMT_List <<- as.character(as.vector(KMT_List[, 1]))
-      } else {
-        KMT_List <<- NULL
-      }
-    }
-    if (Retrive == "All") {
-      KMT_List <<- NULL
-    }
-  }
+List_of_Kfibers <- function(Data) {
+  return(c(
+    "All",
+    colnames(Data[, grepl("Pole", colnames(Data))])
+  ))
 }

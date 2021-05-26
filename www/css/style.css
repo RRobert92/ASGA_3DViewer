@@ -162,7 +162,7 @@ img {
 
 .splash {
   /* absolute center .splash within .splash-container */
-    width: 80%;
+  width: 80%;
   height: 95%;
   margin: auto;
   position: absolute;
@@ -318,7 +318,7 @@ img {
 /*
   # CSS MEDIA QUERIES  -------------------------------------------------------------------
 */
-  @media (min-height:600px){
+  @media (min-height:800px){
     img {
   max-width: 400px;
   max-height: 400px;

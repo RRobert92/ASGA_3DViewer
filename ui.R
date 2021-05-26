@@ -28,12 +28,12 @@ fluidPage(
                                 $(document).on("shiny:connected", function(e) {
                                     dimension[0] = window.screen.width;
                                     dimension[1] = window.screen.height;
-                                    Shiny.onInputChange("dimension", dimension);
+                                    Shiny.onInputChange("Home-dimension", dimension);
                                 });
                                 $(window).resize(function(e) {
                                     dimension[0] = window.screen.width;
                                     dimension[1] = window.screen.height;
-                                    Shiny.onInputChange("dimension", dimension);
+                                    Shiny.onInputChange("Home-dimension", dimension);
                                 });
                             ')),
     tabPanel(

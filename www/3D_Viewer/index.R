@@ -57,15 +57,6 @@ Viewer_UI <- function(id) {
                   )
                 })
               }
-            ),
-            tags$div(
-              class = "splash-input-3D",
-              actionBttn(
-                inputId = ns("3D_View_Demo"),
-                label = "Demo",
-                style = "material-flat",
-                color = "primary"
-              )
             )
           )
         ),
@@ -93,6 +84,9 @@ Viewer_UI <- function(id) {
                 multiple = FALSE
               )
             ),
+
+            tags$div(class = "h_line"),
+
             tags$div(
               class = "Tools-3D",
               pickerInput(
@@ -107,23 +101,24 @@ Viewer_UI <- function(id) {
               hidden(
                 checkboxInput(
                   inputId = ns("Hidde_MTs"),
-                  label = "Show all non-KMTs",
+                  label = "Show all non-KMTs (Long calculation)",
                   value = FALSE
                 )
               )
             ),
+
             tags$div(
               class = "Tools-3D",
               hidden(
                 pickerInput(
                   inputId = ns("Select_fiber"),
                   label = "Select k-fibers",
-                  choices = Column_List_Fiber,
+                  choices = c("All"),
                   multiple = FALSE,
                 )
               )
             ),
-            tags$div(class = "h_line"),
+
             tags$div(
               class = "Tools-3D",
               hidden(
@@ -142,13 +137,14 @@ Viewer_UI <- function(id) {
                 )
               )
             ),
+
             tags$div(
               class = "Tools-3D",
               hidden(
                 pickerInput(
                   inputId = ns("Select_KMT_Analysis"),
                   label = "Select KMT analysis",
-                  choices = AVAILABLE_ANALYSIS_KMTs,
+                  choices = c("NaN"),
                   multiple = FALSE
                 )
               )
@@ -159,11 +155,12 @@ Viewer_UI <- function(id) {
                 pickerInput(
                   inputId = ns("Select_SMT_Analysis"),
                   label = "Select MT-MT interaction analysis",
-                  choices = AVAILABLE_ANALYSIS_ALL,
+                  choices = c("NaN"),
                   multiple = FALSE
                 )
               )
             ),
+
             tags$div(
               class = "splash-input-setting",
               actionBttn(
@@ -174,6 +171,7 @@ Viewer_UI <- function(id) {
               )
             )
           ),
+
           column(
             10,
             offset = 0,
@@ -183,10 +181,12 @@ Viewer_UI <- function(id) {
         )
       )
     ),
+
     tabPanel(
       title = "Wiki",
       value = "Wiki"
     ),
+
     tabPanel(
       title = "About",
       value = "About"

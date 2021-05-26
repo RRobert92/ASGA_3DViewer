@@ -4,293 +4,71 @@
 # (c) 2021 Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
+# TODO - finally adapt functius to all previous restructures
+#
 # Author: Robert Kiewisz
 # Created: 2021-04-06
 ################################################################################
 
-`3D_Generate` <- function(input, output, session) {
-  if (`3D_View_Set` == "All MTs") {
-    output$`wdg` <- renderRglwidget({
-      open3d()
-      rgl.bg(color = "black")
-
+`3D_Generate_RunUP` <- function(id, i, j) {
+  moduleServer(
+    id,
+    function(input, output, session) {
+      # Load data from i and j
       progressSweetAlert(
         session = session,
         id = "Load_3D",
-        title = "Loading 3D data",
+        title = "Loading 3D data: Loading SpatialGraph...",
         display_pct = TRUE,
         value = 0
       )
 
-      if (SMT_Analysis != "NaN" && !is.null(Data) && "Segment ID" %in% colnames(Data)) {
-        # Handle MT-MT interaction data
-        df_Data <- Data %>% filter_at(vars(starts_with("Segment ID")), any_vars(. %in% as.list(Data_Segments[1])[[1]]))
+      Data_Segments <- Load_Data_Segments(
+        paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
+        i,
+        j
+      )
+      Data_Points <- Load_Data_Points(
+        paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
+        i,
+        j
+      )
+      updateProgressBar(
+        session = session,
+        id = "Load_3D",
+        title = "Loading 3D data: Loading parameaters...",
+        value = 0
+      )
 
-        updateProgressBar(
-          session = session,
-          id = "Load_3D",
-          value = 10
-        )
+      # Update all boxes for selections
+      updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments))
+      updatePickerInput(session, "Select_KMT_Analysis", choices = Analysis_List_KMTs(i, j))
+      updatePickerInput(session, "Select_SMT_Analysis", choices = Analysis_List_All(i, j))
 
-        # Render interaction region on KMTs
-        for (i in 1:nrow(df_Data)) {
-          MT <- seq(as.numeric(df_Data[i, 3]), as.numeric(df_Data[i, 4]))
+      # Collect data from all input
+      df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
+      df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
 
-          MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+      # Run rgl
+      output$`wdg` <- renderRglwidget({
+        open3d()
+        rgl.bg(color = "black")
 
-          lines3d(MT, col = KMT_Int, alpha = 1)
-        }
-
-        updateProgressBar(
-          session = session,
-          id = "Load_3D",
-          value = 50
-        )
-
-        df_Data <- Data %>% filter_at(vars(starts_with("Segment ID")), any_vars(. %in% as.list(df_Data[2])[[1]]))
-
-        updateProgressBar(
-          session = session,
-          id = "Load_3D",
-          value = 60
-        )
-
-        # Render interaction region on NoN-KMTs
-        for (i in 1:nrow(df_Data)) {
-          MT <- seq(as.numeric(df_Data[i, 3]), as.numeric(df_Data[i, 4]))
-          MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-          lines3d(MT, col = NON_KMT_Int, alpha = 1)
-        }
-
-        updateProgressBar(
-          session = session,
-          id = "Load_3D",
-          value = 100
-        )
-      } else {
-        for (i in 1:nrow(Data_Segments)) {
+        for (k in 1:nrow(df_Segments)) {
           updateProgressBar(
             session = session,
             id = "Load_3D",
-            value = (i / nrow(Data_Segments)) * 100
+            title = "Loading 3D data: Loading KMTs...",
+            value = (k / nrow(df_Segments)) * 100
           )
-          # Sys.sleep(0.1)
-          MT <- as.numeric(unlist(strsplit(Data_Segments[i, "Point IDs"], split = ",")))
+
+          MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
           MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-          lines3d(MT, col = Non_KMT_Col, alpha = 1)
-        }
-      }
-
-      scene <- scene3d()
-      rgl.close()
-      closeSweetAlert(session = session)
-      rglwidget(scene, reuse = CASHING)
-    })
-  }
-
-  if (`3D_View_Set` == "KMTs") {
-    output$`wdg` <- renderRglwidget({
-      open3d()
-      rgl.bg(color = "black")
-
-      progressSweetAlert(
-        session = session,
-        id = "Load_3D",
-        title = "Loading 3D data : ",
-        display_pct = TRUE,
-        value = 0
-      )
-
-      if (input$`Select_fiber` != "All") {
-        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(input$`Select_fiber`)), any_vars(. >= 1))
-        df_Segments <- df_Segments %>% select("Segment ID", all_of(starts_with(input$`Select_fiber`)), "Point IDs")
-      } else {
-        df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
-        df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
-      }
-
-      if (!is.null(KMT_Analysis) && KMT_Analysis == TRUE && !is.null(Data) && "Segment ID" %in% colnames(Data)) {
-        df_Data <- subset(Data, subset = `Segment ID` %in% df_Segments$`Segment ID`)
-        df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`Segment ID`)
-
-        Palette <<- Creat_Palette(
-          MIN_SLIDER,
-          MAX_SLIDER,
-          nrow(df_Segments),
-          ACQ,
-          KMT_Col
-        )
-
-        df_Data <- df_Data[order(df_Data$`Segment ID`), ]
-        df_Segments <- cbind(df_Segments, df_Data["Data"])
-        df_Segments <- tibble(
-          df_Segments$`Segment ID`,
-          df_Segments$`Point IDs`,
-          df_Segments$`Data`
-        )
-        names(df_Segments)[1:3] <- c("Segment ID", "Point IDs", "Data")
-
-        df_col <- tibble()
-        for (i in 1:nrow(df_Segments)) {
-          df_col[i, 1] <- Palette$Color[which.min(abs(Palette$Range - as.numeric(df_Segments[i, 3])))]
-        }
-
-        df_Segments <- cbind(df_Segments, df_col)
-        names(df_Segments)[4] <- c("Color")
-      }
-
-      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "KMT_ID" %in% colnames(Data) && "MT_type" %in% colnames(Data)) {
-        # how to handle the data when user want to see interactions
-        df_Data <- subset(Data, subset = `KMT_ID` %in% df_Segments$`Segment ID`)
-        df_Segments <- subset(df_Segments, subset = `Segment ID` %in% Data$`KMT_ID`)
-        df_Segments <- select(df_Segments, all_of(c("Segment ID")))
-
-        df_Data <- df_Data %>% filter(Interaction_ID != "NaN")
-
-        if (nrow(df_Data) > 0) {
-          df_col <- tibble()
-          for (i in 1:nrow(df_Segments)) {
-            df_col[i, 1] <- df_Segments[i, "Segment ID"]
-
-            if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["KMT_ID"])[[1]]) {
-              df_col[i, 2] <- "#FF7A7A" # KMT with inter == 1 / light red
-            } else {
-              df_col[i, 2] <- "#8F8F8F" # KMT without inter == 0 / gray
-            }
-          }
-
-          for (i in 1:nrow(df_Data)) {
-            if (df_Data[i, "Interaction_ID"] %in% as.list(df_Segments["Segment ID"])[[1]]) {
-              Find_Col <- which(df_Segments$`Segment ID` == as.numeric(df_Data[i, "Interaction_ID"]))
-              df_col[Find_Col, 2] <- "#FD7BFD" # KMT interacting == 2 / purple
-            } else {
-              Find_Col <- nrow(df_col) + 1
-              df_col[Find_Col, 1] <- as.numeric(df_Data[i, "Interaction_ID"])
-              df_col[Find_Col, 2] <- "#FDDC7B" # NoN-KMT interacting == 3 / light yellow
-            }
-          }
-
-          for (i in 1:nrow(df_col)) {
-            df_col[i, 3] <- Data_Segments[which(as.numeric(df_col[i, 1]) == Data_Segments$`Segment ID`), "Point IDs"]
-          }
-
-          df_Segments <- df_col
-          names(df_Segments)[1:3] <- c("Segment ID", "Color", "Point IDs")
-        } else {
-          df_Segments[2] <- "#8F8F8F"
-          for (i in 1:nrow(df_Segments)) {
-            df_Segments[i, 3] <- Data_Segments[which(as.numeric(df_Segments[i, 1]) == Data_Segments$`Segment ID`), "Point IDs"]
-          }
-          names(df_Segments)[1:3] <- c("Segment ID", "Color", "Point IDs")
-        }
-        Palette <<- tibble(c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B"))
-        UNIT <<- c("KMT without interaction", "KMT with Non-KMT interaction", "KMT - KMT interaction", "Non-KMT interaction with KMT")
-      }
-
-      if (!is.null(KMT_Analysis) && KMT_Analysis == FALSE && !is.null(Data) && "KMT_ID" %in% colnames(Data) && "I_class" %in% colnames(Data)) {
-        df_Data <- subset(Data, subset = `KMT_ID` %in% df_Segments$`Segment ID`)
-        df_Segments <- select(df_Segments, all_of(c("Segment ID", "Point IDs")))
-
-        for (i in 1:nrow(df_Segments)) {
-          if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["Interactor_ID"])[[1]]) {
-            df_Segments[i, 3] <- "#FF7A7A" # KMT-SMT lateral interaction == light red
-          } else if (df_Segments[i, "Segment ID"] %in% as.list(df_Data["KMT_ID"])[[1]]) {
-            df_Segments[i, 3] <- "#FD7BFD" # KMT-KMT lateral interaction == purple
+          if ("Color" %in% colnames(df_Segments)) {
+            lines3d(MT, col = df_Segments[k, "Color"], alpha = 1)
           } else {
-            df_Segments[i, 3] <- "#8F8F8F" # No interaction == gray
-          }
-        }
-        names(df_Segments)[3] <- "Color"
-        df_Data <- df_Data %>%
-          select(all_of(c("Interactor_ID", "I_class"))) %>%
-          filter_at(vars(starts_with("I_class")), any_vars(. == "SMT"))
-
-        if (nrow(df_Data) > 0) {
-          for (i in 1:nrow(df_Data)) {
-            df_Data[i, 3] <- Data_Segments[as.numeric(df_Data[i, 1] + 1), "Point IDs"]
-          }
-          df_Data <- tibble(
-            df_Data[1],
-            df_Data[3],
-            df_Data[2]
-          )
-          df_Data[3] <- "#FDDC7B" # KMT-SMT lateral interaction == purple
-          names(df_Data)[1:3] <- c("Segment ID", "Point IDs", "Color")
-          df_Segments <- rbind(df_Segments, df_Data)
-        }
-
-        Palette <<- tibble(c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B"))
-        UNIT <<- c("KMT without interactions", "KMT with Non-KMT interaction", "KMT - KMT interaction", "Non-KMT interaction with KMT")
-      }
-
-      if (VIEW_ALL == TRUE) {
-        if (SMT_Analysis != "NaN" && !is.null(Data) && "Segment ID" %in% colnames(Data)) {
-          # Handle MT-MT interaction data
-          df_Data <- Data %>% filter_at(vars(starts_with("Segment ID")), any_vars(. %in% as.list(Data_Segments[1])[[1]]))
-
-          updateProgressBar(
-            session = session,
-            id = "Load_3D",
-            value = 10
-          )
-
-          # Render interaction region on KMTs
-          for (i in 1:nrow(df_Data)) {
-            MT <- seq(as.numeric(df_Data[i, 3]), as.numeric(df_Data[i, 4]))
-            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-            lines3d(MT, col = KMT_Int, alpha = 1)
-          }
-
-          updateProgressBar(
-            session = session,
-            id = "Load_3D",
-            value = 50
-          )
-
-          df_Data <- Data %>% filter_at(vars(starts_with("Segment ID")), any_vars(. %in% as.list(df_Data[2])[[1]]))
-
-          updateProgressBar(
-            session = session,
-            id = "Load_3D",
-            value = 60
-          )
-
-          # Render interaction region on NoN-KMTs
-          for (i in 1:nrow(df_Data)) {
-            MT <- seq(as.numeric(df_Data[i, 3]), as.numeric(df_Data[i, 4]))
-            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-            lines3d(MT, col = NON_KMT_Int, alpha = 1)
-          }
-
-          updateProgressBar(
-            session = session,
-            id = "Load_3D",
-            value = 100
-          )
-        } else {
-          for (i in 1:nrow(Data_Segments)) {
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = (i / nrow(Data_Segments)) * 100
-            )
-
-            MT <- as.numeric(unlist(strsplit(Data_Segments[i, "Point IDs"], split = ",")))
-            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-            if (Data_Segments[i, 1] %in% df_Segments[, 1]) {
-              if ("Color" %in% colnames(df_Segments)) {
-                lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
-              } else {
-                lines3d(MT, col = KMT_Col, alpha = 1)
-              }
-            } else {
-              lines3d(MT, col = Non_KMT_Col, alpha = 1)
-            }
+            lines3d(MT, col = input$`KMT_Col`, alpha = 1)
           }
         }
 
@@ -298,167 +76,187 @@
         rgl.close()
         closeSweetAlert(session = session)
         rglwidget(scene, reuse = CASHING)
+      })
+    }
+  )
+}
+
+`3D_Generate_Refresh` <- function(id, i, j) {
+  moduleServer(
+    id,
+    function(input, output, session) {
+      # Load data from i and j
+      progressSweetAlert(
+        session = session,
+        id = "Load_3D",
+        title = "Loading 3D data: Loading parameaters...",
+        display_pct = TRUE,
+        value = 0
+      )
+
+      Data_Segments <- Load_Data_Segments(
+        paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
+        i,
+        j
+      )
+      Data_Points <- Load_Data_Points(
+        paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
+        i,
+        j
+      )
+
+      # Collect all information from inputs
+      updateProgressBar(
+        session = session,
+        id = "Load_3D",
+        value = 50
+      )
+
+      WINDOW_HEIGHT <- paste(as.numeric(input$dimension[2] - 51), "px", sep = "")
+      WINDOW_WIDTH <- round(as.numeric(input$dimension[1]), 0)
+
+      if (WINDOW_WIDTH < 800) {
+        FONT_SIZE <- 0.8
+      } else if (WINDOW_WIDTH < 1400) {
+        FONT_SIZE <- 1
       } else {
-        if (nrow(df_Segments) > 0 && input$`Select_fiber` == "All") {
-          if (SMT_Analysis != "NaN" && !is.null(Data) && "Segment ID" %in% colnames(Data)) {
-            # Handle MT-MT interaction data
-            df_Data <- Data %>% filter_at(vars(starts_with("Segment ID")), any_vars(. %in% as.list(df_Segments[1])[[1]]))
+        FONT_SIZE <- 2
+      }
 
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = 10
-            )
+      Data_to_Show <- input$`Analysis_in_DataSet`
+      Show_All_MTs <- input$`Hidde_MTs`
+      Fibers_to_Show <- input$`Select_fiber`
+      Non_KMT_Col <- input$`Non_KMT_Col`
+      KMT_Col <- input$`KMT_Col`
+      KMT_Analysis <- input$`Select_KMT_Analysis`
+      SMT_Analysis <- input$`Select_SMT_Analysis`
 
-            # Render interaction region on KMTs
-            for (i in 1:nrow(df_Data)) {
-              MT <- seq(as.numeric(df_Data[i, 3]), as.numeric(df_Data[i, 4]))
-              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+      updateProgressBar(
+        session = session,
+        id = "Load_3D",
+        value = 75
+      )
+      # Laod data for KMTs
+      df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
 
-              lines3d(MT, col = "#F6005D", alpha = 1)
-            }
+      # If show all MT generate df for non-MT to be loaded at the end
+      if(Show_All_MTs == TRUE){
+      df_Segments_NoN_KMT <- Data_Segments %>% filter_at(vars(starts_with("Pole")), all_vars(. == 0))
+      df_Segments_NoN_KMT <- df_Segments_NoN_KMT %>% select("Segment ID", "Point IDs")
+      }
+      df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
 
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = 50
-            )
+      if(Fibers_to_Show != "All"){
+        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. >= 1))
+        df_Segments <- df_Segments %>% select("Segment ID", starts_with(Fibers_to_Show), "Point IDs")
+      }
 
-            df_Data <- Data %>% filter_at(vars(starts_with("Segment ID")), any_vars(. %in% as.list(df_Data[2])[[1]]))
+      updateProgressBar(
+        session = session,
+        id = "Load_3D",
+        value = 100
+      )
+      # Collect analysis
+      if(KMT_Analysis != "NaN"){
+        df_Data <- Collect_Analysis(KMT_Analysis, i, j)
 
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = 60
-            )
-
-            # Render interaction region on NoN-KMTs
-            for (i in 1:nrow(df_Data)) {
-              MT <- seq(as.numeric(df_Data[i, 3]), as.numeric(df_Data[i, 4]))
-              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-              lines3d(MT, col = "#FF8F00", alpha = 1)
-            }
-
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = 100
-            )
-          } else {
-            for (i in 1:nrow(df_Segments)) {
-              updateProgressBar(
-                session = session,
-                id = "Load_3D",
-                value = (i / nrow(df_Segments)) * 100
-              )
-
-              MT <- as.numeric(unlist(strsplit(as.character(df_Segments[i, "Point IDs"]), split = ",")))
-              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-              if ("Color" %in% colnames(df_Segments)) {
-                lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
-              } else {
-                lines3d(MT, col = KMT_Col, alpha = 1)
-              }
-            }
-          }
-
-          scene <- scene3d()
-          rgl.close()
-          closeSweetAlert(session = session)
-          rglwidget(scene, reuse = CASHING)
-        } else {
-          if (SMT_Analysis != "NaN" && !is.null(Data) && "Segment ID" %in% colnames(Data)) {
-            # Handle MT-MT interaction data
-            df_Data <- Data %>% filter_at(vars(starts_with("Segment ID")), any_vars(. %in% as.list(df_Segments[1])[[1]]))
-
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = 10
-            )
-
-            # Render interaction region on KMTs
-            for (i in 1:nrow(df_Data)) {
-              MT <- seq(as.numeric(df_Data[i, 3]), as.numeric(df_Data[i, 4]))
-              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-              lines3d(MT, col = "#F6005D", alpha = 1)
-            }
-
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = 50
-            )
-
-            df_Data <- Data %>% filter_at(vars(starts_with("Segment ID")), any_vars(. %in% as.list(df_Data[2])[[1]]))
-
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = 60
-            )
-
-            # Render interaction region on NoN-KMTs
-            for (i in 1:nrow(df_Data)) {
-              MT <- seq(as.numeric(df_Data[i, 3]), as.numeric(df_Data[i, 4]))
-              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-              lines3d(MT, col = "#FF8F00", alpha = 1)
-            }
-
-            updateProgressBar(
-              session = session,
-              id = "Load_3D",
-              value = 100
-            )
-          } else {
-            for (i in 1:nrow(df_Segments)) {
-              updateProgressBar(
-                session = session,
-                id = "Load_3D",
-                value = (i / nrow(df_Segments)) * 100
-              )
-
-              MT <- as.numeric(unlist(strsplit(as.character(df_Segments[i, "Point IDs"]), split = ",")))
-              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-              if ("Color" %in% colnames(df_Segments)) {
-                lines3d(MT, col = df_Segments[i, "Color"], alpha = 1)
-              } else {
-                lines3d(MT, col = KMT_Col, alpha = 1)
-              }
-            }
-          }
-
-
-          scene <- scene3d()
-          rgl.close()
-          closeSweetAlert(session = session)
-          rglwidget(scene, reuse = CASHING)
+        if(startsWith(KMT_Analysis, "KMT lattice interaction for")){
+          df_Data <- Transform_Data(df_Data, df_Segments)
         }
+
+        ACQ <- Legend_Setting_ACQ(KMT_Analysis)
+        MIN_SLIDER <- Legend_Setting_MIN(KMT_Analysis)
+        MAX_SLIDER <- Legend_Setting_MAX(KMT_Analysis, df_Data)
+        UNIT <- Legend_Setting_UNIT(KMT_Analysis, MIN_SLIDER, MAX_SLIDER)
       }
-    })
 
-    output$`ScaleBare` <- renderRglwidget({
-      if (exists("Palette")) {
+      if(SMT_Analysis != "NaN"){
+        df_Data <- Collect_Analysis(SMT_Analysis, i, j)
 
-        open3d(windowRect = c(10, 10, WINDOW_WIDTH, 200))
-        rgl.bg(color = "white")
-        bgplot3d({
-          plot.new()
-          color.legend(0, -0.2, 1, 0.8,
-            rect.col = as.list(Palette[1])[[1]],
-            legend = UNIT, gradient = "x", cex = FONT_SIZE
+        ACQ <- Legend_Setting_ACQ(SMT_Analysis)
+        MIN_SLIDER <- Legend_Setting_MIN(SMT_Analysis)
+        MAX_SLIDER <- Legend_Setting_MAX(SMT_Analysis, df_Data)
+        UNIT <- Legend_Setting_UNIT(SMT_Analysis, MIN_SLIDER, MAX_SLIDER)
+      }
+      closeSweetAlert(session = session)
+
+      if(!exists("df_Data")){
+          output$`wdg` <- renderRglwidget({
+            open3d()
+            rgl.bg(color = "black")
+
+            progressSweetAlert(
+              session = session,
+              id = "Load_3D",
+              title = "Loading 3D data: Loading KMTs...",
+              display_pct = TRUE,
+              value = 0
+            )
+
+            for (k in 1:nrow(df_Segments)) {
+              updateProgressBar(
+                session = session,
+                id = "Load_3D",
+                title = "Loading 3D data: Loading KMTs...",
+                value = (k / nrow(df_Segments)) * 100
+              )
+
+              MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
+              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+              lines3d(MT, col = input$`KMT_Col`, alpha = 1)
+            }
+
+            if(Show_All_MTs == TRUE){
+              closeSweetAlert(session = session)
+              progressSweetAlert(
+                session = session,
+                id = "Load_3D",
+                title = "Loading 3D data: Loading NoN-KMTs...",
+                display_pct = TRUE,
+                value = 0
+              )
+              for (k in 1:nrow(df_Segments_NoN_KMT)) {
+                updateProgressBar(
+                  session = session,
+                  id = "Load_3D",
+                  title = "Loading 3D data: Loading NoN-KMTs...",
+                  value = (k / nrow(df_Segments_NoN_KMT)) * 100
+                )
+
+                MT <- as.numeric(unlist(strsplit(as.character(df_Segments_NoN_KMT[k, "Point IDs"]), split = ",")))
+                MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+                lines3d(MT, col = input$`Non_KMT_Col`, alpha = 1)
+              }
+            }
+
+            scene <- scene3d()
+            rgl.close()
+            closeSweetAlert(session = session)
+            rglwidget(scene, reuse = CASHING)
+          })
+      } else {
+        output$`wdg` <- renderRglwidget({
+          open3d()
+          rgl.bg(color = "black")
+
+          progressSweetAlert(
+            session = session,
+            id = "Load_3D",
+            title = "Loading 3D data: Loading KMTs...",
+            display_pct = TRUE,
+            value = 0
           )
-        })
 
-        scene <- scene3d()
-        rgl.close()
-        rglwidget(scene, reuse = CASHING)
+          scene <- scene3d()
+          rgl.close()
+          closeSweetAlert(session = session)
+          rglwidget(scene, reuse = CASHING)
+        })
       }
-    })
-  }
+
+      closeSweetAlert(session = session)
+    }
+  )
 }
