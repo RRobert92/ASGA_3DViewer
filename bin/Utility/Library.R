@@ -18,7 +18,6 @@ library("colourpicker")
 library("stringr")
 library("rmarkdown")
 library("htmlwidgets")
-library("janitor")
 
 # Function Library  ------------------------------------------------------------
 

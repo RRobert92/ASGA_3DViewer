@@ -68,8 +68,10 @@ Analysis_List_All <- function(Pub, Data) {
     }
 
     if (!is.null(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")))) {
-      if(sum(str_detect(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
-                        paste("Data_", Data, "_MT_Interaction", sep = "")) == TRUE) == 5){
+      if (sum(str_detect(
+        get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
+        paste("Data_", Data, "_MT_Interaction", sep = "")
+      ) == TRUE) == 5) {
         return(
           c(
             "NaN",

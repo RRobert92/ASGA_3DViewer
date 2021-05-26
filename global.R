@@ -33,7 +33,6 @@ shinyjs.browseURL = function(url) {
   window.location.assign(url,'_blank');
 }
 "
-# JS_RESET <- "shinyjs.refresh = function() { history.go(0); }"
 
 # Global HTML  -----------------------------------------------------------------
 source("www/Home/index.R")
@@ -53,4 +52,3 @@ WINDOW_HEIGHT <- "640px" # Constant to define rgl_widget height
 WINDOW_WIDTH <- NULL
 
 Search_for_Data() # Scan environment and define set of variable for UI
-# Analysis_List(1, 1) # Gather initial info about analysis if exists

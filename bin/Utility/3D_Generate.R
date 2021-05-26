@@ -4,7 +4,7 @@
 # (c) 2021 Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
-# TODO - finally adapt functius to all previous restructures
+# TODO - finally adapt functions to all previous restructures
 #
 # Author: Robert Kiewisz
 # Created: 2021-04-06
@@ -140,13 +140,13 @@
       df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
 
       # If show all MT generate df for non-MT to be loaded at the end
-      if(Show_All_MTs == TRUE){
-      df_Segments_NoN_KMT <- Data_Segments %>% filter_at(vars(starts_with("Pole")), all_vars(. == 0))
-      df_Segments_NoN_KMT <- df_Segments_NoN_KMT %>% select("Segment ID", "Point IDs")
+      if (Show_All_MTs == TRUE) {
+        df_Segments_NoN_KMT <- Data_Segments %>% filter_at(vars(starts_with("Pole")), all_vars(. == 0))
+        df_Segments_NoN_KMT <- df_Segments_NoN_KMT %>% select("Segment ID", "Point IDs")
       }
       df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
 
-      if(Fibers_to_Show != "All"){
+      if (Fibers_to_Show != "All") {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. >= 1))
         df_Segments <- df_Segments %>% select("Segment ID", starts_with(Fibers_to_Show), "Point IDs")
       }
@@ -157,10 +157,10 @@
         value = 100
       )
       # Collect analysis
-      if(KMT_Analysis != "NaN"){
+      if (KMT_Analysis != "NaN") {
         df_Data <- Collect_Analysis(KMT_Analysis, i, j)
 
-        if(startsWith(KMT_Analysis, "KMT lattice interaction for")){
+        if (startsWith(KMT_Analysis, "KMT lattice interaction for")) {
           df_Data <- Transform_Data(df_Data, df_Segments)
         }
 
@@ -170,7 +170,7 @@
         UNIT <- Legend_Setting_UNIT(KMT_Analysis, MIN_SLIDER, MAX_SLIDER)
       }
 
-      if(SMT_Analysis != "NaN"){
+      if (SMT_Analysis != "NaN") {
         df_Data <- Collect_Analysis(SMT_Analysis, i, j)
 
         ACQ <- Legend_Setting_ACQ(SMT_Analysis)
@@ -180,62 +180,62 @@
       }
       closeSweetAlert(session = session)
 
-      if(!exists("df_Data")){
-          output$`wdg` <- renderRglwidget({
-            open3d()
-            rgl.bg(color = "black")
+      if (!exists("df_Data")) {
+        output$`wdg` <- renderRglwidget({
+          open3d()
+          rgl.bg(color = "black")
 
-            progressSweetAlert(
+          progressSweetAlert(
+            session = session,
+            id = "Load_3D",
+            title = "Loading 3D data: Loading KMTs...",
+            display_pct = TRUE,
+            value = 0
+          )
+
+          for (k in 1:nrow(df_Segments)) {
+            updateProgressBar(
               session = session,
               id = "Load_3D",
               title = "Loading 3D data: Loading KMTs...",
+              value = (k / nrow(df_Segments)) * 100
+            )
+
+            MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
+            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+            lines3d(MT, col = input$`KMT_Col`, alpha = 1)
+          }
+
+          if (Show_All_MTs == TRUE) {
+            closeSweetAlert(session = session)
+            progressSweetAlert(
+              session = session,
+              id = "Load_3D",
+              title = "Loading 3D data: Loading NoN-KMTs...",
               display_pct = TRUE,
               value = 0
             )
-
-            for (k in 1:nrow(df_Segments)) {
+            for (k in 1:nrow(df_Segments_NoN_KMT)) {
               updateProgressBar(
                 session = session,
                 id = "Load_3D",
-                title = "Loading 3D data: Loading KMTs...",
-                value = (k / nrow(df_Segments)) * 100
+                title = "Loading 3D data: Loading NoN-KMTs...",
+                value = (k / nrow(df_Segments_NoN_KMT)) * 100
               )
 
-              MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
+              MT <- as.numeric(unlist(strsplit(as.character(df_Segments_NoN_KMT[k, "Point IDs"]), split = ",")))
               MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-              lines3d(MT, col = input$`KMT_Col`, alpha = 1)
+              lines3d(MT, col = input$`Non_KMT_Col`, alpha = 1)
             }
+          }
 
-            if(Show_All_MTs == TRUE){
-              closeSweetAlert(session = session)
-              progressSweetAlert(
-                session = session,
-                id = "Load_3D",
-                title = "Loading 3D data: Loading NoN-KMTs...",
-                display_pct = TRUE,
-                value = 0
-              )
-              for (k in 1:nrow(df_Segments_NoN_KMT)) {
-                updateProgressBar(
-                  session = session,
-                  id = "Load_3D",
-                  title = "Loading 3D data: Loading NoN-KMTs...",
-                  value = (k / nrow(df_Segments_NoN_KMT)) * 100
-                )
-
-                MT <- as.numeric(unlist(strsplit(as.character(df_Segments_NoN_KMT[k, "Point IDs"]), split = ",")))
-                MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
-
-                lines3d(MT, col = input$`Non_KMT_Col`, alpha = 1)
-              }
-            }
-
-            scene <- scene3d()
-            rgl.close()
-            closeSweetAlert(session = session)
-            rglwidget(scene, reuse = CASHING)
-          })
+          scene <- scene3d()
+          rgl.close()
+          closeSweetAlert(session = session)
+          rglwidget(scene, reuse = CASHING)
+        })
       } else {
         output$`wdg` <- renderRglwidget({
           open3d()
