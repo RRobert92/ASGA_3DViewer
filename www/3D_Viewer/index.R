@@ -114,7 +114,7 @@ Viewer_UI <- function(id) {
                   inputId = ns("Select_fiber"),
                   label = "Select k-fibers",
                   choices = c("All"),
-                  multiple = FALSE,
+                  multiple = FALSE
                 )
               )
             ),

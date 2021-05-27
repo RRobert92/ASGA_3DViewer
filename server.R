@@ -4,8 +4,6 @@
 # (c) 2021 Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 # TODO - Restructure code for higher scalability
-# TODO - Restructure server pipeline to generate singel `3D_Generate` output for each manipulation
-# TODO - Selector functunality is limited to hide and show the rest is collected by he functions
 #
 # Author: Robert Kiewisz
 # Created: 2021-04-03

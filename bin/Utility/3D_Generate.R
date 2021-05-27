@@ -24,12 +24,12 @@
       )
 
       Data_Segments <- Load_Data_Segments(
-        paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
+        paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
         i,
         j
       )
       Data_Points <- Load_Data_Points(
-        paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
+        paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
         i,
         j
       )
@@ -41,7 +41,7 @@
       )
 
       # Update all boxes for selections
-      updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments))
+      updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments), selected = "All")
       updatePickerInput(session, "Select_KMT_Analysis", choices = Analysis_List_KMTs(i, j))
       updatePickerInput(session, "Select_SMT_Analysis", choices = Analysis_List_All(i, j))
 
@@ -65,11 +65,7 @@
           MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
           MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-          if ("Color" %in% colnames(df_Segments)) {
-            lines3d(MT, col = df_Segments[k, "Color"], alpha = 1)
-          } else {
-            lines3d(MT, col = input$`KMT_Col`, alpha = 1)
-          }
+          lines3d(MT, col = input$`KMT_Col`, alpha = 1)
         }
 
         scene <- scene3d()
@@ -95,24 +91,18 @@
       )
 
       Data_Segments <- Load_Data_Segments(
-        paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
+        paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
         i,
         j
       )
       Data_Points <- Load_Data_Points(
-        paste(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
+        paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/", sep = ""),
         i,
         j
       )
 
       # Collect all information from inputs
-      updateProgressBar(
-        session = session,
-        id = "Load_3D",
-        value = 50
-      )
-
-      WINDOW_HEIGHT <- paste(as.numeric(input$dimension[2] - 51), "px", sep = "")
+      WINDOW_HEIGHT <- paste0(as.numeric(input$dimension[2] - 51), "px", sep = "")
       WINDOW_WIDTH <- round(as.numeric(input$dimension[1]), 0)
 
       if (WINDOW_WIDTH < 800) {
@@ -131,11 +121,6 @@
       KMT_Analysis <- input$`Select_KMT_Analysis`
       SMT_Analysis <- input$`Select_SMT_Analysis`
 
-      updateProgressBar(
-        session = session,
-        id = "Load_3D",
-        value = 75
-      )
       # Laod data for KMTs
       df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
 
@@ -144,18 +129,14 @@
         df_Segments_NoN_KMT <- Data_Segments %>% filter_at(vars(starts_with("Pole")), all_vars(. == 0))
         df_Segments_NoN_KMT <- df_Segments_NoN_KMT %>% select("Segment ID", "Point IDs")
       }
-      df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
-
-      if (Fibers_to_Show != "All") {
-        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. >= 1))
-        df_Segments <- df_Segments %>% select("Segment ID", starts_with(Fibers_to_Show), "Point IDs")
-      }
+      df_Segments <- df_Segments %>% select("Segment ID", "Point IDs")
 
       updateProgressBar(
         session = session,
         id = "Load_3D",
         value = 100
       )
+
       # Collect analysis
       if (KMT_Analysis != "NaN") {
         df_Data <- Collect_Analysis(KMT_Analysis, i, j)
@@ -168,6 +149,32 @@
         MIN_SLIDER <- Legend_Setting_MIN(KMT_Analysis)
         MAX_SLIDER <- Legend_Setting_MAX(KMT_Analysis, df_Data)
         UNIT <- Legend_Setting_UNIT(KMT_Analysis, MIN_SLIDER, MAX_SLIDER)
+
+        if (startsWith(KMT_Analysis, "KMT minus-ends interaction for") ||
+          startsWith(KMT_Analysis, "KMT lattice interaction for")) {
+          Palette <- tibble(c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B"))
+        } else {
+          Palette <- Creat_Palette(
+            MIN_SLIDER,
+            MAX_SLIDER,
+            nrow(df_Segments),
+            ACQ,
+            KMT_Col
+          )
+        }
+
+        for (k in 1:nrow(df_Segments)) {
+          if (df_Segments[k, 1] %in% df_Data$`Segment ID`) {
+            df_Segments[k, 3] <- df_Data[
+              which(as.numeric(df_Segments[k, 1]) == df_Data$`Segment ID`),
+              2
+            ]
+            df_Segments[k, 4] <- Palette[which.min(abs(Palette$Range - as.numeric(df_Segments[k, 3]))), 1]
+          } else {
+            df_Segments[k, 3] <- 0
+            df_Segments[k, 4] <- Palette[which.min(abs(Palette$Range - as.numeric(df_Segments[k, 3]))), 1]
+          }
+        }
       }
 
       if (SMT_Analysis != "NaN") {
@@ -177,8 +184,16 @@
         MIN_SLIDER <- Legend_Setting_MIN(SMT_Analysis)
         MAX_SLIDER <- Legend_Setting_MAX(SMT_Analysis, df_Data)
         UNIT <- Legend_Setting_UNIT(SMT_Analysis, MIN_SLIDER, MAX_SLIDER)
+        Palette <- tibble(c("#FD7BFD", "#8F8F8F"))
       }
+
+      if (Fibers_to_Show != "All") {
+        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. >= 1))
+        df_Segments <- df_Segments %>% select("Segment ID", starts_with(Fibers_to_Show), "Point IDs")
+      }
+
       closeSweetAlert(session = session)
+
 
       if (!exists("df_Data")) {
         output$`wdg` <- renderRglwidget({
@@ -216,6 +231,7 @@
               display_pct = TRUE,
               value = 0
             )
+
             for (k in 1:nrow(df_Segments_NoN_KMT)) {
               updateProgressBar(
                 session = session,
@@ -249,6 +265,8 @@
             value = 0
           )
 
+          # TODO assign segment coord to df_data
+          # TODO rgl df_Data
           scene <- scene3d()
           rgl.close()
           closeSweetAlert(session = session)
