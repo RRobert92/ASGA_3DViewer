@@ -42,8 +42,8 @@
 
       # Update all boxes for selections
       updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments), selected = "All")
-      updatePickerInput(session, "Select_KMT_Analysis", choices = Analysis_List_KMTs(i, j))
-      updatePickerInput(session, "Select_SMT_Analysis", choices = Analysis_List_All(i, j))
+      updatePickerInput(session, "Select_KMT_Analysis", choices = Analysis_List_KMTs(i, j), selected = "NaN")
+      updatePickerInput(session, "Select_SMT_Analysis", choices = Analysis_List_All(i, j), selected = "NaN")
 
       # Collect data from all input
       df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
@@ -77,7 +77,12 @@
   )
 }
 
-`3D_Generate_Refresh` <- function(id, i, j) {
+`3D_Generate_Refresh` <- function(id,
+                                  i, j,
+                                  Data_to_Show, Show_All_MTs,
+                                  Fibers_to_Show,
+                                  Non_KMT_Col, KMT_Col,
+                                  KMT_Analysis, SMT_Analysis) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -113,14 +118,6 @@
         FONT_SIZE <- 2
       }
 
-      Data_to_Show <- input$`Analysis_in_DataSet`
-      Show_All_MTs <- input$`Hidde_MTs`
-      Fibers_to_Show <- input$`Select_fiber`
-      Non_KMT_Col <- input$`Non_KMT_Col`
-      KMT_Col <- input$`KMT_Col`
-      KMT_Analysis <- input$`Select_KMT_Analysis`
-      SMT_Analysis <- input$`Select_SMT_Analysis`
-
       # Laod data for KMTs
       df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
 
@@ -137,12 +134,17 @@
         value = 100
       )
 
+      if (Fibers_to_Show != "All") {
+        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. >= 1))
+        df_Segments <- df_Segments %>% select("Segment ID", "Point IDs")
+      }
+
       # Collect analysis
       if (KMT_Analysis != "NaN") {
-        df_Data <- Collect_Analysis(KMT_Analysis, i, j)
+        df_Data <- Collect_Analysis(Data_Segments, KMT_Analysis, i, j)
 
         if (startsWith(KMT_Analysis, "KMT lattice interaction for")) {
-          df_Data <- Transform_Data(df_Data, df_Segments)
+          df_Data <- Transform_Data(df_Data, Data_Segments)
         }
 
         ACQ <- Legend_Setting_ACQ(KMT_Analysis)
@@ -163,19 +165,44 @@
           )
         }
 
-        for (k in 1:nrow(df_Segments)) {
-          if (df_Segments[k, 1] %in% df_Data$`Segment ID`) {
-            df_Segments[k, 3] <- df_Data[
-              which(as.numeric(df_Segments[k, 1]) == df_Data$`Segment ID`),
-              2
+        if (startsWith(KMT_Analysis, "KMT minus-ends interaction for")) {
+          # TODO assigin colors to df_Segments
+          for (k in 1:nrow(df_Segments)) {
+            df_Segments[k, 3:5] <- df_Data[
+              which(as.numeric(df_Segments[k, 1]) == df_Data$KMT_ID),
+              1:ncol(df_Data)
             ]
-            df_Segments[k, 4] <- Palette[which.min(abs(Palette$Range - as.numeric(df_Segments[k, 3]))), 1]
-          } else {
-            df_Segments[k, 3] <- 0
-            df_Segments[k, 4] <- Palette[which.min(abs(Palette$Range - as.numeric(df_Segments[k, 3]))), 1]
+          }
+
+        } else if (startsWith(KMT_Analysis, "KMT lattice interaction for")) {
+          # TODO handle df_data if this is selected
+
+        } else {
+          for (k in 1:nrow(df_Segments)) {
+            if (df_Segments[k, 1] %in% df_Data$`Segment ID`) {
+              df_Segments[k, 3] <- df_Data[
+                which(as.numeric(df_Segments[k, 1]) == df_Data$`Segment ID`),
+                "Data"
+              ]
+              df_Segments[k, 4] <- Palette[
+                which.min(abs(Palette$Range - as.numeric(df_Segments[k, 3]))),
+                1
+              ]
+            } else {
+              df_Segments[k, 3] <- 0
+              df_Segments[k, 4] <- Palette[
+                which.min(abs(Palette$Range - as.numeric(df_Segments[k, 3]))),
+                1
+              ]
+            }
           }
         }
+
+        if (nrow(df_Segments) >= 4) {
+          names(df_Segments)[2:4] <- c("Point IDs", "Data", "Color")
+        }
       }
+
 
       if (SMT_Analysis != "NaN") {
         df_Data <- Collect_Analysis(SMT_Analysis, i, j)
@@ -185,11 +212,6 @@
         MAX_SLIDER <- Legend_Setting_MAX(SMT_Analysis, df_Data)
         UNIT <- Legend_Setting_UNIT(SMT_Analysis, MIN_SLIDER, MAX_SLIDER)
         Palette <- tibble(c("#FD7BFD", "#8F8F8F"))
-      }
-
-      if (Fibers_to_Show != "All") {
-        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. >= 1))
-        df_Segments <- df_Segments %>% select("Segment ID", starts_with(Fibers_to_Show), "Point IDs")
       }
 
       closeSweetAlert(session = session)
@@ -265,12 +287,43 @@
             value = 0
           )
 
-          # TODO assign segment coord to df_data
-          # TODO rgl df_Data
+          for (k in 1:nrow(df_Segments)) {
+            updateProgressBar(
+              session = session,
+              id = "Load_3D",
+              title = "Loading 3D data: Loading KMTs with analysis...",
+              value = (k / nrow(df_Segments)) * 100
+            )
+
+            # TODO if "POint IDs do not exisit then, search for IDs list in the Data_segment
+            MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
+            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+            lines3d(MT, col = as.character(df_Segments[k, 4]), alpha = 1)
+          }
+
           scene <- scene3d()
           rgl.close()
           closeSweetAlert(session = session)
           rglwidget(scene, reuse = CASHING)
+        })
+
+        output$`ScaleBare` <- renderRglwidget({
+          if(exists("Palette")){
+            open3d(windowRect = c(10, 10, WINDOW_WIDTH, 200))
+            rgl.bg(color = "white")
+            bgplot3d({
+              plot.new()
+              color.legend(0, -0.2, 1, 0.8,
+                           rect.col = as.list(Palette[1])[[1]],
+                           legend = UNIT, gradient = "x",
+                           cex = FONT_SIZE
+              )
+            })
+            scene <- scene3d()
+            rgl.close()
+            rglwidget(scene, reuse = CASHING)
+          }
         })
       }
 

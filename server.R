@@ -98,14 +98,19 @@ function(input, output, session) {
         # Loop to load and display for the first time the pub is selected
         lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
           # Run first time when DataSet in Pub is changed
-          if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
+          if (input$`Home-DataSet_in_Pub` == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
             `3D_Generate_RunUP`("Home", i, j)
-          }
 
-          # Refresh rgl widget -------------------------------------------------------
-          observeEvent(input$`Home-Refresh`, {
-            `3D_Generate_Refresh`("Home", i, j)
-          })
+            # Refresh rgl widget -------------------------------------------------------
+            observeEvent(input$`Home-Refresh`, {
+              `3D_Generate_Refresh`("Home",
+                                    i, j,
+                                    input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
+                                    input$`Home-Select_fiber`,
+                                    input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
+                                    input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`)
+            })
+          }
         })
       })
     })
