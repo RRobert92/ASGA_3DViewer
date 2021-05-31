@@ -166,17 +166,37 @@
         }
 
         if (startsWith(KMT_Analysis, "KMT minus-ends interaction for")) {
-          # TODO assigin colors to df_Segments
           for (k in 1:nrow(df_Segments)) {
             df_Segments[k, 3:5] <- df_Data[
               which(as.numeric(df_Segments[k, 1]) == df_Data$KMT_ID),
               1:ncol(df_Data)
             ]
+            if (df_Segments[k, 5] == "NaN") {
+              df_Segments[k, 6] <- "#8F8F8F" # KMT without interaction
+            } else if (df_Segments[k, 5] == "SMT") {
+              df_Segments[k, 6] <- "#FF7A7A" # KMT with Non-KMT interaction
+            } else if (df_Segments[k, 5] == "KMT") {
+              df_Segments[k, 6] <- "#FD7BFD" # KMT - KMT interaction
+            }
           }
+          names(df_Segments)[6] <- "Color"
+
+          df_Interactions <- tibble(df_Segments[, "Interaction_ID"])
+          names(df_Interactions)[1] <- "Interaction_ID"
+          df_Interactions <- df_Interactions[!(df_Interactions$Interaction_ID == "NaN"), ]
+
+          for (k in 1:nrow(df_Interactions)) {
+            # TODO assign Point IDs to each Interaction_ID
+            df_Interactions[k, 2] <- Data_Segments[
+              as.numeric(df_Interactions[k, "Interaction_ID"]) + 1,
+              "Point IDs"
+            ]
+            df_Interactions[k, 3] <- "#FDDC7B" # Non-KMT interaction with KMT
+          }
+          names(df_Interactions)[2:3] <- c("Point IDs", "Color")
 
         } else if (startsWith(KMT_Analysis, "KMT lattice interaction for")) {
           # TODO handle df_data if this is selected
-
         } else {
           for (k in 1:nrow(df_Segments)) {
             if (df_Segments[k, 1] %in% df_Data$`Segment ID`) {
@@ -200,6 +220,7 @@
 
         if (nrow(df_Segments) >= 4) {
           names(df_Segments)[2:4] <- c("Point IDs", "Data", "Color")
+          df_Segments <- df_Segments[1:4, ]
         }
       }
 
@@ -269,6 +290,17 @@
             }
           }
 
+          if (exists("df_Interactions")) {
+            closeSweetAlert(session = session)
+            progressSweetAlert(
+              session = session,
+              id = "Load_3D",
+              title = "Loading 3D data: Loading NoN-KMTs interaction...",
+              display_pct = TRUE,
+              value = 0
+            )
+          }
+
           scene <- scene3d()
           rgl.close()
           closeSweetAlert(session = session)
@@ -295,11 +327,24 @@
               value = (k / nrow(df_Segments)) * 100
             )
 
-            # TODO if "POint IDs do not exisit then, search for IDs list in the Data_segment
             MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
             MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-            lines3d(MT, col = as.character(df_Segments[k, 4]), alpha = 1)
+            lines3d(MT, col = as.character(df_Segments[k, "Color"]), alpha = 1)
+          }
+
+          for (k in 1:nrow(df_Interactions)) {
+            updateProgressBar(
+              session = session,
+              id = "Load_3D",
+              title = "Loading 3D data: Loading NoN-KMTs...",
+              value = (k / nrow(df_Segments_NoN_KMT)) * 100
+            )
+
+            MT <- as.numeric(unlist(strsplit(as.character(df_Interactions[k, "Point IDs"]), split = ",")))
+            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+            lines3d(MT, col = df_Interactions[k, "Color"], alpha = 1)
           }
 
           scene <- scene3d()
@@ -309,15 +354,15 @@
         })
 
         output$`ScaleBare` <- renderRglwidget({
-          if(exists("Palette")){
+          if (exists("Palette")) {
             open3d(windowRect = c(10, 10, WINDOW_WIDTH, 200))
             rgl.bg(color = "white")
             bgplot3d({
               plot.new()
               color.legend(0, -0.2, 1, 0.8,
-                           rect.col = as.list(Palette[1])[[1]],
-                           legend = UNIT, gradient = "x",
-                           cex = FONT_SIZE
+                rect.col = as.list(Palette[1])[[1]],
+                legend = UNIT, gradient = "x",
+                cex = FONT_SIZE
               )
             })
             scene <- scene3d()
