@@ -152,8 +152,9 @@
         MAX_SLIDER <- Legend_Setting_MAX(KMT_Analysis, df_Data)
         UNIT <- Legend_Setting_UNIT(KMT_Analysis, MIN_SLIDER, MAX_SLIDER)
 
-        if (startsWith(KMT_Analysis, "KMT minus-ends interaction for") ||
-          startsWith(KMT_Analysis, "KMT lattice interaction for")) {
+        if (startsWith(KMT_Analysis, "KMT minus-ends interaction for")) {
+          Palette <- tibble(c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B"))
+        } else if (startsWith(KMT_Analysis, "KMT lattice interaction for")) {
           Palette <- tibble(c("#8F8F8F", "#FF7A7A", "#FD7BFD", "#FDDC7B"))
         } else {
           Palette <- Creat_Palette(
@@ -185,9 +186,8 @@
           names(df_Interactions)[1] <- "Interaction_ID"
           df_Interactions <- df_Interactions[!(df_Interactions$Interaction_ID == "NaN"), ]
 
-          if(exists("df_Interactions") && nrow(df_Interactions) > 0){
+          if (exists("df_Interactions") && nrow(df_Interactions) > 0) {
             for (k in 1:nrow(df_Interactions)) {
-              # TODO assign Point IDs to each Interaction_ID
               df_Interactions[k, 2] <- Data_Segments[
                 as.numeric(df_Interactions[k, "Interaction_ID"]) + 1,
                 "Point IDs"
@@ -198,9 +198,45 @@
           } else {
             rm(df_Interactions)
           }
-
         } else if (startsWith(KMT_Analysis, "KMT lattice interaction for")) {
-          # TODO handle df_data if this is selected
+          df_Data <- df_Data[(df_Data$KMT_ID %in% df_Segments$`Segment ID`), ]
+          df_Segments <- df_Segments[!(df_Segments$`Segment ID` %in% df_Data$KMT_ID), ]
+          df_Segments[, 3] <- "#8F8F8F" # KMT without interaction
+          names(df_Segments)[2:3] <- c("Point IDs", "Color")
+
+          df_Interactions <- tibble(df_Data[, c("Interactor_ID", "I_class")])
+          names(df_Interactions)[1] <- "Interaction_ID"
+          df_Interactions <- df_Interactions[!(df_Interactions$Interaction_ID == "NaN"), ]
+
+          if (nrow(df_Data) > 0) {
+            for (k in 1:nrow(df_Interactions)) {
+              df_Interactions[k, 3] <- Data_Segments[
+                as.numeric(df_Interactions[k, "Interaction_ID"]) + 1,
+                "Point IDs"
+              ]
+
+              if (df_Data[k, 2] == "KMT") {
+                df_Interactions[k, 4] <- "#FD7BFD" # KMT - KMT interaction
+              } else {
+                df_Interactions[k, 4] <- "#FDDC7B" # KMT with Non-KMT interaction
+              }
+            }
+            names(df_Interactions)[3:4] <- c("Point IDs", "Color")
+
+            df <- tibble("Segment ID" = df_Data$KMT_ID)
+
+            for (k in 1:nrow(df)) {
+              df[k, 2] <- Data_Segments[
+                as.numeric(df[k, 1]) + 1,
+                "Point IDs"
+              ]
+            }
+            df[, 3] <- "#FF7A7A" # KMT with interaction
+            names(df)[2:3] <- c("Point IDs", "Color")
+            df_Segments <- rbind(df_Segments, df)
+          } else {
+            rm(df_Interactions)
+          }
         } else {
           for (k in 1:nrow(df_Segments)) {
             if (df_Segments[k, 1] %in% df_Data$`Segment ID`) {
@@ -220,6 +256,7 @@
               ]
             }
           }
+          names(df_Segments)[4] <- "Color"
         }
       }
 
@@ -300,6 +337,16 @@
           closeSweetAlert(session = session)
           rglwidget(scene, reuse = CASHING)
         })
+
+        output$`ScaleBare` <- renderRglwidget({
+          if (KMT_Analysis == "NaN" || SMT_Analysis == "NaN") {
+            open3d()
+            rgl.bg(color = "black")
+            scene <- scene3d()
+            rgl.close()
+            rglwidget(scene, reuse = CASHING)
+          }
+        })
       } else {
         output$`wdg` <- renderRglwidget({
           open3d()
@@ -359,17 +406,19 @@
         })
 
         output$`ScaleBare` <- renderRglwidget({
-          if (exists("Palette")) {
+          if (KMT_Analysis != "NaN" || SMT_Analysis != "NaN") {
             open3d(windowRect = c(10, 10, WINDOW_WIDTH, 200))
-            rgl.bg(color = "white")
-            bgplot3d({
+            rgl.bg(color = "black")
+
+            bgplot3d(bg.color = "black", {
               plot.new()
               color.legend(0, -0.2, 1, 0.8,
                 rect.col = as.list(Palette[1])[[1]],
                 legend = UNIT, gradient = "x",
-                cex = FONT_SIZE
+                cex = FONT_SIZE, col = "white"
               )
             })
+
             scene <- scene3d()
             rgl.close()
             rglwidget(scene, reuse = CASHING)

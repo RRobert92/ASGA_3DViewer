@@ -102,7 +102,7 @@ function(input, output, session) {
             `3D_Generate_RunUP`("Home", i, j)
 
             # Refresh rgl widget -------------------------------------------------------
-            observeEvent(input$`Home-Refresh`, {
+            observeEvent(req(input$`Home-Refresh`), {
               `3D_Generate_Refresh`("Home",
                                     i, j,
                                     input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,

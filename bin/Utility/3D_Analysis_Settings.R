@@ -75,16 +75,18 @@ Legend_Setting_UNIT <- function(Analysis, MIN, MAX) {
     Analysis == "No. of KMTs at a Pole") {
     return(paste(round(seq(MIN, MAX, length.out = 7), 0), "KMTs", sep = " "))
   }
-  if (startsWith(Analysis, "KMT minus-ends interaction for") ||
-    startsWith(Analysis, "KMT lattice interaction for")) {
-    return(c("KMT without interaction", "KMT with Non-KMT interaction", "KMT - KMT interaction", "Non-KMT interacting with KMT"))
+  if (startsWith(Analysis, "KMT minus-ends interaction for")) {
+    return(c("KMT without an interaction", "KMT with KMT interaction", "KMT with Non-KMT interaction", "Non-KMT interacting with KMT"))
+  }
+  if (startsWith(Analysis, "KMT lattice interaction for")) {
+    return(c("KMT without an interaction", "KMT with an interaction", "KMT with KMT interaction", "Non-KMT interacting with KMT"))
   }
   if (startsWith(Analysis, "MT-MT interactions for")) {
     return(c("KMT Interaction Region", "NoN-KMT Interaction Region"))
   }
 }
 
-# Transform data for each selected analysis to create uified output
+# Transform data for each selected analysis to create unified output
 Collect_Analysis <- function(Data_Segments, Analysis, Pub_ID, Data_ID) {
 
   # Length Distribution --------------------------------------------------------

@@ -101,7 +101,7 @@ Viewer_UI <- function(id) {
               hidden(
                 checkboxInput(
                   inputId = ns("Hidde_MTs"),
-                  label = "Show all non-KMTs (Long calculation)",
+                  label = "Show non-KMTs (Longer calculation)",
                   value = FALSE
                 )
               )
