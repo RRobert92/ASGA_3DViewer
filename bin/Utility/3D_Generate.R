@@ -128,16 +128,16 @@
       }
       df_Segments <- df_Segments %>% select("Segment ID", "Point IDs")
 
-      updateProgressBar(
-        session = session,
-        id = "Load_3D",
-        value = 100
-      )
-
       if (Fibers_to_Show != "All") {
         df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. >= 1))
         df_Segments <- df_Segments %>% select("Segment ID", "Point IDs")
       }
+
+      updateProgressBar(
+        session = session,
+        id = "Load_3D",
+        value = 75
+      )
 
       # Collect analysis
       if (KMT_Analysis != "NaN") {
@@ -185,15 +185,19 @@
           names(df_Interactions)[1] <- "Interaction_ID"
           df_Interactions <- df_Interactions[!(df_Interactions$Interaction_ID == "NaN"), ]
 
-          for (k in 1:nrow(df_Interactions)) {
-            # TODO assign Point IDs to each Interaction_ID
-            df_Interactions[k, 2] <- Data_Segments[
-              as.numeric(df_Interactions[k, "Interaction_ID"]) + 1,
-              "Point IDs"
-            ]
-            df_Interactions[k, 3] <- "#FDDC7B" # Non-KMT interaction with KMT
+          if(exists("df_Interactions") && nrow(df_Interactions) > 0){
+            for (k in 1:nrow(df_Interactions)) {
+              # TODO assign Point IDs to each Interaction_ID
+              df_Interactions[k, 2] <- Data_Segments[
+                as.numeric(df_Interactions[k, "Interaction_ID"]) + 1,
+                "Point IDs"
+              ]
+              df_Interactions[k, 3] <- "#FDDC7B" # Non-KMT interaction with KMT
+            }
+            names(df_Interactions)[2:3] <- c("Point IDs", "Color")
+          } else {
+            rm(df_Interactions)
           }
-          names(df_Interactions)[2:3] <- c("Point IDs", "Color")
 
         } else if (startsWith(KMT_Analysis, "KMT lattice interaction for")) {
           # TODO handle df_data if this is selected
@@ -217,11 +221,6 @@
             }
           }
         }
-
-        if (nrow(df_Segments) >= 4) {
-          names(df_Segments)[2:4] <- c("Point IDs", "Data", "Color")
-          df_Segments <- df_Segments[1:4, ]
-        }
       }
 
 
@@ -234,6 +233,12 @@
         UNIT <- Legend_Setting_UNIT(SMT_Analysis, MIN_SLIDER, MAX_SLIDER)
         Palette <- tibble(c("#FD7BFD", "#8F8F8F"))
       }
+
+      updateProgressBar(
+        session = session,
+        id = "Load_3D",
+        value = 100
+      )
 
       closeSweetAlert(session = session)
 
@@ -290,17 +295,6 @@
             }
           }
 
-          if (exists("df_Interactions")) {
-            closeSweetAlert(session = session)
-            progressSweetAlert(
-              session = session,
-              id = "Load_3D",
-              title = "Loading 3D data: Loading NoN-KMTs interaction...",
-              display_pct = TRUE,
-              value = 0
-            )
-          }
-
           scene <- scene3d()
           rgl.close()
           closeSweetAlert(session = session)
@@ -333,18 +327,29 @@
             lines3d(MT, col = as.character(df_Segments[k, "Color"]), alpha = 1)
           }
 
-          for (k in 1:nrow(df_Interactions)) {
-            updateProgressBar(
+          if (exists("df_Interactions")) {
+            closeSweetAlert(session = session)
+            progressSweetAlert(
               session = session,
               id = "Load_3D",
-              title = "Loading 3D data: Loading NoN-KMTs...",
-              value = (k / nrow(df_Segments_NoN_KMT)) * 100
+              title = "Loading 3D data: Loading NoN-KMTs interaction...",
+              display_pct = TRUE,
+              value = 0
             )
 
-            MT <- as.numeric(unlist(strsplit(as.character(df_Interactions[k, "Point IDs"]), split = ",")))
-            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+            for (k in 1:nrow(df_Interactions)) {
+              updateProgressBar(
+                session = session,
+                id = "Load_3D",
+                title = "Loading 3D data: Loading NoN-KMTs...",
+                value = (k / nrow(df_Interactions)) * 100
+              )
 
-            lines3d(MT, col = df_Interactions[k, "Color"], alpha = 1)
+              MT <- as.numeric(unlist(strsplit(as.character(df_Interactions[k, "Point IDs"]), split = ",")))
+              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+              lines3d(MT, col = df_Interactions[k, "Color"], alpha = 1)
+            }
           }
 
           scene <- scene3d()
