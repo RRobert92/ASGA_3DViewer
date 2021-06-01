@@ -82,7 +82,7 @@ Legend_Setting_UNIT <- function(Analysis, MIN, MAX) {
     return(c("KMT without an interaction", "KMT with an interaction", "KMT with KMT interaction", "Non-KMT interacting with KMT"))
   }
   if (startsWith(Analysis, "MT-MT interactions for")) {
-    return(c("KMT Interaction Region", "NoN-KMT Interaction Region"))
+    return(c("KMT lattice", "KMT Interaction Region", "NoN-KMT Interaction Region"))
   }
 }
 
