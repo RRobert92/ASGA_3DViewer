@@ -75,6 +75,16 @@
         closeSweetAlert(session = session)
         rglwidget(scene, reuse = CASHING)
       })
+
+      output$`ScaleBare` <- renderRglwidget({
+        if (KMT_Analysis == "NaN" || SMT_Analysis == "NaN") {
+          open3d()
+          rgl.bg(color = "black")
+          scene <- scene3d()
+          rgl.close()
+          rglwidget(scene, reuse = CASHING)
+        }
+      })
     }
   )
 }
