@@ -95,23 +95,30 @@ function(input, output, session) {
 
         show("Home-Select_fiber")
 
-        # Loop to load and display for the first time the pub is selected
-        lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
-          # Run first time when DataSet in Pub is changed
-          if (input$`Home-DataSet_in_Pub` == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
-            `3D_Generate_RunUP`("Home", i, j)
+        # Run first time when Data Set in Pub is changed
+        if (length(which(input$`Home-DataSet_in_Pub` %in% get(paste(Publication_Name[i], "Names", sep = "_")))) > 0) {
+          `3D_Generate_RunUP`(
+            "Home",
+            i, which(input$`Home-DataSet_in_Pub` %in% get(paste(Publication_Name[i], "Names", sep = "_")))
+          )
+        } else {
+          `3D_Generate_RunUP`(
+            "Home",
+            i, 1
+          )
+        }
+      })
 
-            # Refresh rgl widget -------------------------------------------------------
-            observeEvent(req(input$`Home-Refresh`), {
-              `3D_Generate_Refresh`("Home",
-                                    i, j,
-                                    input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
-                                    input$`Home-Select_fiber`,
-                                    input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
-                                    input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`)
-            })
-          }
-        })
+      # Refresh rgl widget -------------------------------------------------------
+      observeEvent(input$`Home-Refresh`, {
+        `3D_Generate_Refresh`(
+          "Home",
+          i, which(input$`Home-DataSet_in_Pub` %in% get(paste(Publication_Name[i], "Names", sep = "_"))),
+          input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
+          input$`Home-Select_fiber`,
+          input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
+          input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`
+        )
       })
     })
   })
