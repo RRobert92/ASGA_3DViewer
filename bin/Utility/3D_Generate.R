@@ -40,11 +40,11 @@
       )
 
       # Update all boxes for selections
-      updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments), selected = "All")
       updatePickerInput(session, "Select_KMT_Analysis", choices = Analysis_List_KMTs(i, j), selected = "NaN")
       updatePickerInput(session, "Select_SMT_Analysis", choices = Analysis_List_All(i, j), selected = "NaN")
       updateColourInput(session, "Non_KMT_Col", value = "#FFFFFF")
       updateColourInput(session, "KMT_Col", value = "#FF3C28")
+      updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments), selected = "All")
 
       # Collect data from all input
       df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))

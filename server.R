@@ -39,14 +39,12 @@ function(input, output, session) {
       hideTab(inputId = "innavbar", target = "3D_Viewer")
       hideTab(inputId = "innavbar-3D", target = "3D_Viewer")
 
-      rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
-      source("global.R")
-
       updateTabsetPanel(session, "innavbar", selected = "Home")
     }
     if (input$"innavbar-3D" == "3D_Data_Select") {
-      rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
-      source("global.R")
+      updateTabsetPanel(session, "innavbar-3D", selected = "3D_Data_Select")
+      showTab(inputId = "innavbar-3D", target = "3D_Data_Select")
+      hideTab(inputId = "innavbar-3D", target = "3D_Viewer")
     }
 
     if (input$"innavbar-3D" == "Wiki") {
@@ -74,12 +72,12 @@ function(input, output, session) {
 
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
       updatePickerInput(session, "Home-DataSet_in_Pub",
-        choices = get(paste(Publication_Name[i], "Names", sep = "_")),
-        selected = get(paste(Publication_Name[i], "Names", sep = "_"))[1]
+                        choices = get(paste(Publication_Name[i], "Names", sep = "_")),
+                        selected = get(paste(Publication_Name[i], "Names", sep = "_"))[1]
       )
       updatePickerInput(session, "Home-Analysis_in_DataSet",
-        choices = c("KMTs", "All MTs"),
-        selected = "KMTs"
+                        choices = c("KMTs", "All MTs"),
+                        selected = "KMTs"
       )
 
       showTab(inputId = "innavbar-3D", target = "3D_Viewer")
@@ -100,32 +98,36 @@ function(input, output, session) {
 
         show("Home-Select_fiber")
 
+        # Run first time when Data Set in Pub is changed -----------------------
         lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
           if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
-            # Run first time when Data Set in Pub is changed
             `3D_Generate_RunUP`(
               "Home",
               i, j
             )
           }
+          })
+      })
+
+          # Refresh rgl widget -------------------------------------------------
+          observeEvent(input$`Home-Refresh`, ignoreNULL = TRUE, {
+            lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
+            if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
+              `3D_Generate_Refresh`(
+                "Home",
+                i, which(input$`Home-DataSet_in_Pub` == get(paste(Publication_Name[i], "Names", sep = "_"))),
+                input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
+                input$`Home-Select_fiber`,
+                input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
+                input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`
+              )
+            }
+            })
+          })
         })
       })
 
-      # Refresh rgl widget -------------------------------------------------------
-      observeEvent(input$`Home-Refresh`, {
-        `3D_Generate_Refresh`(
-          "Home",
-          i, which(input$`Home-DataSet_in_Pub` == get(paste(Publication_Name[i], "Names", sep = "_"))),
-          input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
-          input$`Home-Select_fiber`,
-          input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
-          input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`
-        )
-      })
-    })
-  })
-
-  # Button triggering show/hide action
+  # Button triggering show/hide action -----------------------------------------
   observeEvent(input$`Home-Analysis_in_DataSet`, {
     if (input$"Home-Analysis_in_DataSet" == "All MTs") {
       show("Home-Non_KMT_Col")
@@ -197,7 +199,7 @@ function(input, output, session) {
 
     if (input$`Home-Select_KMT_Analysis` == "NaN") {
       hide("Home-Non_KMT_Col")
-      hide("Home-KMT_Col")
+      show("Home-KMT_Col")
     }
   })
 }

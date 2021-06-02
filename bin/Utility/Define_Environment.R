@@ -180,6 +180,9 @@ Analysis_List_KMTs <- function(Pub, Data) {
       }
       return(df_list_of_analysis)
     }
+  } else {
+    df_list_of_analysis <- c("NaN")
+    return(df_list_of_analysis)
   }
 }
 
