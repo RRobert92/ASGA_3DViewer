@@ -74,11 +74,13 @@ function(input, output, session) {
 
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
       updatePickerInput(session, "Home-DataSet_in_Pub",
-                        choices = get(paste(Publication_Name[i], "Names", sep = "_")),
-                        selected = get(paste(Publication_Name[i], "Names", sep = "_"))[1])
+        choices = get(paste(Publication_Name[i], "Names", sep = "_")),
+        selected = get(paste(Publication_Name[i], "Names", sep = "_"))[1]
+      )
       updatePickerInput(session, "Home-Analysis_in_DataSet",
-                        choices = c("KMTs", "All MTs"),
-                        selected = "KMTs")
+        choices = c("KMTs", "All MTs"),
+        selected = "KMTs"
+      )
 
       showTab(inputId = "innavbar-3D", target = "3D_Viewer")
       updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
@@ -169,11 +171,10 @@ function(input, output, session) {
   # Collect info about KMT anaysis selection -----------------------------------
   observeEvent(input$`Home-Select_KMT_Analysis`, {
     if (input$`Home-Select_KMT_Analysis` == "Length Distribution" ||
-        input$`Home-Select_KMT_Analysis` == "Minus-ends Position" ||
-        input$`Home-Select_KMT_Analysis` == "KMTs Curvature" ||
-        input$`Home-Select_KMT_Analysis` == "No. of KMTs" ||
-        input$`Home-Select_KMT_Analysis` == "No. of KMTs at a Pole") {
-
+      input$`Home-Select_KMT_Analysis` == "Minus-ends Position" ||
+      input$`Home-Select_KMT_Analysis` == "KMTs Curvature" ||
+      input$`Home-Select_KMT_Analysis` == "No. of KMTs" ||
+      input$`Home-Select_KMT_Analysis` == "No. of KMTs at a Pole") {
       hide("Home-Non_KMT_Col")
       show("Home-KMT_Col")
     } else {
@@ -182,7 +183,7 @@ function(input, output, session) {
     }
 
     if (input$`Home-Select_KMT_Analysis` != "NaN" &&
-        input$`Home-Select_SMT_Analysis` != "NaN") {
+      input$`Home-Select_SMT_Analysis` != "NaN") {
       updatePickerInput(session, "Home-Select_SMT_Analysis", selected = "NaN")
     }
   })
@@ -190,7 +191,7 @@ function(input, output, session) {
   # Collect info about MT-MT analysis selection --------------------------------
   observeEvent(input$`Home-Select_SMT_Analysis`, {
     if (input$`Home-Select_KMT_Analysis` != "NaN" &&
-        input$`Home-Select_SMT_Analysis` != "NaN") {
+      input$`Home-Select_SMT_Analysis` != "NaN") {
       updatePickerInput(session, "Home-Select_KMT_Analysis", selected = "NaN")
     }
 
