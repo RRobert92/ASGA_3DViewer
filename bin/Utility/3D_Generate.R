@@ -4,13 +4,12 @@
 # (c) 2021 Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
-# TODO - finally adapt functions to all previous restructures
-#
 # Author: Robert Kiewisz
 # Created: 2021-04-06
 ################################################################################
 
-`3D_Generate_RunUP` <- function(id, i, j) {
+`3D_Generate_RunUP` <- function(id,
+                                i, j) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -77,13 +76,11 @@
       })
 
       output$`ScaleBare` <- renderRglwidget({
-        if (KMT_Analysis == "NaN" || SMT_Analysis == "NaN") {
-          open3d()
-          rgl.bg(color = "black")
-          scene <- scene3d()
-          rgl.close()
-          rglwidget(scene, reuse = CASHING)
-        }
+        open3d()
+        rgl.bg(color = "black")
+        scene <- scene3d()
+        rgl.close()
+        rglwidget(scene, reuse = CASHING)
       })
     }
   )
@@ -134,7 +131,7 @@
       df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
 
       # If show all MT generate df for non-MT to be loaded at the end
-      if (Show_All_MTs == TRUE) {
+      if (Show_All_MTs == TRUE || Data_to_Show == "All MTs") {
         df_Segments_NoN_KMT <- Data_Segments %>% filter_at(vars(starts_with("Pole")), all_vars(. == 0))
         df_Segments_NoN_KMT <- df_Segments_NoN_KMT %>% select("Segment ID", "Point IDs")
       }
@@ -285,20 +282,22 @@
         df_Segments[, 3] <- "#8F8F8F" # KMT lattice
         names(df_Segments)[3] <- "Color"
 
-        if(nrow(df_Data) > 0) {
+        if (nrow(df_Data) > 0) {
           df_KMT <- df_Data[(df_Data$`Segment ID` %in% df_Segments$`Segment ID`), c("Segment ID", "S_1_Start", "S_1_Stop")]
-          for(k in 1:nrow(df_KMT)){
-            df_KMT[k, 4] <- str_c(as.numeric(df_KMT[k,2]):as.numeric(df_KMT[k,3]),
-                                  collapse = ",")
+          for (k in 1:nrow(df_KMT)) {
+            df_KMT[k, 4] <- str_c(as.numeric(df_KMT[k, 2]):as.numeric(df_KMT[k, 3]),
+              collapse = ","
+            )
           }
           df_KMT[5] <- "#FD7BFD" # KMT interaction region
           names(df_KMT)[4:5] <- c("Point IDs", "Color")
           df_KMT <- df_KMT[, c("Point IDs", "Color")]
 
           df_Non_KMT <- df_Data[(df_Data$`Segment ID` %in% df_Segments$`Segment ID`), c("Segments_ID_2", "S_2_Start", "S_2_Stop")]
-          for(k in 1:nrow(df_Non_KMT)){
-            df_Non_KMT[k, 4] <- str_c(as.numeric(df_Non_KMT[k,2]):as.numeric(df_Non_KMT[k,3]),
-                                      collapse = ",")
+          for (k in 1:nrow(df_Non_KMT)) {
+            df_Non_KMT[k, 4] <- str_c(as.numeric(df_Non_KMT[k, 2]):as.numeric(df_Non_KMT[k, 3]),
+              collapse = ","
+            )
           }
           df_Non_KMT[5] <- "#FDDC7B" # Non-KMT interaction region
           names(df_Non_KMT)[4:5] <- c("Point IDs", "Color")
@@ -324,26 +323,28 @@
           open3d()
           rgl.bg(color = "black")
 
-          progressSweetAlert(
-            session = session,
-            id = "Load_3D",
-            title = "Loading 3D data: Loading KMTs...",
-            display_pct = TRUE,
-            value = 0
-          )
-
-          for (k in 1:nrow(df_Segments)) {
-            updateProgressBar(
+          if (nrow(df_Segments) > 0) {
+            progressSweetAlert(
               session = session,
               id = "Load_3D",
               title = "Loading 3D data: Loading KMTs...",
-              value = (k / nrow(df_Segments)) * 100
+              display_pct = TRUE,
+              value = 0
             )
 
-            MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
-            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+            for (k in 1:nrow(df_Segments)) {
+              updateProgressBar(
+                session = session,
+                id = "Load_3D",
+                title = "Loading 3D data: Loading KMTs...",
+                value = (k / nrow(df_Segments)) * 100
+              )
 
-            lines3d(MT, col = input$`KMT_Col`, alpha = 1)
+              MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
+              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+              lines3d(MT, col = input$`KMT_Col`, alpha = 1)
+            }
           }
 
           if (Show_All_MTs == TRUE) {

@@ -3,7 +3,6 @@
 #
 # (c) 2021 Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
-# TODO - Restructure code for higher scalability
 #
 # Author: Robert Kiewisz
 # Created: 2021-04-03
@@ -74,8 +73,12 @@ function(input, output, session) {
     updateColourInput(session, "Home-KMT_Col", value = "#FF3C28")
 
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
-      updatePickerInput(session, "Home-DataSet_in_Pub", choices = get(paste(Publication_Name[1], "Names", sep = "_")))
-      updatePickerInput(session, "Home-Analysis_in_DataSet", choices = c("KMTs", "All MTs"), selected = "KMTs")
+      updatePickerInput(session, "Home-DataSet_in_Pub",
+                        choices = get(paste(Publication_Name[i], "Names", sep = "_")),
+                        selected = get(paste(Publication_Name[i], "Names", sep = "_"))[1])
+      updatePickerInput(session, "Home-Analysis_in_DataSet",
+                        choices = c("KMTs", "All MTs"),
+                        selected = "KMTs")
 
       showTab(inputId = "innavbar-3D", target = "3D_Viewer")
       updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
@@ -95,25 +98,22 @@ function(input, output, session) {
 
         show("Home-Select_fiber")
 
-        # Run first time when Data Set in Pub is changed
-        if (length(which(input$`Home-DataSet_in_Pub` %in% get(paste(Publication_Name[i], "Names", sep = "_")))) > 0) {
-          `3D_Generate_RunUP`(
-            "Home",
-            i, which(input$`Home-DataSet_in_Pub` %in% get(paste(Publication_Name[i], "Names", sep = "_")))
-          )
-        } else {
-          `3D_Generate_RunUP`(
-            "Home",
-            i, 1
-          )
-        }
+        lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
+          if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
+            # Run first time when Data Set in Pub is changed
+            `3D_Generate_RunUP`(
+              "Home",
+              i, j
+            )
+          }
+        })
       })
 
       # Refresh rgl widget -------------------------------------------------------
       observeEvent(input$`Home-Refresh`, {
         `3D_Generate_Refresh`(
           "Home",
-          i, which(input$`Home-DataSet_in_Pub` %in% get(paste(Publication_Name[i], "Names", sep = "_"))),
+          i, which(input$`Home-DataSet_in_Pub` == get(paste(Publication_Name[i], "Names", sep = "_"))),
           input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
           input$`Home-Select_fiber`,
           input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
