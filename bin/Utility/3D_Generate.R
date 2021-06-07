@@ -47,15 +47,8 @@
       updateColourInput(session, "KMT_Col", value = "#FF3C28")
       updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments), selected = "All")
 
-      print("sidebar updated")
-      print(i)
-      print(j)
-
       # Collect data from all input
-      df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
-      print("filtered")
-      df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
-      print("selected")
+      df_Segments <- tibble(Collect_df_Segments(Data_Segments, "Pole"))
 
       # Run rgl
       output$`wdg` <- renderRglwidget({
@@ -135,7 +128,7 @@
       }
 
       # Laod data for KMTs
-      df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
+      df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. > 0))
 
       # If show all MT generate df for non-MT to be loaded at the end
       if (Show_All_MTs == TRUE || Data_to_Show == "All MTs") {
@@ -145,7 +138,7 @@
       df_Segments <- df_Segments %>% select("Segment ID", "Point IDs")
 
       if (Fibers_to_Show != "All") {
-        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. >= 1))
+        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. > 0))
         df_Segments <- df_Segments %>% select("Segment ID", "Point IDs")
       }
 

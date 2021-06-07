@@ -192,3 +192,9 @@ List_of_Kfibers <- function(Data) {
     colnames(Data[, grepl("Pole", colnames(Data))])
   ))
 }
+
+Collect_df_Segments <- function(Data_Segments, SELECT){
+  # Collect data from all input
+  df <- Data_Segments %>% dplyr::filter_at(vars(starts_with(SELECT)), any_vars(. > 0))
+  return(df %>% select("Segment ID", starts_with(SELECT), "Point IDs"))
+}
