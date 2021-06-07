@@ -10,10 +10,11 @@
 
 # Global server settings  ------------------------------------------------------
 options(shiny.maxRequestSize = 1024 * 1024^2)
-options(shiny.host = "127.0.0.1")
-options(shiny.port = 7878)
+# options(shiny.host = "127.0.0.1")
+# options(shiny.port = 7878)
 options(java.parameters = "-Xmx1024m")
 options(encoding = "UTF-8")
+options(rgl.useNULL = TRUE)
 
 # Title of the app -------------------------------------------------------------
 source("bin/Utility/Library.R")

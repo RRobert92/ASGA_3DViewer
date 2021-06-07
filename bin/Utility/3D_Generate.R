@@ -32,6 +32,7 @@
         i,
         j
       )
+
       updateProgressBar(
         session = session,
         id = "Load_3D",
@@ -46,9 +47,15 @@
       updateColourInput(session, "KMT_Col", value = "#FF3C28")
       updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments), selected = "All")
 
+      print("sidebar updated")
+      print(i)
+      print(j)
+
       # Collect data from all input
       df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. >= 1))
+      print("filtered")
       df_Segments <- df_Segments %>% select("Segment ID", starts_with("Pole"), "Point IDs")
+      print("selected")
 
       # Run rgl
       output$`wdg` <- renderRglwidget({
