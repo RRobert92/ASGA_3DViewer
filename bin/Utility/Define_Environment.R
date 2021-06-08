@@ -193,8 +193,17 @@ List_of_Kfibers <- function(Data) {
   ))
 }
 
-Collect_df_Segments <- function(Data_Segments, SELECT){
+Collect_df_Segments <- function(Data, SELECT){
   # Collect data from all input
-  df <- Data_Segments %>% dplyr::filter_at(vars(starts_with(SELECT)), any_vars(. > 0))
-  return(df %>% select("Segment ID", starts_with(SELECT), "Point IDs"))
+  df <- Data %>% select("Segment ID", starts_with(SELECT), "Point IDs")
+
+  df_Segments <- tibble()
+  for(i in which(startsWith(colnames(df), SELECT))){
+    df_df <- df[df[, i] > 0, ]
+    df_df <- df_df %>% select("Segment ID", "Point IDs")
+   df_Segments <- rbind(df_Segments,
+                        df_df)
+  }
+
+  return(df_Segments)
 }
