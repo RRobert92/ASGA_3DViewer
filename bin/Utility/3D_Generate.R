@@ -43,12 +43,12 @@
       # Update all boxes for selections
       updatePickerInput(session, "Select_KMT_Analysis", choices = Analysis_List_KMTs(i, j), selected = "NaN")
       updatePickerInput(session, "Select_SMT_Analysis", choices = Analysis_List_All(i, j), selected = "NaN")
-      updateColourInput(session, "Non_KMT_Col", value = "#FFFFFF")
+      updateColourInput(session, "Non_KMT_Col", value = "#EBBA34")
       updateColourInput(session, "KMT_Col", value = "#FF3C28")
       updatePickerInput(session, "Select_fiber", choices = List_of_Kfibers(Data_Segments), selected = "All")
 
       # Collect data from all input
-      df_Segments <- tibble(Collect_df_Segments(Data_Segments, "Pole"))
+      df_Segments <- tibble(Collect_df_Segments(Data_Segments, "Pole", 1))
 
       # Run rgl
       output$`wdg` <- renderRglwidget({
@@ -128,18 +128,15 @@
       }
 
       # Laod data for KMTs
-      df_Segments <- Data_Segments %>% filter_at(vars(starts_with("Pole")), any_vars(. > 0))
+      df_Segments <- tibble(Collect_df_Segments(Data_Segments, "Pole", 1))
 
       # If show all MT generate df for non-MT to be loaded at the end
       if (Show_All_MTs == TRUE || Data_to_Show == "All MTs") {
-        df_Segments_NoN_KMT <- Data_Segments %>% filter_at(vars(starts_with("Pole")), all_vars(. == 0))
-        df_Segments_NoN_KMT <- df_Segments_NoN_KMT %>% select("Segment ID", "Point IDs")
+        df_Segments_NoN_KMT <- tibble(Collect_df_Segments(Data_Segments, "Pole", 0))
       }
-      df_Segments <- df_Segments %>% select("Segment ID", "Point IDs")
 
       if (Fibers_to_Show != "All") {
-        df_Segments <- Data_Segments %>% filter_at(vars(starts_with(Fibers_to_Show)), any_vars(. > 0))
-        df_Segments <- df_Segments %>% select("Segment ID", "Point IDs")
+        df_Segments <- tibble(Collect_df_Segments(Data_Segments, Fibers_to_Show, 1))
       }
 
       updateProgressBar(
@@ -347,7 +344,7 @@
             }
           }
 
-          if (Show_All_MTs == TRUE) {
+          if (Show_All_MTs == TRUE || Data_to_Show == "All MTs") {
             closeSweetAlert(session = session)
             progressSweetAlert(
               session = session,

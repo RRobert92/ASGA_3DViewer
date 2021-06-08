@@ -67,7 +67,7 @@ function(input, output, session) {
 
   # 3D_Viewer module - load Pub Data -------------------------------------------
   lapply(1:Publication_No, function(i) {
-    updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
+    updateColourInput(session, "Home-Non_KMT_Col", value = "#EBBA34")
     updateColourInput(session, "Home-KMT_Col", value = "#FF3C28")
 
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
@@ -84,7 +84,7 @@ function(input, output, session) {
       updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
 
       observeEvent(input$`Home-DataSet_in_Pub`, {
-        updateColourInput(session, "Home-Non_KMT_Col", value = "#FFFFFF")
+        updateColourInput(session, "Home-Non_KMT_Col", value = "#EBBA34")
         updateColourInput(session, "Home-KMT_Col", value = "#FF3C28")
         updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
 
@@ -141,6 +141,13 @@ function(input, output, session) {
 
       hide("Home-Select_KMT_Analysis")
       hide("Home-Select_SMT_Analysis")
+
+      updatePickerInput(session, "Home-DataSet_in_Pub",
+                        selected = "NaN"
+      )
+      updatePickerInput(session, "Home-Analysis_in_DataSet",
+                        selected = "KMTs"
+      )
     }
 
     if (input$`Home-Analysis_in_DataSet` == "KMTs") {
