@@ -1,7 +1,7 @@
 ################################################################################
 # Shiny Server - 3D view generator module
 #
-# (c) 2021 Kiewisz
+# (c) 2021 Müller-Reichert Lab & Robert Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Author: Robert Kiewisz
@@ -55,7 +55,7 @@
         open3d()
         rgl.bg(color = "black")
 
-        for (k in 1:nrow(df_Segments)) {
+        for (k in seq_len(nrow(df_Segments))) {
           updateProgressBar(
             session = session,
             id = "Load_3D",
@@ -116,7 +116,6 @@
       )
 
       # Collect all information from inputs
-      WINDOW_HEIGHT <- paste0(as.numeric(input$dimension[2] - 51), "px", sep = "")
       WINDOW_WIDTH <- round(as.numeric(input$dimension[1]), 0)
 
       if (WINDOW_WIDTH < 800) {
@@ -173,10 +172,10 @@
         }
 
         if (startsWith(KMT_Analysis, "KMT minus-ends interaction for")) {
-          for (k in 1:nrow(df_Segments)) {
+          for (k in seq_len(nrow(df_Segments))) {
             df_Segments[k, 3:5] <- df_Data[
               which(as.numeric(df_Segments[k, 1]) == df_Data$KMT_ID),
-              1:ncol(df_Data)
+              seq_len(ncol(df_Data))
             ]
             if (df_Segments[k, 5] == "NaN") {
               df_Segments[k, 6] <- "#8F8F8F" # KMT without interaction
@@ -193,7 +192,7 @@
           df_Interactions <- df_Interactions[!(df_Interactions$Interaction_ID == "NaN"), ]
 
           if (exists("df_Interactions") && nrow(df_Interactions) > 0) {
-            for (k in 1:nrow(df_Interactions)) {
+            for (k in seq_len(nrow(df_Interactions))) {
               df_Interactions[k, 2] <- Data_Segments[
                 as.numeric(df_Interactions[k, "Interaction_ID"]) + 1,
                 "Point IDs"
@@ -215,7 +214,7 @@
           df_Interactions <- df_Interactions[!(df_Interactions$Interaction_ID == "NaN"), ]
 
           if (nrow(df_Data) > 0) {
-            for (k in 1:nrow(df_Interactions)) {
+            for (k in seq_len(nrow(df_Interactions))) {
               df_Interactions[k, 3] <- Data_Segments[
                 as.numeric(df_Interactions[k, "Interaction_ID"]) + 1,
                 "Point IDs"
@@ -231,7 +230,7 @@
 
             df <- tibble("Segment ID" = df_Data$KMT_ID)
 
-            for (k in 1:nrow(df)) {
+            for (k in seq_len(nrow(df))) {
               df[k, 2] <- Data_Segments[
                 as.numeric(df[k, 1]) + 1,
                 "Point IDs"
@@ -244,7 +243,7 @@
             rm(df_Interactions)
           }
         } else {
-          for (k in 1:nrow(df_Segments)) {
+          for (k in seq_len(nrow(df_Segments))) {
             if (df_Segments[k, 1] %in% df_Data$`Segment ID`) {
               df_Segments[k, 3] <- df_Data[
                 which(as.numeric(df_Segments[k, 1]) == df_Data$`Segment ID`),
@@ -270,7 +269,7 @@
       if (SMT_Analysis != "NaN") {
         df_Data <- Collect_Analysis(Data_Segments, SMT_Analysis, i, j)
 
-        ACQ <- Legend_Setting_ACQ(SMT_Analysis)
+        # ACQ <- Legend_Setting_ACQ(SMT_Analysis)
         MIN_SLIDER <- Legend_Setting_MIN(SMT_Analysis)
         MAX_SLIDER <- Legend_Setting_MAX(SMT_Analysis, df_Data)
         UNIT <- Legend_Setting_UNIT(SMT_Analysis, MIN_SLIDER, MAX_SLIDER)
@@ -281,7 +280,7 @@
 
         if (nrow(df_Data) > 0) {
           df_KMT <- df_Data[(df_Data$`Segment ID` %in% df_Segments$`Segment ID`), c("Segment ID", "S_1_Start", "S_1_Stop")]
-          for (k in 1:nrow(df_KMT)) {
+          for (k in seq_len(nrow(df_KMT))) {
             df_KMT[k, 4] <- str_c(as.numeric(df_KMT[k, 2]):as.numeric(df_KMT[k, 3]),
               collapse = ","
             )
@@ -291,7 +290,7 @@
           df_KMT <- df_KMT[, c("Point IDs", "Color")]
 
           df_Non_KMT <- df_Data[(df_Data$`Segment ID` %in% df_Segments$`Segment ID`), c("Segments_ID_2", "S_2_Start", "S_2_Stop")]
-          for (k in 1:nrow(df_Non_KMT)) {
+          for (k in seq_len(nrow(df_Non_KMT))) {
             df_Non_KMT[k, 4] <- str_c(as.numeric(df_Non_KMT[k, 2]):as.numeric(df_Non_KMT[k, 3]),
               collapse = ","
             )
@@ -329,7 +328,7 @@
               value = 0
             )
 
-            for (k in 1:nrow(df_Segments)) {
+            for (k in seq_len(nrow(df_Segments))) {
               updateProgressBar(
                 session = session,
                 id = "Load_3D",
@@ -354,7 +353,7 @@
               value = 0
             )
 
-            for (k in 1:nrow(df_Segments_NoN_KMT)) {
+            for (k in seq_len(nrow(df_Segments_NoN_KMT))) {
               updateProgressBar(
                 session = session,
                 id = "Load_3D",
@@ -398,7 +397,7 @@
               value = 0
             )
 
-            for (k in 1:nrow(df_Interactions)) {
+            for (k in seq_len(nrow(df_Interactions))) {
               updateProgressBar(
                 session = session,
                 id = "Load_3D",
@@ -422,7 +421,7 @@
             value = 0
           )
 
-          for (k in 1:nrow(df_Segments)) {
+          for (k in seq_len(nrow(df_Segments))) {
             updateProgressBar(
               session = session,
               id = "Load_3D",

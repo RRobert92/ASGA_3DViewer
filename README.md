@@ -26,7 +26,7 @@
   * [Usage](#Quick_start)
 * [Contributing](#Contributing)
 * [Copyright](#Copyright)
-  
+
 <a name="Quick_start"></a>
 # Quick startS
 You can run the software in an online-version under the [Shinyapp.io](https://kiewisz.shinyapps.io/ASGA_3DViewer/).
@@ -66,9 +66,9 @@ app
 ├── Data
 │   └── Publication_Name_1                       # This name will be display on the website page as a name of publication
 │       ├── Raw
-│       │   ├── DataName_Number_Points.RDS       # This DataName will be display on the website page as a name of dataset
-│       │   ├── DataName_Number_Nodes.RDS        # "Number" indicate the order in which data will be display
-│       │   ├── DataName_Number_Segments.RDS     # e.g. Hela_#1_Points.RDS; Hela_#1_Nodes.RDS; Hela_#1_Segments.RDS etc.
+│       │   ├── DataName_#Number_Points.RDS       # This DataName will be display on the website page as a name of dataset
+│       │   ├── DataName_#Number_Nodes.RDS        # "Number" indicate the order in which data will be display
+│       │   ├── DataName_#Number_Segments.RDS     # e.g. Hela_#1_Points.RDS; Hela_#1_Nodes.RDS; Hela_#1_Segments.RDS etc.
 │       └── Analysis
 │       │   ├── Data_Number_AnalysisName.xlsx    # Analysis datasets connected to DataName_Number in Raw folder obtained from ASGA
 │       |   ├── ...                              # "Number" is corelated with number of data in Raw folder

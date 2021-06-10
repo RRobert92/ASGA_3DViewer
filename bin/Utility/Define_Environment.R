@@ -1,7 +1,7 @@
 ################################################################################
 # Shiny Global - Search Environment
 #
-# (c) 2021 Kiewisz
+# (c) 2021 Müller-Reichert Lab & Robert Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Define variables that are used in all sessions by the users
@@ -17,17 +17,17 @@ Search_for_Data <- function() {
   if (Publication_No != 0) {
     for (i in 1:Publication_No) {
       # List of data sets
-      df <- str_split(list.files(paste("./Data/", list.files("./Data")[i], "/Raw", sep = "")), "_")
+      df <- str_split(list.files(paste0("./Data/", list.files("./Data")[i], "/Raw")), "_")
       if (length(df) > 0) {
         df_df <- tibble()
-        for (j in 1:length(df)) {
+        for (j in seq_along(df)) {
           df_df[j, 1] <- df[[j]][1]
           df_df[j, 2] <- df[[j]][2]
         }
 
         df_df <- unique(df_df)
         df <- NULL
-        for (j in 1:nrow(df_df)) {
+        for (j in seq_len(nrow(df_df))) {
           df <- c(df, paste(df_df[j, 1], df_df[j, 2], sep = "_"))
         }
 
@@ -54,10 +54,10 @@ Search_for_Data <- function() {
 }
 
 Analysis_List_All <- function(Pub, Data) {
-  if (length(list.files(paste("./Data/", list.files("./Data")[Pub], "/Analysis", sep = ""))) > 0) {
+  if (length(list.files(paste0("./Data/", list.files("./Data")[Pub], "/Analysis"))) > 0) {
     # List of Analysis
     assign(paste(Publication_Name[Pub], "Analysis_Names", sep = "_"),
-      list.files(paste("./Data/", list.files("./Data")[Pub], "/Analysis", sep = "")),
+      list.files(paste0("./Data/", list.files("./Data")[Pub], "/Analysis")),
       envir = .GlobalEnv
     )
     if (length(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_"))) == 0) {
@@ -70,7 +70,7 @@ Analysis_List_All <- function(Pub, Data) {
     if (!is.null(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")))) {
       if (sum(str_detect(
         get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
-        paste("Data_", Data, "_MT_Interaction", sep = "")
+        paste0("Data_", Data, "_MT_Interaction")
       ) == TRUE) == 5) {
         return(
           c(
@@ -83,22 +83,18 @@ Analysis_List_All <- function(Pub, Data) {
           )
         )
       } else {
-        return(
-          c(
-            "NaN"
-          )
-        )
+        return("NaN")
       }
     }
   }
 }
 
 Analysis_List_KMTs <- function(Pub, Data) {
-  if (length(list.files(paste("./Data/", list.files("./Data")[Pub], "/Analysis", sep = ""))) > 0) {
+  if (length(list.files(paste0("./Data/", list.files("./Data")[Pub], "/Analysis"))) > 0) {
 
     # List of Analysis
     assign(paste(Publication_Name[Pub], "Analysis_Names", sep = "_"),
-      list.files(paste("./Data/", list.files("./Data")[Pub], "/Analysis", sep = "")),
+      list.files(paste0("./Data/", list.files("./Data")[Pub], "/Analysis")),
       envir = .GlobalEnv
     )
     if (length(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_"))) == 0) {
@@ -108,12 +104,12 @@ Analysis_List_KMTs <- function(Pub, Data) {
       )
     }
 
-    df_list_of_analysis <- c("NaN")
+    df_list_of_analysis <- "NaN"
     if (!is.null(get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")))) {
       # List of analysis for KMTs
       if (sum(str_detect(
         get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
-        paste("Data_", Data, "_LD", sep = "")
+        paste0("Data_", Data, "_LD")
       ) == TRUE) != 0) {
         df_list_of_analysis <- c(
           df_list_of_analysis,
@@ -123,7 +119,7 @@ Analysis_List_KMTs <- function(Pub, Data) {
       }
       if (sum(str_detect(
         get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
-        paste("Data_", Data, "_KMT_Total_Curv", sep = "")
+        paste0("Data_", Data, "_KMT_Total_Curv")
       ) == TRUE) != 0) {
         df_list_of_analysis <- c(
           df_list_of_analysis,
@@ -132,7 +128,7 @@ Analysis_List_KMTs <- function(Pub, Data) {
       }
       if (sum(str_detect(
         get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
-        paste("Data_", Data, "_K_Core_Area", sep = "")
+        paste0("Data_", Data, "_K_Core_Area")
       ) == TRUE) != 0) {
         df_list_of_analysis <- c(
           df_list_of_analysis,
@@ -141,7 +137,7 @@ Analysis_List_KMTs <- function(Pub, Data) {
       }
       if (sum(str_detect(
         get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
-        paste("Data_", Data, "_KMT_Pole", sep = "")
+        paste0("Data_", Data, "_KMT_Pole")
       ) == TRUE) != 0) {
         df_list_of_analysis <- c(
           df_list_of_analysis,
@@ -150,7 +146,7 @@ Analysis_List_KMTs <- function(Pub, Data) {
       }
       if (sum(str_detect(
         get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
-        paste("Data_", Data, "_KMT_Minus_End", sep = "")
+        paste0("Data_", Data, "_KMT_Minus_End")
       ) == TRUE) == 7) {
         df_list_of_analysis <- c(
           df_list_of_analysis,
@@ -165,7 +161,7 @@ Analysis_List_KMTs <- function(Pub, Data) {
       }
       if (sum(str_detect(
         get(paste(Publication_Name[Pub], "Analysis_Names", sep = "_")),
-        paste("Data_", Data, "_KMTs_minus_seed", sep = "")
+        paste0("Data_", Data, "_KMTs_minus_seed")
       ) == TRUE) == 7) {
         df_list_of_analysis <- c(
           df_list_of_analysis,
@@ -181,7 +177,7 @@ Analysis_List_KMTs <- function(Pub, Data) {
       return(df_list_of_analysis)
     }
   } else {
-    df_list_of_analysis <- c("NaN")
+    df_list_of_analysis <- "NaN"
     return(df_list_of_analysis)
   }
 }
@@ -193,20 +189,22 @@ List_of_Kfibers <- function(Data) {
   ))
 }
 
-Collect_df_Segments <- function(Data, SELECT, TYPE){
+Collect_df_Segments <- function(Data, SELECT, TYPE) {
   # Collect data from all input
   df <- Data %>% select("Segment ID", starts_with(SELECT), "Point IDs")
 
   df_Segments <- tibble()
-  if(TYPE == 1){
-    for(i in which(startsWith(colnames(df), SELECT))){
+  if (TYPE == 1) {
+    for (i in which(startsWith(colnames(df), SELECT))) {
       df_df <- df[df[, i] == TYPE, ]
       df_df <- df_df %>% select("Segment ID", "Point IDs")
-      df_Segments <- rbind(df_Segments,
-                           df_df)
+      df_Segments <- rbind(
+        df_Segments,
+        df_df
+      )
     }
   } else {
-    for(i in which(startsWith(colnames(df), SELECT))){
+    for (i in which(startsWith(colnames(df), SELECT))) {
       df <- df[df[, i] == TYPE, ]
     }
     df_Segments <- df %>% select("Segment ID", "Point IDs")

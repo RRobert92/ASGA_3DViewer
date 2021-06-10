@@ -1,12 +1,11 @@
 ################################################################################
 # Shiny UI-Home
 #
-# (c) 2021 Kiewisz
+# (c) 2021 Müller-Reichert Lab & Robert Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Author: Robert Kiewisz
 # Created: 2020-05-17
-# Reviewed: Robert Kiewisz 28/08/2020 (v0.31.1)
 ################################################################################
 
 # Shiny UI-Home  ---------------------------------------------------------------
@@ -18,10 +17,11 @@ homeUI <- function(id) {
     class = "splash-container",
     tags$div(
       class = "splash",
-      tags$p(align="center",
-             tags$img(
-               src = "https://github.com/RRobert92/ASGA_3DViewer/blob/main/img/ASGA_3D_logo.png?raw=true"
-             )
+      tags$p(
+        align = "center",
+        tags$img(
+          src = "https://github.com/RRobert92/ASGA_3DViewer/blob/main/img/ASGA_3D_logo.png?raw=true"
+        )
       ),
       tags$h1(
         class = "splash-head",

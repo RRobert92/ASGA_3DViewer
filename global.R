@@ -1,7 +1,7 @@
 ################################################################################
 # Shiny Global
 #
-# (c) 2021 Kiewisz
+# (c) 2021 Müller-Reichert Lab & Robert Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Author: Robert Kiewisz
@@ -19,10 +19,10 @@ options(rgl.useNULL = TRUE)
 # Title of the app -------------------------------------------------------------
 source("bin/Utility/Library.R")
 
-APP_TITLE <- "ASGA - 3D Viewer v1.1.4"
+APP_TITLE <- "ASGA - 3D Viewer v1.2.0"
 CC <- paste0("© Copyright GPL V3.0 2021-",
   str_split(Sys.Date(), pattern = "-")[[1]][1],
-  ", Robert Kiewisz",
+  ", Müller-Reichert Lab & Robert Kiewisz",
   sep = ""
 )
 

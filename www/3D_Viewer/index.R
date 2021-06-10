@@ -1,7 +1,7 @@
 ################################################################################
 # Shiny UI - 3D viewer
 #
-# (c) 2021 Kiewisz
+# (c) 2021 Müller-Reichert Lab & Robert Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Author: Robert Kiewisz
@@ -84,9 +84,7 @@ Viewer_UI <- function(id) {
                 multiple = FALSE
               )
             ),
-
             tags$div(class = "h_line"),
-
             tags$div(
               class = "Tools-3D",
               pickerInput(
@@ -106,7 +104,6 @@ Viewer_UI <- function(id) {
                 )
               )
             ),
-
             tags$div(
               class = "Tools-3D",
               hidden(
@@ -118,7 +115,6 @@ Viewer_UI <- function(id) {
                 )
               )
             ),
-
             tags$div(
               class = "Tools-3D",
               hidden(
@@ -137,7 +133,6 @@ Viewer_UI <- function(id) {
                 )
               )
             ),
-
             tags$div(
               class = "Tools-3D",
               hidden(
@@ -160,7 +155,6 @@ Viewer_UI <- function(id) {
                 )
               )
             ),
-
             tags$div(
               class = "splash-input-setting",
               actionBttn(
@@ -171,7 +165,6 @@ Viewer_UI <- function(id) {
               )
             )
           ),
-
           column(
             10,
             offset = 0,
@@ -181,12 +174,10 @@ Viewer_UI <- function(id) {
         )
       )
     ),
-
     tabPanel(
       title = "Wiki",
       value = "Wiki"
     ),
-
     tabPanel(
       title = "About",
       value = "About"

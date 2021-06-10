@@ -1,7 +1,7 @@
 ################################################################################
 # Shiny Global - Color conversion HEX to RGB and RGB to HEX
 #
-# (c) 2021 Kiewisz
+# (c) 2021 Müller-Reichert Lab & Robert Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Author: Robert Kiewisz
@@ -14,9 +14,9 @@ HexToRGB <- function(HEX) {
   if (str_length(HEX) == 6) {
     HEX <- strsplit(HEX, "")
     RGB <- tibble(
-      R = as.integer(as.hexmode(paste(HEX[[1]][1], HEX[[1]][2], sep = ""))),
-      G = as.integer(as.hexmode(paste(HEX[[1]][3], HEX[[1]][4], sep = ""))),
-      B = as.integer(as.hexmode(paste(HEX[[1]][5], HEX[[1]][6], sep = "")))
+      R = as.integer(as.hexmode(paste0(HEX[[1]][1], HEX[[1]][2]))),
+      G = as.integer(as.hexmode(paste0(HEX[[1]][3], HEX[[1]][4]))),
+      B = as.integer(as.hexmode(paste0(HEX[[1]][5], HEX[[1]][6])))
     )
     return(RGB)
   } else {
@@ -28,20 +28,20 @@ RGBtoHEX <- function(Col) {
   if (ncol(Col) == 3) {
     R <- as.character(as.hexmode(as.integer(Col[1])))
     if (nchar(R) != 2) {
-      R <- paste("0", R, sep = "")
+      R <- paste0("0", R)
     }
 
     G <- as.character(as.hexmode(as.integer(Col[2])))
     if (nchar(G) != 2) {
-      G <- paste("0", G, sep = "")
+      G <- paste0("0", G)
     }
 
     B <- as.character(as.hexmode(as.integer(Col[3])))
     if (nchar(B) != 2) {
-      B <- paste("0", B, sep = "")
+      B <- paste0("0", B)
     }
 
-    HEX <- paste("#", R, G, B, sep = "")
+    HEX <- paste0("#", R, G, B)
     return(HEX)
   } else {
     return(NULL)
@@ -127,13 +127,13 @@ Creat_Palette <- function(MIN, MAX, RANGE, ACQ, HEX) {
   }
 
   RGB <- data.frame(
-    get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "R"), sep = "")),
-    get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "G"), sep = "")),
-    get(paste("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "B"), sep = ""))
+    get(paste0("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "R"))),
+    get(paste0("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "G"))),
+    get(paste0("MAX_", which(c(MAX_1_Name, MAX_2_Name, MAX_3_Name) == "B")))
   )
 
   df_col <- data.frame()
-  for (i in 1:nrow(RGB)) {
+  for (i in seq_len(nrow(RGB))) {
     df_col[i, 1] <- RGBtoHEX(RGB[i, 1:3])
   }
   names(df_col)[1] <- "Color"

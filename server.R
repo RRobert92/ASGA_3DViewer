@@ -1,7 +1,7 @@
 ################################################################################
 # Shiny Server - Main Server module
 #
-# (c) 2021 Kiewisz
+# (c) 2021 Müller-Reichert Lab & Robert Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Author: Robert Kiewisz
@@ -72,12 +72,12 @@ function(input, output, session) {
 
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
       updatePickerInput(session, "Home-DataSet_in_Pub",
-                        choices = get(paste(Publication_Name[i], "Names", sep = "_")),
-                        selected = get(paste(Publication_Name[i], "Names", sep = "_"))[1]
+        choices = get(paste(Publication_Name[i], "Names", sep = "_")),
+        selected = get(paste(Publication_Name[i], "Names", sep = "_"))[1]
       )
       updatePickerInput(session, "Home-Analysis_in_DataSet",
-                        choices = c("KMTs", "All MTs"),
-                        selected = "KMTs"
+        choices = c("KMTs", "All MTs"),
+        selected = "KMTs"
       )
 
       showTab(inputId = "innavbar-3D", target = "3D_Viewer")
@@ -106,32 +106,32 @@ function(input, output, session) {
               i, j
             )
           }
-          })
-      })
-
-          # Refresh rgl widget -------------------------------------------------
-          observeEvent(input$`Home-Refresh`, ignoreNULL = TRUE, {
-            lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
-            if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
-              `3D_Generate_Refresh`(
-                "Home",
-                i, which(input$`Home-DataSet_in_Pub` == get(paste(Publication_Name[i], "Names", sep = "_"))),
-                input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
-                input$`Home-Select_fiber`,
-                input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
-                input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`
-              )
-            }
-            })
-          })
         })
       })
+
+      # Refresh rgl widget -------------------------------------------------
+      observeEvent(input$`Home-Refresh`, ignoreNULL = TRUE, {
+        lapply(1:get(paste(Publication_Name[i], "No", sep = "_")), function(j) {
+          if (input[[paste("Home-DataSet_in_Pub", sep = "_")]] == get(paste(Publication_Name[i], "Names", sep = "_"))[j]) {
+            `3D_Generate_Refresh`(
+              "Home",
+              i, which(input$`Home-DataSet_in_Pub` == get(paste(Publication_Name[i], "Names", sep = "_"))),
+              input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
+              input$`Home-Select_fiber`,
+              input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
+              input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`
+            )
+          }
+        })
+      })
+    })
+  })
 
   # Button triggering show/hide action -----------------------------------------
   observeEvent(input$`Home-Analysis_in_DataSet`, {
     if (input$"Home-Analysis_in_DataSet" == "All MTs") {
       show("Home-Non_KMT_Col")
-      hide("Home-KMT_Col")
+      show("Home-KMT_Col")
 
       hide("Home-Hidde_MTs")
       updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
@@ -140,13 +140,13 @@ function(input, output, session) {
       updatePickerInput(session, "Home-Select_fiber", selected = "All")
 
       hide("Home-Select_KMT_Analysis")
-      hide("Home-Select_SMT_Analysis")
-
-      updatePickerInput(session, "Home-DataSet_in_Pub",
-                        selected = "NaN"
+      updatePickerInput(session, "Home-Select_KMT_Analysis",
+        selected = "NaN"
       )
-      updatePickerInput(session, "Home-Analysis_in_DataSet",
-                        selected = "KMTs"
+
+      hide("Home-Select_SMT_Analysis")
+      updatePickerInput(session, "Home-Select_SMT_Analysis",
+        selected = "NaN"
       )
     }
 
@@ -186,9 +186,6 @@ function(input, output, session) {
       input$`Home-Select_KMT_Analysis` == "No. of KMTs at a Pole") {
       hide("Home-Non_KMT_Col")
       show("Home-KMT_Col")
-    } else {
-      hide("Home-Non_KMT_Col")
-      hide("Home-KMT_Col")
     }
 
     if (input$`Home-Select_KMT_Analysis` != "NaN" &&
@@ -207,6 +204,25 @@ function(input, output, session) {
     if (input$`Home-Select_KMT_Analysis` == "NaN") {
       hide("Home-Non_KMT_Col")
       show("Home-KMT_Col")
+    }
+  })
+
+  observeEvent(input$`Home-Select_KMT_Analysis`, {
+    if (input$`Home-Select_KMT_Analysis` != "NaN") {
+      hide("Home-Hidde_MTs")
+      updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
+    } else {
+      show("Home-Hidde_MTs")
+      updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
+    }
+  })
+  observeEvent(input$`Home-Select_SMT_Analysis`, {
+    if (input$`Home-Select_SMT_Analysis` != "NaN") {
+      hide("Home-Hidde_MTs")
+      updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
+    } else {
+      show("Home-Hidde_MTs")
+      updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
     }
   })
 }

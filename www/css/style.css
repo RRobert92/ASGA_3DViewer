@@ -2,12 +2,11 @@
   ################################################################################
 # Shiny CSS
 #
-# (c) 2019 Kiewisz
+# (c) 2019 Müller-Reichert Lab & Robert Kiewisz
 # This code is licensed under GPL V3.0 license (see LICENSE.txt for details)
 #
 # Author: Robert Kiewisz
 # Created: 2020-05-17
-# Reviewed: Robert Kiewisz 28/08/2020 (v0.31.1)
 ################################################################################
 */
 
@@ -220,6 +219,8 @@ img {
   width: 100%;
   margin-bottom: 5%;
   margin-top: 10%;
+  display: flex;
+  flex-direction: column;
 }
 
 .splash-input-3D-row:after{
