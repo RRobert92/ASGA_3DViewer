@@ -19,7 +19,7 @@ options(rgl.useNULL = TRUE)
 # Title of the app -------------------------------------------------------------
 source("bin/Utility/Library.R")
 
-APP_TITLE <- "ASGA - 3D Viewer v1.2.0"
+APP_TITLE <- "ASGA - 3D Viewer v1.2.1"
 CC <- paste0("© Copyright GPL V3.0 2021-",
   str_split(Sys.Date(), pattern = "-")[[1]][1],
   ", Müller-Reichert Lab & Robert Kiewisz",

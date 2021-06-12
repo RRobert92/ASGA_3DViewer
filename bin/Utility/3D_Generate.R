@@ -50,8 +50,24 @@
       # Collect data from all input
       df_Segments <- tibble(Collect_df_Segments(Data_Segments, "Pole", 1))
 
+      updateProgressBar(
+        session = session,
+        id = "Load_3D",
+        title = "Loading 3D data: Loading parameaters...",
+        value = 100
+      )
+      closeSweetAlert(session = session)
+
       # Run rgl
       output$`wdg` <- renderRglwidget({
+        progressSweetAlert(
+          session = session,
+          id = "Load_3D",
+          title = "Loading 3D data: Loading KMTs...",
+          display_pct = TRUE,
+          value = 0
+        )
+
         open3d()
         rgl.bg(color = "black")
 
@@ -59,14 +75,13 @@
           updateProgressBar(
             session = session,
             id = "Load_3D",
-            title = "Loading 3D data: Loading KMTs...",
             value = (k / nrow(df_Segments)) * 100
           )
 
           MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
           MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-          lines3d(MT, col = input$`KMT_Col`, alpha = 1)
+          lines3d(MT, col = "#FF3C28", alpha = 1)
         }
 
         scene <- scene3d()

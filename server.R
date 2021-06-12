@@ -67,9 +67,6 @@ function(input, output, session) {
 
   # 3D_Viewer module - load Pub Data -------------------------------------------
   lapply(1:Publication_No, function(i) {
-    updateColourInput(session, "Home-Non_KMT_Col", value = "#EBBA34")
-    updateColourInput(session, "Home-KMT_Col", value = "#FF3C28")
-
     observeEvent(input[[paste("Home-3D_Viewer_Pub", i, sep = "_")]], {
       updatePickerInput(session, "Home-DataSet_in_Pub",
         choices = get(paste(Publication_Name[i], "Names", sep = "_")),
@@ -84,8 +81,6 @@ function(input, output, session) {
       updateTabsetPanel(session, "innavbar-3D", selected = "3D_Viewer")
 
       observeEvent(input$`Home-DataSet_in_Pub`, {
-        updateColourInput(session, "Home-Non_KMT_Col", value = "#EBBA34")
-        updateColourInput(session, "Home-KMT_Col", value = "#FF3C28")
         updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
 
         hide("Home-Non_KMT_Col")
