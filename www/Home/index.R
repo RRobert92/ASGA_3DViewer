@@ -40,14 +40,3 @@ homeUI <- function(id) {
     )
   )
 }
-
-# UI-Footnote  ---------------------------------------------------------------
-
-footnoteUI <- function(id) {
-  ns <- NS(id)
-
-  tags$div(
-    class = "footer l-box is-center",
-    tags$p(CC)
-  )
-}

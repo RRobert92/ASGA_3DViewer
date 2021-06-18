@@ -114,7 +114,8 @@ function(input, output, session) {
               input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
               input$`Home-Select_fiber`,
               input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
-              input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`
+              input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`,
+              input$`Home-Show_Sister`
             )
           }
         })
@@ -213,11 +214,22 @@ function(input, output, session) {
   })
   observeEvent(input$`Home-Select_SMT_Analysis`, {
     if (input$`Home-Select_SMT_Analysis` != "NaN") {
+      show("Home-Show_Sister")
       hide("Home-Hidde_MTs")
       updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
     } else {
-      show("Home-Hidde_MTs")
+      if(input$`Home-Select_fiber` == "All"){
+        hide("Home-Show_Sister")
+      }
       updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
+    }
+  })
+
+  observeEvent(input$`Home-Select_fiber`, {
+    if (input$`Home-Select_fiber` == "All") {
+      hide("Home-Show_Sister")
+    } else {
+      show("Home-Show_Sister")
     }
   })
 }

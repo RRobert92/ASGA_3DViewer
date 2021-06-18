@@ -106,7 +106,8 @@
                                   Data_to_Show, Show_All_MTs,
                                   Fibers_to_Show,
                                   Non_KMT_Col, KMT_Col,
-                                  KMT_Analysis, SMT_Analysis) {
+                                  KMT_Analysis, SMT_Analysis,
+                                  Show_Sister) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -130,6 +131,12 @@
         j
       )
 
+      # Do not allow to load full stack
+      if (SMT_Analysis != "NaN" && Fibers_to_Show == "All") {
+        updatePickerInput(session, "Select_fiber", selected = List_of_Kfibers(Data_Segments)[2])
+        Fibers_to_Show <- List_of_Kfibers(Data_Segments)[2]
+      }
+
       # Collect all information from inputs
       WINDOW_WIDTH <- round(as.numeric(input$dimension[1]), 0)
 
@@ -150,7 +157,27 @@
       }
 
       if (Fibers_to_Show != "All") {
-        df_Segments <- tibble(Collect_df_Segments(Data_Segments, Fibers_to_Show, 1))
+        if(Show_Sister == FALSE){
+          df_Segments <- tibble(Collect_df_Segments(Data_Segments, Fibers_to_Show, 1))
+        } else {
+          df_Fiber_Select <- str_split(Fibers_to_Show, "_")
+          if(df_Fiber_Select[[1]][1] == "Pole1"){
+            df_Fiber_Select[[1]][1] <- "Pole2"
+          } else {
+            df_Fiber_Select[[1]][1] <- "Pole1"
+          }
+          df_Fiber_Select <- paste(df_Fiber_Select[[1]][1], df_Fiber_Select[[1]][2], sep = "_")
+
+          df_Segments_1 <- tibble(Collect_df_Segments(Data_Segments, Fibers_to_Show, 1))
+
+          tryCatch({
+            df_Segments_2 <- tibble(Collect_df_Segments(Data_Segments, df_Fiber_Select, 1))
+            df_Segments <- rbind(df_Segments_1, df_Segments_2)
+          },
+          error = function(e){
+            df_Segments <- df_Segments_1
+          })
+        }
       }
 
       updateProgressBar(
@@ -288,9 +315,9 @@
         MIN_SLIDER <- Legend_Setting_MIN(SMT_Analysis)
         MAX_SLIDER <- Legend_Setting_MAX(SMT_Analysis, df_Data)
         UNIT <- Legend_Setting_UNIT(SMT_Analysis, MIN_SLIDER, MAX_SLIDER)
-        Palette <- tibble(c("#8F8F8F", "#FD7BFD", "#FDDC7B"))
+        Palette <- tibble(c("#FF7A7A", "#FD7BFD", "#8F8F8F", "#FDDC7B"))
 
-        df_Segments[, 3] <- "#8F8F8F" # KMT lattice
+        df_Segments[, 3] <- "#FF7A7A" # KMT lattice
         names(df_Segments)[3] <- "Color"
 
         if (nrow(df_Data) > 0) {
@@ -304,14 +331,21 @@
           names(df_KMT)[4:5] <- c("Point IDs", "Color")
           df_KMT <- df_KMT[, c("Point IDs", "Color")]
 
-          df_Non_KMT <- df_Data[(df_Data$`Segment ID` %in% df_Segments$`Segment ID`), c("Segments_ID_2", "S_2_Start", "S_2_Stop")]
+          df_Non_KMT <- df_Data[(df_Data$`Segment ID` %in% df_Segments$`Segment ID`), c("Segment ID", "Segments_ID_2", "S_2_Start", "S_2_Stop")]
           for (k in seq_len(nrow(df_Non_KMT))) {
-            df_Non_KMT[k, 4] <- str_c(as.numeric(df_Non_KMT[k, 2]):as.numeric(df_Non_KMT[k, 3]),
+            df_Non_KMT[k, 5] <- str_c(as.numeric(df_Non_KMT[k, 3]):as.numeric(df_Non_KMT[k, 4]),
               collapse = ","
             )
           }
-          df_Non_KMT[5] <- "#FDDC7B" # Non-KMT interaction region
-          names(df_Non_KMT)[4:5] <- c("Point IDs", "Color")
+
+          df_Non_KMT[6] <- "#FDDC7B" # Non-KMT interaction region
+          names(df_Non_KMT)[5:6] <- c("Point IDs", "Color")
+          df_Non_KMT_Lattices <- unique(df_Data[(df_Data$`Segment ID` %in% df_Segments$`Segment ID`), "Segments_ID_2"])
+          names(df_Non_KMT_Lattices)[1] <- "Segment ID"
+          df_Non_KMT_Lattices <- Data_Segments[Data_Segments$`Segment ID` %in% df_Non_KMT_Lattices$`Segment ID`, c("Segment ID", "Point IDs")]
+          df_Non_KMT_Lattices[3] <- "#8F8F8F" # Non-KMT interaction region
+          names(df_Non_KMT_Lattices)[3] <- "Color"
+
           df_Non_KMT <- df_Non_KMT[, c("Point IDs", "Color")]
 
           df_Interactions <- rbind(df_KMT, df_Non_KMT)
@@ -413,41 +447,66 @@
             )
 
             for (k in seq_len(nrow(df_Interactions))) {
-              updateProgressBar(
-                session = session,
-                id = "Load_3D",
-                title = "Loading 3D data: Loading Non-KMT...",
-                value = (k / nrow(df_Interactions)) * 100
-              )
+              # updateProgressBar(
+              #   session = session,
+              #   id = "Load_3D",
+              #   value = (k / nrow(df_Interactions)) * 100
+              # )
 
               MT <- as.numeric(unlist(strsplit(as.character(df_Interactions[k, "Point IDs"]), split = ",")))
               MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
               lines3d(MT, col = df_Interactions[k, "Color"], alpha = 1)
             }
-            closeSweetAlert(session = session)
           }
 
-          progressSweetAlert(
-            session = session,
-            id = "Load_3D",
-            title = "Loading 3D data: Loading KMTs...",
-            display_pct = TRUE,
-            value = 0
-          )
+          if (exists("df_Segments")) {
+            closeSweetAlert(session = session)
 
-          for (k in seq_len(nrow(df_Segments))) {
-            updateProgressBar(
+            progressSweetAlert(
               session = session,
               id = "Load_3D",
               title = "Loading 3D data: Loading KMTs...",
-              value = (k / nrow(df_Segments)) * 100
+              display_pct = TRUE,
+              value = 0
             )
 
-            MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
-            MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+            for (k in seq_len(nrow(df_Segments))) {
+              # updateProgressBar(
+              #   session = session,
+              #   id = "Load_3D",
+              #   value = (k / nrow(df_Segments)) * 100
+              # )
 
-            lines3d(MT, col = as.character(df_Segments[k, "Color"]), alpha = 1)
+              MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
+              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+              lines3d(MT, col = as.character(df_Segments[k, "Color"]), alpha = 1)
+            }
+          }
+
+          if (exists("df_Non_KMT_Lattices")) {
+            closeSweetAlert(session = session)
+            progressSweetAlert(
+              session = session,
+              id = "Load_3D",
+              title = "Loading 3D data: Loading non-KMTs...",
+              display_pct = TRUE,
+              value = 0
+            )
+
+            for (k in seq_len(nrow(df_Non_KMT_Lattices))) {
+              # updateProgressBar(
+              #   session = session,
+              #   id = "Load_3D",
+              #   value = (k / nrow(df_Non_KMT_Lattices)) * 100
+              # )
+
+              MT <- as.numeric(unlist(strsplit(as.character(df_Non_KMT_Lattices[k, "Point IDs"]), split = ",")))
+              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+
+              lines3d(MT, col = as.character(df_Non_KMT_Lattices[k, "Color"]), alpha = 1)
+            }
           }
 
           scene <- scene3d()

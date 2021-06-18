@@ -156,6 +156,16 @@ Viewer_UI <- function(id) {
               )
             ),
             tags$div(
+              class = "Tools-3D",
+              hidden(
+                checkboxInput(
+                  inputId = ns("Show_Sister"),
+                  label = "Show sister k-fiber",
+                  value = FALSE
+                )
+              )
+            ),
+            tags$div(
               class = "splash-input-setting",
               actionBttn(
                 inputId = ns("Refresh"),
