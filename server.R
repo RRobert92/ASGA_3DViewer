@@ -212,13 +212,14 @@ function(input, output, session) {
       updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
     }
   })
+
   observeEvent(input$`Home-Select_SMT_Analysis`, {
     if (input$`Home-Select_SMT_Analysis` != "NaN") {
       show("Home-Show_Sister")
       hide("Home-Hidde_MTs")
       updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
     } else {
-      if(input$`Home-Select_fiber` == "All"){
+      if (input$`Home-Select_fiber` == "All") {
         hide("Home-Show_Sister")
       }
       updateCheckboxInput(session, "Home-Hidde_MTs", value = FALSE)
@@ -228,6 +229,7 @@ function(input, output, session) {
   observeEvent(input$`Home-Select_fiber`, {
     if (input$`Home-Select_fiber` == "All") {
       hide("Home-Show_Sister")
+      updateCheckboxInput(session, "Home-Show_Sister", value = FALSE)
     } else {
       show("Home-Show_Sister")
     }

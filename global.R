@@ -22,7 +22,7 @@ source("bin/Utility/Library.R")
 APP_TITLE <- "ASGA - 3D Viewer v1.2.11"
 CC <- paste0("© Copyright GPL V3.0 2021-",
   str_split(Sys.Date(), pattern = "-")[[1]][1],
-  ", Müller-Reichert Lab & Robert Kiewisz",
+  ", Robert Kiewisz & Müller-Reichert Lab",
   sep = ""
 )
 

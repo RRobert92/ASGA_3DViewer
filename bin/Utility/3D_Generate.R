@@ -140,7 +140,11 @@
       # Collect all information from inputs
       WINDOW_WIDTH <- round(as.numeric(input$dimension[1]), 0)
 
-      if (WINDOW_WIDTH < 800) {
+      if (WINDOW_WIDTH < 500) {
+        FONT_SIZE <- 0.5
+      } else if (WINDOW_WIDTH < 650) {
+        FONT_SIZE <- 0.6
+      } else if (WINDOW_WIDTH < 800) {
         FONT_SIZE <- 0.8
       } else if (WINDOW_WIDTH < 1400) {
         FONT_SIZE <- 1
@@ -157,11 +161,11 @@
       }
 
       if (Fibers_to_Show != "All") {
-        if(Show_Sister == FALSE){
+        if (Show_Sister == FALSE) {
           df_Segments <- tibble(Collect_df_Segments(Data_Segments, Fibers_to_Show, 1))
         } else {
           df_Fiber_Select <- str_split(Fibers_to_Show, "_")
-          if(df_Fiber_Select[[1]][1] == "Pole1"){
+          if (df_Fiber_Select[[1]][1] == "Pole1") {
             df_Fiber_Select[[1]][1] <- "Pole2"
           } else {
             df_Fiber_Select[[1]][1] <- "Pole1"
@@ -170,13 +174,15 @@
 
           df_Segments_1 <- tibble(Collect_df_Segments(Data_Segments, Fibers_to_Show, 1))
 
-          tryCatch({
-            df_Segments_2 <- tibble(Collect_df_Segments(Data_Segments, df_Fiber_Select, 1))
-            df_Segments <- rbind(df_Segments_1, df_Segments_2)
-          },
-          error = function(e){
-            df_Segments <- df_Segments_1
-          })
+          tryCatch(
+            {
+              df_Segments_2 <- tibble(Collect_df_Segments(Data_Segments, df_Fiber_Select, 1))
+              df_Segments <- rbind(df_Segments_1, df_Segments_2)
+            },
+            error = function(e) {
+              df_Segments <- df_Segments_1
+            }
+          )
         }
       }
 
