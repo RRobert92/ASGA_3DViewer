@@ -10,14 +10,14 @@
 ################################################################################
 */
 
-  /*
-  # Shiny Server  ----------------------------------------------------------------
+/*
+# Shiny Server  ----------------------------------------------------------------
 */
-  body {
+body {
     line-height: 1.7em;
     color: #7f8c8d;
-      font-size: 13px;
-  }
+    font-size: 13px;
+}
 
 h1,
 h2,
@@ -26,7 +26,7 @@ h4,
 h5,
 h6,
 label {
-  color: #34495e;
+    color: #34495e;
 }
 
 .h_line {
@@ -37,236 +37,252 @@ label {
 }
 
 img {
-  width: 50%;
-  height: 50%;
-  min-width: 200px;
-  max-width: 200px;
-  min-height: 200px;
-  max-height: 200px;
+    width: 50%;
+    height: 50%;
+    min-width: 200px;
+    max-width: 200px;
+    min-height: 200px;
+    max-height: 200px;
 }
+
 /*
   # CSS layout styles  ------------------------------------------------------------
 */
 
-  .l-box {
+.l-box {
     padding: 0.5em;
-  }
+}
 
 .l-box-lrg {
-  padding: 2em;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 2em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .is-center {
-  text-align: center;
+    text-align: center;
 }
+
 .col-sm-10 {
-  margin-right: 0;
-  background: black;
+    margin-right: 0;
+    background: black;
 }
+
 /*
   # CSS button  -------------------------------------------------------------------
 */
 .dropup .dropdown-menu, .navbar-fixed-bottom .dropdown .dropdown-menu {
-  max-height: 400px;
+    max-height: 400px;
 }
-  .asga-button {
+
+.asga-button {
     background-color: #1f8dd6;
-      color: white;
+    color: white;
     padding: 0.5em 2em;
     border-radius: 5px;
-  }
-
-.asga-button-primary {
-  background: white;
-  color: #1f8dd6;
-    border-radius: 5px;
-  font-size: 120%;
 }
 
-.sweet-alert button.cancel{
-  background-color: #f8bb86;
+.asga-button-primary {
+    background: white;
+    color: #1f8dd6;
+    border-radius: 5px;
+    font-size: 120%;
+}
+
+.sweet-alert button.cancel {
+    background-color: #f8bb86;
 }
 
 .btn-default-3D {
-  margin: 5px;
+    margin: 5px;
 }
 
 .Setting_button {
-  margin: 3%;
+    margin: 3%;
 }
 
 .Tools-3D {
-  margin-top: 5%;
-  margin-bottom: 5%;
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
+
 /*
   # CSS Main Page  -----------------------------------------------------------------
 */
 
-  .container-fluid{
+.container-fluid {
     width: 100%;
     padding-right: 0;
     padding-left: 0;
     margin-right: auto;
     margin-left: auto
-  }
-.nav{
-  float: right;
-  margin: auto;
 }
-.navbar-header{
-  float: left;
-  padding-left: 15px
+
+.nav {
+    float: right;
+    margin: auto;
+}
+
+.navbar-header {
+    float: left;
+    padding-left: 15px
 }
 
 /*
   # CSS Splash  -------------------------------------------------------------------
 */
 
-  .splash-container-3D {
+.splash-container-3D {
     background: #fdfdfd;
-      z-index: 1;
+    z-index: 1;
     overflow: hidden;
     /* The following styles are required for the "scroll-over" effect */
-      width: 100%;
+    width: 100%;
     height: 94.3%;
     top: 0;
     left: 0;
-  }
+}
 
 .splash-container {
-  background: #1f8dd6;
+    background: #1f8dd6;
     z-index: 1;
-  overflow: hidden;
-  /* The following styles are required for the "scroll-over" effect */
+    overflow: hidden;
+    /* The following styles are required for the "scroll-over" effect */
     width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  position: fixed !important;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed !important;
 }
 
 .splash-content {
-  padding-left: 250px;
-  padding-right: 250px;
+    padding-left: 250px;
+    padding-right: 250px;
 }
 
 .sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
 
 .sticky + .content {
-  padding-top: 102px;
+    padding-top: 102px;
 }
 
 .splash {
-  /* absolute center .splash within .splash-container */
-  width: 80%;
-  height: 95%;
-  margin: auto;
-  position: absolute;
-  top: 100px; left: 0; bottom: 0; right: 0;
-  text-align: center;
-  text-transform: uppercase;
+    /* absolute center .splash within .splash-container */
+    width: 80%;
+    height: 95%;
+    margin: auto;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    text-transform: uppercase;
 }
 
-.splash-3D{
-  width: 80%;
-  height: 85%;
-  margin: auto;
-  position: absolute;
-  top: 100px; left: 0; bottom: 0; right: 0;
-  text-align: center;
-  text-transform: uppercase;
+.splash-3D {
+    width: 80%;
+    height: 85%;
+    margin: auto;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 
-.table-3D{
-  width: 100%;
-  margin: auto;
-  position: absolute;
-  top: 51px; left: 0; bottom: 0; right: 0;
-  text-align: left;
-  text-transform: none;
+.table-3D {
+    width: 100%;
+    margin: auto;
+    position: absolute;
+    top: 51px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: left;
+    text-transform: none;
 }
 
 .form-group {
-  margin: auto;
+    margin: auto;
 }
 
 .form-group shiny-input-container {
-  align-items: center;
+    align-items: center;
 }
 
 .shiny-input-container {
-  align-items: center;
+    align-items: center;
 }
 
 .shiny-input-container-inline {
-  align-items: center;
+    align-items: center;
 }
 
-.splash-input-3D{
-  width: 100%;
-  padding-left: 20%;
-  padding-right: 20%;
+.splash-input-3D {
+    width: 100%;
+    padding-left: 20%;
+    padding-right: 20%;
 }
 
-.splash-input-setting{
-  width: 100%;
-  margin-bottom: 5%;
-  margin-top: 10%;
-  display: flex;
-  flex-direction: column;
+.splash-input-setting {
+    width: 100%;
+    margin-bottom: 5%;
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
 }
 
-.splash-input-3D-row:after{
-  width: 90%;
-  content: "";
-  display: table;
-  clear: both;
+.splash-input-3D-row:after {
+    width: 90%;
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .splash-head {
-  font-size: 20px;
-  color: white;
-  border: 3px solid white;
-  padding: 1em 1.6em;
-  font-weight: 100 bold;
-  border-radius: 5px;
-  line-height: 1em;
+    font-size: 20px;
+    color: white;
+    border: 3px solid white;
+    padding: 1em 1.6em;
+    font-weight: 100 bold;
+    border-radius: 5px;
+    line-height: 1em;
 }
 
-.splash-head-3D{
-  font-size: 20px;
-  font-weight: bold;
-  color: black;
-  border: 3px solid black;
-  padding: 1em 1.6em;
-  border-radius: 5px;
-  line-height: 1em;
+.splash-head-3D {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    border: 3px solid black;
+    padding: 1em 1.6em;
+    border-radius: 5px;
+    line-height: 1em;
 }
 
 .splash-subhead {
-  color: white;
-  letter-spacing: 0.05em;
-  opacity: 0.8;
+    color: white;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
 }
 
-.splash-subhead-3D{
-  color: black;
-  letter-spacing: 0.05em;
-  opacity: 0.8;
+.splash-subhead-3D {
+    color: black;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
 }
 
 /*
   # CSS Wrappers  -------------------------------------------------------------------
 */
 
-  .content-wrapper {
+.content-wrapper {
     position: absolute;
     top: 87%;
     width: 100%;
@@ -274,91 +290,97 @@ img {
     z-index: 2;
     background: white;
 
-  }
+}
 
 .content {
-  padding: 1em 1em 3em;
+    padding: 1em 1em 3em;
 }
 
 .content-head {
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin: 2em 0 1em;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 2em 0 1em;
 }
 
 .content-head-ribbon {
-  color: white;
+    color: white;
 }
 
 .content-subhead {
-  color: #1f8dd6;
+    color: #1f8dd6;
 }
+
 .content-subhead i {
-  margin-right: 7px;
+    margin-right: 7px;
 }
 
 .ribbon {
-  background: #2d3e50;
+    background: #2d3e50;
     color: #aaa;
 }
 
 .footer {
-  background: #111;
+    background: #111;
     position: absolute;
-  width: 100%;
-  left: 0;
-  z-index: 1;
-  bottom: 0;
+    width: 100%;
+    left: 0;
+    z-index: 1;
+    bottom: 0;
 }
-.footer-report{
-  background: #111;
+
+.footer-report {
+    background: #111;
     position: absolute;
-  width: 100%;
-  left: 0;
-  z-index: 1;
+    width: 100%;
+    left: 0;
+    z-index: 1;
 }
 
 /*
   # CSS MEDIA QUERIES  -------------------------------------------------------------------
 */
-  @media (min-height:800px){
+@media (min-height: 800px) {
     img {
-  max-width: 400px;
-  max-height: 400px;
+        max-width: 400px;
+        max-height: 400px;
+    }
 }
-  }
-  @media (min-width:60em) {
+
+@media (min-width: 60em) {
 
     body {
-      font-size: 13px;
+        font-size: 13px;
     }
 
     .home-menu {
-      text-align: left;
+        text-align: left;
     }
+
     .home-menu ul {
-      float: right;
+        float: right;
     }
 
     .splash {
-      width: 65%;
-      height: 95%;
+        width: 65%;
+        height: 95%;
     }
+
     .splash-3D {
-      width: 55%;
-      height: 75%;
+        width: 55%;
+        height: 75%;
     }
 
     .splash-head {
-      font-size: 250%;
+        font-size: 250%;
     }
+
     .splash-head-3D {
-      font-size: 250%;
+        font-size: 250%;
     }
 
     .l-box-lrg {
-      border: none;
+        border: none;
     }
 
-  }
+}
