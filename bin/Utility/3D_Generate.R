@@ -131,6 +131,17 @@
           i,
           j
         )
+      } else if (SMT_Analysis != "NaN") {
+        Data_Segments <- Load_Data_Segments(
+          paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/Small/", sep = ""),
+          i,
+          j
+        )
+        Data_Points <- Load_Data_Points(
+          paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/Small/", sep = ""),
+          i,
+          j
+        )
       } else {
         Data_Segments <- Load_Data_Segments(
           paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/Full/", sep = ""),
@@ -283,7 +294,7 @@
               if (df_Data[k, 2] == "KMT") {
                 df_Interactions[k, 4] <- "#FD7BFD" # KMT - KMT interaction
               } else {
-                df_Interactions[k, 4] <- "#FDDC7B" # KMT with Non-KMT interaction
+                df_Interactions[k, 4] <- "#FDDC7B" # Non-KMT with KMT interaction
               }
             }
             names(df_Interactions)[3:4] <- c("Point IDs", "Color")
