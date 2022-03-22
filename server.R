@@ -69,7 +69,7 @@ function(input, output, session) {
     session = session,
     title = "Usage of a ASGA_3DViewer",
     text = "Due to the limitation of the server the app speed is highly dependent
-    on your device speed. Please be patient during the rendering process.",
+    on your device. Please be patient during the rendering process.",
     "OK",
     type = "info"
   )
@@ -120,10 +120,13 @@ function(input, output, session) {
             `3D_Generate_Refresh`(
               "Home",
               i, which(input$`Home-DataSet_in_Pub` == get(paste(Publication_Name[i], "Names", sep = "_"))),
-              input$`Home-Analysis_in_DataSet`, input$`Home-Hidde_MTs`,
+              input$`Home-Analysis_in_DataSet`,
+              input$`Home-Hidde_MTs`,
               input$`Home-Select_fiber`,
-              input$`Home-Non_KMT_Col`, input$`Home-KMT_Col`,
-              input$`Home-Select_KMT_Analysis`, input$`Home-Select_SMT_Analysis`,
+              input$`Home-Non_KMT_Col`,
+              input$`Home-KMT_Col`,
+              input$`Home-Select_KMT_Analysis`,
+              nput$`Home-Select_SMT_Analysis`,
               input$`Home-Show_Sister`
             )
           }

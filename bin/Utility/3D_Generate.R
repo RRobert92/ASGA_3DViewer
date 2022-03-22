@@ -120,18 +120,7 @@
         value = 0
       )
 
-      if (KMT_Analysis != "NaN") {
-        Data_Segments <- Load_Data_Segments(
-          paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/Small/", sep = ""),
-          i,
-          j
-        )
-        Data_Points <- Load_Data_Points(
-          paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/Small/", sep = ""),
-          i,
-          j
-        )
-      } else if (SMT_Analysis != "NaN") {
+      if (Fibers_to_Show == "All" || Show_All_MTs == TRUE) {
         Data_Segments <- Load_Data_Segments(
           paste0(getwd(), "/Data/", Publication_Name[i], "/Raw/Small/", sep = ""),
           i,
