@@ -463,10 +463,10 @@
             )
 
             for (k in seq_len(nrow(df_Interactions))) {
-              MT <- as.numeric(unlist(strsplit(as.character(df_Interactions[k, "Point IDs"]), split = ",")))
-              MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
+              MT <<- as.numeric(unlist(strsplit(as.character(df_Interactions[k, "Point IDs"]), split = ",")))
+              MT <<- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-              lines3d(MT, col = df_Interactions[k, "Color"], alpha = 1)
+              lines3d(MT, color = df_Interactions[k, "Color"], lwd=2)
             }
           }
 
@@ -485,7 +485,7 @@
               MT <- as.numeric(unlist(strsplit(as.character(df_Segments[k, "Point IDs"]), split = ",")))
               MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-              lines3d(MT, col = as.character(df_Segments[k, "Color"]), alpha = 1)
+              lines3d(MT, color = as.character(df_Segments[k, "Color"]), lwd=2)
             }
           }
 
@@ -503,7 +503,7 @@
               MT <- as.numeric(unlist(strsplit(as.character(df_Non_KMT_Lattices[k, "Point IDs"]), split = ",")))
               MT <- Data_Points[as.numeric(MT[which.min(MT)] + 1):as.numeric(MT[which.max(MT)] + 1), 2:4]
 
-              lines3d(MT, col = as.character(df_Non_KMT_Lattices[k, "Color"]), alpha = 1)
+              lines3d(MT, color = as.character(df_Non_KMT_Lattices[k, "Color"]), lwd=2)
             }
           }
 

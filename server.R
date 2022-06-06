@@ -126,7 +126,7 @@ function(input, output, session) {
               input$`Home-Non_KMT_Col`,
               input$`Home-KMT_Col`,
               input$`Home-Select_KMT_Analysis`,
-              nput$`Home-Select_SMT_Analysis`,
+              input$`Home-Select_SMT_Analysis`,
               input$`Home-Show_Sister`
             )
           }
