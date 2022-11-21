@@ -21,9 +21,9 @@ source("bin/Utility/Library.R")
 
 APP_TITLE <- "ASGA - 3D Viewer v1.3.1"
 CC <- paste0("© Copyright GPL V3.0 2021-",
-             str_split(Sys.Date(), pattern = "-")[[1]][1],
-             ", Robert Kiewisz & Müller-Reichert Lab",
-             sep = ""
+  str_split(Sys.Date(), pattern = "-")[[1]][1],
+  ", Robert Kiewisz & Müller-Reichert Lab",
+  sep = ""
 )
 
 # Global CSS  ------------------------------------------------------------------

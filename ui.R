@@ -53,8 +53,8 @@ fluidPage(
                         value = "Wiki"
                 ),
                 tabPanel(
-                        title = "About",
-                        value = "About"
+                        title = "Cite Us",
+                        value = "cite_us"
                 )
         )
 )

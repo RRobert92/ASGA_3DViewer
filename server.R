@@ -26,7 +26,7 @@ function(input, output, session) {
       js$browseURL("https://rrobert92.github.io/ASGA/")
       updateTabsetPanel(session, "innavbar", selected = "Home")
     }
-    if (input$innavbar == "About") {
+    if (input$innavbar == "cite_us") {
       js$browseURL("https://rrobert92.github.io/ASGA/Cit/")
       updateTabsetPanel(session, "innavbar", selected = "Home")
     }
@@ -50,7 +50,7 @@ function(input, output, session) {
     if (input$"innavbar-3D" == "Wiki") {
       js$browseURL("https://rrobert92.github.io/ASGA/")
     }
-    if (input$"innavbar-3D" == "About") {
+    if (input$"innavbar-3D" == "cite_us") {
       js$browseURL("https://rrobert92.github.io/ASGA/Cit/")
     }
   })
