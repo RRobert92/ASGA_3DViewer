@@ -59,7 +59,7 @@ R library
 
 <a name="Quick_start"></a>
 
-To use 3D viewer simply refere to [Shinyapp.io](https://kiewisz.shinyapps.io/ASGA_3DViewer/).
+To use 3D viewer simply refere to [Shinyapp.io](https://cfci.shinyapps.io/ASGA_3DViewer/).
 
 To add and publish new data:
 
