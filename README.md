@@ -33,7 +33,7 @@ mitotic spindles. Key futures:
 
 # Quick startS
 
-You can run the software in an online-version under the [Shinyapp.io](https://kiewisz.shinyapps.io/ASGA_3DViewer/).
+You can run the software in an online-version under the [Shinyapp.io]( https://cfci.shinyapps.io/ASGA_3DViewer).
 
 <a name="Dependency"></a>
 
